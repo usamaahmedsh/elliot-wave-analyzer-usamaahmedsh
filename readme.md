@@ -1,3 +1,6 @@
+# My role
+
+Trying to find an intersection between Elliot Waves and Deep Learning
 
 # ElliottWaveAnalyzer
 First Version of an (not yet) iterative Elliott Wave scanner in financial data.
