@@ -1,0 +1,10 @@
+{
+  "name": "market-dataset-15y-top200",
+  "description": "Combined daily OHLCV market dataset (last 15 years) assembled with top candidates per market. Includes equities, crypto, ETFs, commodities, bonds, indices where available.",
+  "created": "2026-01-15",
+  "rows": 1134666,
+  "unique_tickers": 315,
+  "markets": ["bond","commodity","continuous","crypto","equity","etf","fx_futures","index","international","reit","sector","volatility"],
+  "source_project": "ElliottWaveAnalyzer",
+  "notes": "Some international/FX tickers required normalization and a separate retry run. See data/market_manifest.json for per-ticker results and failures."
+}

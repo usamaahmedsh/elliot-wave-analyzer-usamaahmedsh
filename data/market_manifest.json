@@ -1,0 +1,1162 @@
+{
+  "markets": {
+    "commodity": {
+      "ZN=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZF=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZB=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "CL=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZC=F": {
+        "rows": 3769,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "NG=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZQ=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZW=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZS=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "SB=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "RB=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "HO=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "KE=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZL=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "HE=F": {
+        "rows": 3770,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "CT=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "CC=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "KC=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "GC=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "SI=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "HG=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "PL=F": {
+        "rows": 3770,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "OJ=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "PA=F": {
+        "rows": 3769,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      }
+    },
+    "bond": {
+      "^IRX": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "^FVX": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "^TNX": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "^TYX": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "^VIX": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "^GSPC": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      }
+    },
+    "index": {
+      "^GSPC": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "^IXIC": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "^RUT": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "^FTSE": {
+        "rows": 3787,
+        "min_date": "2011-01-17",
+        "max_date": "2026-01-15"
+      },
+      "^N225": {
+        "rows": 3670,
+        "min_date": "2011-01-17",
+        "max_date": "2026-01-15"
+      },
+      "^GDAXI": {
+        "rows": 3803,
+        "min_date": "2011-01-17",
+        "max_date": "2026-01-15"
+      },
+      "^FCHI": {
+        "rows": 3835,
+        "min_date": "2011-01-17",
+        "max_date": "2026-01-15"
+      },
+      "^HSI": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "^SSEC": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "^STOXX50E": {
+        "rows": 3757,
+        "min_date": "2011-01-17",
+        "max_date": "2026-01-15"
+      }
+    },
+    "reit": {
+      "XLRE": {
+        "rows": 2583,
+        "min_date": "2015-10-08",
+        "max_date": "2026-01-15"
+      },
+      "IYR": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "VTR": {
+        "rows": 5031,
+        "min_date": "2006-01-17",
+        "max_date": "2026-01-14"
+      },
+      "EQR": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "NNN": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "SPG": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "AVB": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ESS": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "EQIX": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      }
+    },
+    "sector": {
+      "XLE": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "XLF": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "XLU": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "XLP": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "XLK": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "XLB": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "XLV": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "XLY": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "XLI": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "XLC": {
+        "rows": 1905,
+        "min_date": "2018-06-19",
+        "max_date": "2026-01-15"
+      }
+    },
+    "continuous": {
+      "GC=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "CL=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "SI=F": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "NG=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "PL=F": {
+        "rows": 3770,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "PA=F": {
+        "rows": 3769,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "HG=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZC=F": {
+        "rows": 3769,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZS=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "ZL=F": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      }
+    },
+    "fx_futures": {
+      "6E=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "6B=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "6A=F": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "6J=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "6C=F": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "6S=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "6N=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "DX=F": {
+        "rows": 3773,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "EURUSD0=X": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "GBPUSD0=X": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      }
+    },
+    "volatility": {
+      "^VIX": {
+        "rows": 3772,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-15"
+      },
+      "^VVIX": {
+        "rows": 3763,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "^VXV": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "^VIX3M": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "^VIX1Y": {
+        "rows": 1,
+        "min_date": "2026-01-14",
+        "max_date": "2026-01-14"
+      }
+    },
+    "international": {
+      "HSBA-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "RIO-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BP-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "VOD-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "GSK-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "AZN-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "SHEL-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "RDSA-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "RDSB-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BATS-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "IMB-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "TSCO-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BARC-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "LLOY-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "SMDS-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "7203-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "7201-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "9432-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "9984-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "6758-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "8316-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "8035-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "6501-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "6752-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "4519-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "2914-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "3861-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "9433-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "8306-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "5802-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "5019-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "3865-T": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "A2A-MI": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "ISP-MI": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "ENI-MI": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "AZM-MI": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "UCG-MI": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BNP-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "SAN-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "OR-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "MC-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "FP-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "AIR-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "SU-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "VIE-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BN-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "SAP-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "DTE-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "ALV-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BAS-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BAYN-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "VOW-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "DBK-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "IFX-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "SIE-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "ADS-DE": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "AD-AS": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "PHIA-AS": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "INGA-AS": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "HEIA-AS": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "DSM-AS": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "ASML-AS": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "SHL-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "CNA-L": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BIDU": {
+        "rows": 3771,
+        "min_date": "2011-01-18",
+        "max_date": "2026-01-14"
+      },
+      "BABA": {
+        "rows": 2847,
+        "min_date": "2014-09-19",
+        "max_date": "2026-01-14"
+      },
+      "0700-HK": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "03988-HK": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "0011-HK": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "03888-HK": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "0267-HK": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "0005-HK": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "09618-HK": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "0001-HK": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "A2M-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "BHP-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "CBA-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "WES-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "WPL-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "QAN-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "TLS-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "NAB-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "ANZ-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "FMG-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "CSL-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "MQG-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "RIO-AX": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "NVS-SW": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "RMS-SW": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "UBSG-SW": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "NESN-SW": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "NOVN-SW": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "CFR-SW": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "ABN-AS": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "KPN-AS": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "KER-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "ML-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      },
+      "EURONEXT-PA": {
+        "rows": 0,
+        "min_date": null,
+        "max_date": null
+      }
+    }
+  },
+  "failures": {
+    "fx": {
+      "EURUSD=X": "no-data",
+      "GBPUSD=X": "no-data",
+      "USDJPY=X": "no-data",
+      "USDCHF=X": "no-data",
+      "USDCAD=X": "no-data",
+      "AUDUSD=X": "no-data",
+      "NZDUSD=X": "no-data",
+      "USDSGD=X": "no-data",
+      "USDHKD=X": "no-data",
+      "USDMXN=X": "no-data",
+      "USDZAR=X": "no-data",
+      "USDBRL=X": "no-data",
+      "USDINR=X": "no-data",
+      "USDKRW=X": "no-data",
+      "USDTRY=X": "no-data",
+      "USDNOK=X": "no-data",
+      "USDSEK=X": "no-data",
+      "USDDKK=X": "no-data",
+      "EURGBP=X": "no-data",
+      "EURJPY=X": "no-data",
+      "EURCHF=X": "no-data",
+      "EURAUD=X": "no-data",
+      "EURCAD=X": "no-data",
+      "EURNZD=X": "no-data",
+      "EURPLN=X": "no-data",
+      "EURHUF=X": "no-data",
+      "EURCZK=X": "no-data",
+      "GBPAUD=X": "no-data",
+      "GBPCAD=X": "no-data",
+      "GBPNZD=X": "no-data",
+      "GBPCHF=X": "no-data",
+      "GBPJPY=X": "no-data",
+      "GBPPLN=X": "no-data",
+      "AUDJPY=X": "no-data",
+      "AUDNZD=X": "no-data",
+      "AUDCAD=X": "no-data",
+      "AUDCHF=X": "no-data",
+      "CADJPY=X": "no-data",
+      "CADCHF=X": "no-data",
+      "NZDJPY=X": "no-data",
+      "NZDCAD=X": "no-data",
+      "NZDCHF=X": "no-data",
+      "SGDJPY=X": "no-data",
+      "SGDUSD=X": "no-data",
+      "HKDUSD=X": "no-data",
+      "CHFJPY=X": "no-data",
+      "CHFCAD=X": "no-data",
+      "CHFGBP=X": "no-data",
+      "MXNUSD=X": "no-data",
+      "BRLUSD=X": "no-data",
+      "ZARUSD=X": "no-data",
+      "INRUSD=X": "no-data",
+      "TRYUSD=X": "no-data",
+      "RUBUSD=X": "no-data",
+      "PLNUSD=X": "no-data",
+      "HUFUSD=X": "no-data",
+      "CZKUSD=X": "no-data",
+      "SEKUSD=X": "no-data",
+      "NOKUSD=X": "no-data",
+      "DKKUSD=X": "no-data",
+      "EURSEK=X": "no-data",
+      "EURNOK=X": "no-data",
+      "EURDKK=X": "no-data",
+      "EURTRY=X": "no-data",
+      "EURMXN=X": "no-data",
+      "EURBRL=X": "no-data",
+      "EURZAR=X": "no-data",
+      "GBPSEK=X": "no-data",
+      "GBPNOK=X": "no-data",
+      "GBPDKK=X": "no-data",
+      "GBPMXN=X": "no-data",
+      "GBRTRY=X": "no-data",
+      "AUDSGD=X": "no-data",
+      "AUDHKD=X": "no-data",
+      "AUDTRY=X": "no-data",
+      "CADSGD=X": "no-data",
+      "CADHKD=X": "no-data",
+      "NZDSGD=X": "no-data",
+      "NZDHKD=X": "no-data",
+      "SGDHKD=X": "no-data",
+      "EURSGD=X": "no-data",
+      "EURHKD=X": "no-data",
+      "GBPSGD=X": "no-data",
+      "GBPHKD=X": "no-data",
+      "USDBYN=X": "no-data",
+      "USDPLN=X": "no-data",
+      "USDHUF=X": "no-data",
+      "USDCZK=X": "no-data",
+      "USDILS=X": "no-data",
+      "USDTHB=X": "no-data",
+      "USDIDR=X": "no-data",
+      "USDPHP=X": "no-data",
+      "USDMYR=X": "no-data",
+      "USDCNY=X": "no-data",
+      "USDCNH=X": "no-data",
+      "CNHUSD=X": "no-data",
+      "CNXUSD=X": "no-data",
+      "JPYUSD=X": "no-data",
+      "CNYUSD=X": "no-data",
+      "EURUSD": "no-data",
+      "GBPUSD": "no-data",
+      "USDJPY": "no-data",
+      "AUDUSD": "no-data",
+      "NZDUSD": "no-data",
+      "USDCAD": "no-data",
+      "USDCHF": "no-data"
+    },
+    "index": {
+      "^IXIC": "no-data",
+      "^HSI": "no-data",
+      "^SSEC": "no-data"
+    },
+    "reit": {
+      "SPG": "no-data"
+    },
+    "sector": {
+      "XLP": "no-data"
+    },
+    "continuous": {
+      "SI=F": "no-data"
+    },
+    "fx_futures": {
+      "6A=F": "no-data",
+      "EURUSD0=X": "no-data",
+      "GBPUSD0=X": "no-data"
+    },
+    "volatility": {
+      "^VXV": "no-data"
+    },
+    "international": {
+      "HSBA-L": "no-data",
+      "RIO-L": "no-data",
+      "BP-L": "no-data",
+      "VOD-L": "no-data",
+      "GSK-L": "no-data",
+      "AZN-L": "no-data",
+      "SHEL-L": "no-data",
+      "RDSA-L": "no-data",
+      "RDSB-L": "no-data",
+      "BATS-L": "no-data",
+      "IMB-L": "no-data",
+      "TSCO-L": "no-data",
+      "BARC-L": "no-data",
+      "LLOY-L": "no-data",
+      "SMDS-L": "no-data",
+      "7203-T": "no-data",
+      "7201-T": "no-data",
+      "9432-T": "no-data",
+      "9984-T": "no-data",
+      "6758-T": "no-data",
+      "8316-T": "no-data",
+      "8035-T": "no-data",
+      "6501-T": "no-data",
+      "6752-T": "no-data",
+      "4519-T": "no-data",
+      "2914-T": "no-data",
+      "3861-T": "no-data",
+      "9433-T": "no-data",
+      "8306-T": "no-data",
+      "5802-T": "no-data",
+      "5019-T": "no-data",
+      "3865-T": "no-data",
+      "A2A-MI": "no-data",
+      "ISP-MI": "no-data",
+      "ENI-MI": "no-data",
+      "AZM-MI": "no-data",
+      "UCG-MI": "no-data",
+      "BNP-PA": "no-data",
+      "SAN-PA": "no-data",
+      "OR-PA": "no-data",
+      "MC-PA": "no-data",
+      "FP-PA": "no-data",
+      "AIR-PA": "no-data",
+      "SU-PA": "no-data",
+      "VIE-PA": "no-data",
+      "BN-PA": "no-data",
+      "SAP-DE": "no-data",
+      "DTE-DE": "no-data",
+      "ALV-DE": "no-data",
+      "BAS-DE": "no-data",
+      "BAYN-DE": "no-data",
+      "VOW-DE": "no-data",
+      "DBK-DE": "no-data",
+      "IFX-DE": "no-data",
+      "SIE-DE": "no-data",
+      "ADS-DE": "no-data",
+      "AD-AS": "no-data",
+      "PHIA-AS": "no-data",
+      "INGA-AS": "no-data",
+      "HEIA-AS": "no-data",
+      "DSM-AS": "no-data",
+      "ASML-AS": "no-data",
+      "SHL-L": "no-data",
+      "CNA-L": "no-data",
+      "0700-HK": "no-data",
+      "03988-HK": "no-data",
+      "0011-HK": "no-data",
+      "03888-HK": "no-data",
+      "0267-HK": "no-data",
+      "0005-HK": "no-data",
+      "09618-HK": "no-data",
+      "0001-HK": "no-data",
+      "A2M-AX": "no-data",
+      "BHP-AX": "no-data",
+      "CBA-AX": "no-data",
+      "WES-AX": "no-data",
+      "WPL-AX": "no-data",
+      "QAN-AX": "no-data",
+      "TLS-AX": "no-data",
+      "NAB-AX": "no-data",
+      "ANZ-AX": "no-data",
+      "FMG-AX": "no-data",
+      "CSL-AX": "no-data",
+      "MQG-AX": "no-data",
+      "RIO-AX": "no-data",
+      "NVS-SW": "no-data",
+      "RMS-SW": "no-data",
+      "UBSG-SW": "no-data",
+      "NESN-SW": "no-data",
+      "NOVN-SW": "no-data",
+      "CFR-SW": "no-data",
+      "ABN-AS": "no-data",
+      "KPN-AS": "no-data",
+      "KER-PA": "no-data",
+      "ML-PA": "no-data",
+      "EURONEXT-PA": "no-data"
+    }
+  }
+}

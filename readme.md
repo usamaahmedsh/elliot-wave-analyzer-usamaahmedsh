@@ -1,10 +1,23 @@
-# My role
-
-Trying to find an intersection between Elliot Waves and Deep Learning
 
 # ElliottWaveAnalyzer
 First Version of an (not yet) iterative Elliott Wave scanner in financial data.
 
+## Contributions by usamaahmedsh (2026-01-15)
+
+- Dataset engineering and ingestion:
+	- Implemented a yfinance-based, daily-only batch fetcher to download OHLCV histories (top-N per market) and produce unified parquet outputs (`data/all_markets_15y.parquet`, `data/all_markets_20y.parquet`).
+	- Added per-ticker parquet caching, aggressive parallel downloads, and OHLC normalization to fill missing Open/High/Low values from Close when necessary.
+
+- Coverage and recovery:
+	- Expanded market candidate lists across equities, crypto, ETFs, commodities, bonds, FX, indices, REITs, sectors, futures and volatility instruments.
+	- Implemented retry logic, symbol-normalization heuristics, and a manifest to record per-ticker success/failure and date ranges.
+	- Merged retry results into the final combined dataset and added a sanity-check script (`scripts/sanity_check.py`) to validate date ranges and completeness.
+
+- Tooling and reproducibility:
+	- Created upload tooling and helpers to publish the dataset to the Hugging Face Hub (`scripts/upload_to_hf.py` and `scripts/push_parquet_as_dataset.py`).
+	- Added dataset metadata and a short dataset README at `data/README_dataset.md` and `data/all_markets_15y_metadata.json` to make the artifact reproducible and discoverable.
+
+These contributions expanded the project's data pipeline, improved robustness for large batch downloads, and produced a reusable market dataset for downstream analysis.
 ## Setup
 use Python 3.9 environment and install all packages via
 `pip install -r requirements.txt`
