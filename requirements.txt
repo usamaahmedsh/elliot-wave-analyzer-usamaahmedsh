@@ -9,15 +9,12 @@ numpy==1.26.4
 pandas==2.2.2
 plotly==6.1.1
 python-dateutil==2.9.0
-# bumped to satisfy pandas and yfinance minimums
 pytz==2023.3
 requests==2.32.3
 six==1.16.0
 tenacity==8.3.0
 urllib3==2.2.1
 yfinance==1.0
-# removed wincertstore (Windows-only) — not needed on macOS
-# bump kaleido to a modern release that has macOS wheels for Python 3.11
 kaleido==1.2.0
 pandas-datareader==0.10.0
 pyarrow==22.0.0

@@ -2,6 +2,10 @@
 # ElliottWaveAnalyzer
 First Version of an (not yet) iterative Elliott Wave scanner in financial data.
 
+## 
+
+Forked from the repository https://github.com/drstevendev/ElliottWaveAnalyzer
+
 ## Contributions by usamaahmedsh (2026-01-15)
 
 - Dataset engineering and ingestion:

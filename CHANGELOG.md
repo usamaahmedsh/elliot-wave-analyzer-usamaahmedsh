@@ -63,5 +63,3 @@ Full file list (created/modified in this session)
 - Modified:
   - scripts/sanity_check.py
   - readme.md
-
-If you'd like a git commit message suggestion for these changes, or want me to create a tidy PR that groups the code edits and dataset artifacts, tell me how you'd like the commits organized (single commit vs separate commits for code/docs/data).
