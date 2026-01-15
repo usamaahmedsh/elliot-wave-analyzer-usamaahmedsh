@@ -22,6 +22,8 @@ Forked from the repository https://github.com/drstevendev/ElliottWaveAnalyzer
 	- Added dataset metadata and a short dataset README at `data/README_dataset.md` and `data/all_markets_15y_metadata.json` to make the artifact reproducible and discoverable.
 
 These contributions expanded the project's data pipeline, improved robustness for large batch downloads, and produced a reusable market dataset for downstream analysis.
+
+---------------------------------ORIGINAL README.md--------------------------------
 ## Setup
 use Python 3.9 environment and install all packages via
 `pip install -r requirements.txt`
