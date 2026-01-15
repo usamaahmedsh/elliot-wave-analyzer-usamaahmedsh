@@ -24,7 +24,7 @@ First Version of an (not yet) iterative Elliott Wave scanner in financial data.
 
 These contributions expanded the project's data pipeline, improved robustness for large batch downloads, and produced a reusable market dataset for downstream analysis.
 
-------------------------------------------------ORIGINAL README.md----------------------------------------------
+--------------------------------------- ORIGINAL README.md ----------------------------------------------
 ## Setup
 use Python 3.9 environment and install all packages via
 `pip install -r requirements.txt`
