@@ -1,24 +1,38 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple, Any
+
+import numpy as np
+import pandas as pd
+
 from models.MonoWave import MonoWaveUp, MonoWaveDown
 from models.WaveOptions import WaveOptionsGenerator5, WaveOptionsGenerator3
 from models.WaveCycle import WaveCycle
 from models.WavePattern import WavePattern
-from models.WaveRules import Impulse, Correction, TDWave
-import numpy as np
-import pandas as pd
+from models.WaveRules import Impulse, Correction, TDWave, LeadingDiagonal
+
+
+@dataclass
+class FoundPattern:
+    pattern: WavePattern
+    rule_name: str
+    score: float
+    wave_config: List[int]
+    idx_start: int
+    idx_end: int
 
 
 class WaveAnalyzer:
     """
     Find impulse or corrective waves for given dataframe
     """
-    def __init__(self,
-                 df: pd.DataFrame,
-                 verbose: bool = False):
 
+    def __init__(self, df: pd.DataFrame, verbose: bool = False):
         self.df = df
-        self.lows = np.array(list(self.df['Low']))
-        self.highs = np.array(list(self.df['High']))
-        self.dates = np.array(list(self.df['Date']))
+        self.lows = np.array(list(self.df["Low"]))
+        self.highs = np.array(list(self.df["High"]))
+        self.dates = np.array(list(self.df["Date"]))
         self.verbose = verbose
 
         self.impulse_rules = list()
@@ -26,119 +40,103 @@ class WaveAnalyzer:
 
         self.__waveoptions_up: WaveOptionsGenerator5
         self.__waveoptions_down: WaveOptionsGenerator3
-
         self.set_combinatorial_limits()
 
     def get_absolute_low(self):
         """
         find the absolute low in the dataframe. Can be used to start the wave analysis from this low.
-        :return:
         """
         return np.min(self.lows)
 
     def set_combinatorial_limits(self, n_up: int = 10, n_down: int = 10):
         """
-        Change the limit to skip min / maxima for the WaveOptionsGenerators, e.g. go up to [n_up, n_up, ...] for the
-        WaveOptions
-
-        :param n_up:
-        :param n_down:
-        :return:
+        Change the limit to skip min / maxima for the WaveOptionsGenerators.
         """
         self.__waveoptions_up = WaveOptionsGenerator5(n_up)
         self.__waveoptions_down = WaveOptionsGenerator3(n_down)
 
-    def find_impulsive_wave(self,
-                            idx_start: int,
-                            wave_config: list = None):
+    # -------------------------
+    # Existing wave builders
+    # -------------------------
+
+    def find_impulsive_wave(self, idx_start: int, wave_config: list = None):
         """
         Tries to find 5 consecutive waves (up, down, up, down, up) to build an impulsive 12345 wave
-
-        :param idx_start: index in dataframe to start from
-        :param wave_config: WaveOptions
-        :return: list of the 5 MonoWaves in case they are found.
-
-                False otherwise
         """
-
-
-
         if wave_config is None:
             wave_config = [0, 0, 0, 0, 0]
 
         wave1 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=idx_start, skip=wave_config[0])
-        wave1.label = '1'
+        wave1.label = "1"
         wave1_end = wave1.idx_end
         if wave1_end is None:
-            if self.verbose: print("Wave 1 has no End in Data")
+            if self.verbose:
+                print("Wave 1 has no End in Data")
             return False
 
         wave2 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave1_end, skip=wave_config[1])
-        wave2.label = '2'
+        wave2.label = "2"
         wave2_end = wave2.idx_end
         if wave2_end is None:
-            if self.verbose: print("Wave 2 has no End in Data")
+            if self.verbose:
+                print("Wave 2 has no End in Data")
             return False
 
         wave3 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave2_end, skip=wave_config[2])
-        wave3.label = '3'
+        wave3.label = "3"
         wave3_end = wave3.idx_end
         if wave3_end is None:
-            if self.verbose: print("Wave 3 has no End in Data")
+            if self.verbose:
+                print("Wave 3 has no End in Data")
             return False
 
         wave4 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave3_end, skip=wave_config[3])
-        wave4.label = '4'
+        wave4.label = "4"
         wave4_end = wave4.idx_end
-
         if wave4_end is None:
-            if self.verbose: print("Wave 4 has no End in Data")
+            if self.verbose:
+                print("Wave 4 has no End in Data")
             return False
 
-        if wave2.low > np.min(self.lows[wave2.low_idx:wave4.low_idx]):
+        if wave2.low > np.min(self.lows[wave2.low_idx : wave4.low_idx]):
             return False
 
         wave5 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave4_end, skip=wave_config[4])
-        wave5.label = '5'
+        wave5.label = "5"
         wave5_end = wave5.idx_end
         if wave5_end is None:
-            if self.verbose: print("Wave 5 has no End in Data")
+            if self.verbose:
+                print("Wave 5 has no End in Data")
             return False
 
-        if self.lows[wave4.low_idx:wave5.high_idx].any() and wave4.low > np.min(self.lows[wave4.low_idx:wave5.high_idx]):
-            if self.verbose: print('Low of Wave 4 higher than a low between Wave 4 and Wave 5')
+        if self.lows[wave4.low_idx : wave5.high_idx].any() and wave4.low > np.min(self.lows[wave4.low_idx : wave5.high_idx]):
+            if self.verbose:
+                print("Low of Wave 4 higher than a low between Wave 4 and Wave 5")
             return False
 
         return [wave1, wave2, wave3, wave4, wave5]
 
-    def find_corrective_wave(self,
-                             idx_start: int,
-                             wave_config: list = None):
+    def find_corrective_wave(self, idx_start: int, wave_config: list = None):
         """
-
         Tries to find a corrective movement (ABC)
-        :param idx_start:
-        :param wave_config:
-        :return: a list of 3 MonoWaves (down, up, down) otherwise False
-
         """
         if wave_config is None:
             wave_config = [0, 0, 0]
 
         waveA = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=idx_start, skip=wave_config[0])
-        waveA.label = 'A'
+        waveA.label = "A"
         waveA_end = waveA.idx_end
         if waveA_end is None:
             return False
 
         waveB = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=waveA_end, skip=wave_config[1])
-        waveB.label = 'B'
+        waveB.label = "B"
         waveB_end = waveB.idx_end
         if waveB_end is None:
             return False
 
         waveC = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=waveB_end, skip=wave_config[2])
-        waveC.label = 'C'
+        waveC.label = "C"
         waveC_end = waveC.idx_end
         if waveC_end is None:
             return False
@@ -150,39 +148,37 @@ class WaveAnalyzer:
             wave_config = [0, 0]
 
         wave1 = MonoWaveUp(self.df, idx_start=idx_start, skip=wave_config[0])
-        wave1.label = '1'
+        wave1.label = "1"
         wave1_end = wave1.idx_end
         if wave1_end is None:
-            if self.verbose: print("Wave 1 has no End in Data")
+            if self.verbose:
+                print("Wave 1 has no End in Data")
             return False
 
         wave2 = MonoWaveDown(self.df, idx_start=wave1_end, skip=wave_config[1])
-        wave2.label = '2'
+        wave2.label = "2"
         wave2_end = wave2.idx_end
         if wave2_end is None:
-            if self.verbose: print("Wave 2 has no End in Data")
+            if self.verbose:
+                print("Wave 2 has no End in Data")
             return False
 
         return [wave1, wave2]
 
-    def next_cycle(self,
-                   start_idx: int):
-
-        impulse = Impulse('impulse')
-        correction = Correction('correction')
+    def next_cycle(self, start_idx: int):
+        impulse = Impulse("impulse")
+        correction = Correction("correction")
 
         wave_cycles = set()
 
         for new_option_impulse in self.__waveoptions_up.options_sorted:
-
             cycle_complete = False
-            waves_up = self.find_impulsive_wave(idx_start=start_idx,
-                                                wave_config=new_option_impulse.values)
+
+            waves_up = self.find_impulsive_wave(idx_start=start_idx, wave_config=new_option_impulse.values)
 
             if waves_up:
                 wavepattern_up = WavePattern(waves_up, verbose=False)
                 if wavepattern_up.check_rule(impulse):
-                    if self.verbose: ('Impulse found!', new_option_impulse.values)
                     end = waves_up[4].idx_end
 
                     for new_option_correction in self.__waveoptions_down.options_sorted:
@@ -190,17 +186,173 @@ class WaveAnalyzer:
                         if waves:
                             wavepattern = WavePattern(waves, verbose=False)
                             if wavepattern.check_rule(correction):
-
                                 cycle_complete = True
                                 wave_cycle = WaveCycle(wavepattern_up, wavepattern)
                                 wave_cycles.add(wave_cycle)
 
-                                # if wave_cycle not in wave_cycles:
-                                if self.verbose and wave_cycle not in wave_cycles:
-                                    print('Corrrection found!', new_option_correction.values)
-                                    print('*' * 40)
-
                     if cycle_complete:
                         yield wave_cycle
+                        return None
+
+    # -------------------------
+    # New: Impulse scanning helpers
+    # -------------------------
+
+    def scan_impulses(self, idx_start: int, up_to: int = 10, top_n: int = 5) -> List[FoundPattern]:
+        """
+        Scan impulse candidates from idx_start for a given up_to and return top-N patterns by score.
+        """
+        wave_options_impulse = WaveOptionsGenerator5(up_to=up_to)
+
+        impulse = Impulse("impulse")
+        leading_diagonal = LeadingDiagonal("leading_diagonal")
+        rules_to_check = [impulse, leading_diagonal]
+
+        found: List[FoundPattern] = []
+        seen = set()
+
+        for opt in wave_options_impulse.options_sorted:
+            waves_up = self.find_impulsive_wave(idx_start=idx_start, wave_config=opt.values)
+            if not waves_up:
+                continue
+
+            wp = WavePattern(waves_up, verbose=False)
+
+            for rule in rules_to_check:
+                if wp.check_rule(rule):
+                    if wp in seen:
+                        continue
+                    seen.add(wp)
+
+                    score = 0.0
+                    if hasattr(wp, "score_rule"):
+                        score = float(wp.score_rule(rule))
+
+                    found.append(
+                        FoundPattern(
+                            pattern=wp,
+                            rule_name=rule.name,
+                            score=score,
+                            wave_config=opt.values,
+                            idx_start=wp.idx_start,
+                            idx_end=wp.idx_end,
+                        )
+                    )
+
+        # Sort by score (desc), then by longer coverage (idx_end desc)
+        found.sort(key=lambda x: (x.score, x.idx_end), reverse=True)
+        return found[:top_n]
+
+    # -------------------------
+    # New: Adaptive window growth
+    # -------------------------
+
+    @staticmethod
+    def _bars_per_week(timeframe: str) -> int:
+        # This is only used for window math in the example orchestration.
+        # For 1D, 1 week ~ 7 bars. For 1W, 1 week ~ 1 bar.
+        if timeframe.upper() == "1W":
+            return 1
+        return 7
+
+    @staticmethod
+    def slice_df(df: pd.DataFrame, start: int, length: int) -> pd.DataFrame:
+        return df.iloc[start : start + length].reset_index(drop=True)
+
+    def find_best_impulse_adaptive_window(
+        self,
+        base_df: pd.DataFrame,
+        start_row: int,
+        timeframe: str = "1D",
+        min_weeks: int = 4,
+        max_weeks: int = 12,
+        up_to: int = 10,
+        grow_weeks: int = 1,
+        top_n: int = 3,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        For a given start_row in base_df:
+        - Start with min_weeks window
+        - If no impulse found, grow by grow_weeks
+        - Stop at max_weeks or end of data
+        """
+        bars_per_week = self._bars_per_week(timeframe)
+        min_len = min_weeks * bars_per_week
+        max_len = max_weeks * bars_per_week
+        step_len = grow_weeks * bars_per_week
+
+        for window_len in range(min_len, max_len + 1, step_len):
+            if start_row + window_len > len(base_df):
+                break
+
+            window_df = self.slice_df(base_df, start_row, window_len)
+
+            # Build a local analyzer for this window
+            wa = WaveAnalyzer(window_df, verbose=False)
+
+            # Choose a local start inside the window (current heuristic)
+            local_idx_start = int(np.argmin(np.array(list(window_df["Low"]))))
+
+            candidates = wa.scan_impulses(idx_start=local_idx_start, up_to=up_to, top_n=top_n)
+
+            if candidates:
+                best = candidates[0]
+                return {
+                    "window_len": window_len,
+                    "window_weeks": window_len / bars_per_week,
+                    "start_row": start_row,
+                    "date_start": base_df.iloc[start_row]["Date"],
+                    "date_end": base_df.iloc[start_row + window_len - 1]["Date"],
+                    "best": best,
+                    "all": candidates,
+                    "window_df": window_df,
+                }
 
         return None
+
+    def sliding_adaptive_impulses(
+        self,
+        df: pd.DataFrame,
+        symbol: str,
+        timeframe: str = "1D",
+        slide_weeks: int = 1,
+        min_weeks: int = 4,
+        max_weeks: int = 12,
+        up_to: int = 10,
+        grow_weeks: int = 1,
+        top_n: int = 1,
+    ) -> List[Dict[str, Any]]:
+        """
+        Slide across df. At each start position, try adaptive window growth.
+        Returns a list of detections including the window slice and best candidate.
+        """
+        bars_per_week = self._bars_per_week(timeframe)
+        slide_step = slide_weeks * bars_per_week
+        min_len = min_weeks * bars_per_week
+
+        out = []
+        start_row = 0
+
+        while start_row <= len(df) - min_len:
+            result = self.find_best_impulse_adaptive_window(
+                base_df=df,
+                start_row=start_row,
+                timeframe=timeframe,
+                min_weeks=min_weeks,
+                max_weeks=max_weeks,
+                up_to=up_to,
+                grow_weeks=grow_weeks,
+                top_n=top_n,
+            )
+
+            if result is None:
+                start_row += slide_step
+                continue
+
+            out.append(result)
+
+            # Move forward (choose overlap behavior)
+            # Overlapping: slide fixed step
+            start_row += slide_step
+
+        return out

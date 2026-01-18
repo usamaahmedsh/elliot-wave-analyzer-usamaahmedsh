@@ -3,3 +3,4 @@ venv
 images
 __pycache__
 /cache
+/.venv

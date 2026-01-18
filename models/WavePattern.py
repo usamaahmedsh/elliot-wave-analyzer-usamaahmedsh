@@ -69,6 +69,51 @@ class WavePattern:
                 raise NotImplementedError('other than 2 or 3 waves as argument not implemented')
 
         return True
+    def score_rule(self, waverule: WaveRule) -> float:
+        """
+        Soft score in [0,1] indicating how well this pattern fits the given WaveRule.
+        1.0 = perfect (all conditions strongly satisfied), 0.0 = clear failure.
+        This is a heuristic layer on top of the existing hard checks.
+        """
+        scores = []
+
+        for rule, conditions in waverule.conditions.items():
+            waves_keys = conditions.get("waves")
+            function = conditions.get("function")
+
+            # Reconstruct the waves that this condition uses
+            used_waves = [self.waves.get(k) for k in waves_keys]
+
+            # Use the existing hard function first
+            ok = function(*used_waves)
+
+            # Start from a binary baseline
+            base = 1.0 if ok else 0.0
+
+            # Optional: add a small adjustment based on "margin" where easy
+            # Example: for simple inequality conditions we can try to infer a margin
+            margin_bonus = 0.0
+
+            try:
+                # Very light heuristic: if waves have 'length', compare them
+                if len(used_waves) == 2 and hasattr(used_waves[0], "length") and hasattr(used_waves[1], "length"):
+                    l1 = used_waves[0].length
+                    l2 = used_waves[1].length
+                    if l1 and l2:
+                        # relative difference, clipped
+                        rel = abs(l1 - l2) / max(abs(l1), abs(l2))
+                        # closer lengths -> higher bonus (just as an example)
+                        margin_bonus = max(0.0, 0.3 - rel)
+            except Exception:
+                pass
+
+            condition_score = max(0.0, min(1.0, base + margin_bonus))
+            scores.append(condition_score)
+
+        if not scores:
+            return 0.0
+
+        return sum(scores) / len(scores)
 
     @property
     def low(self) -> float:

@@ -24,6 +24,100 @@ First Version of an (not yet) iterative Elliott Wave scanner in financial data.
 
 These contributions expanded the project's data pipeline, improved robustness for large batch downloads, and produced a reusable market dataset for downstream analysis.
 
+## Recent updates (2026-01-18)
+
+- Fix: `models/helpers.py::convert_yf_data` now robustly handles yfinance outputs where selecting a single OHLC column may return a DataFrame instead of a Series. This prevents an AttributeError when converting to lists and makes data conversion tolerant to varying yfinance return shapes.
+- New CLI: `scripts/run_symbol.py` — a small command-line runner that scans one or many tickers for impulsive wave patterns using the same analyzer logic as `example_12345_impulsive_wave.py`.
+
+- New: Sliding adaptive-window scan: `WaveAnalyzer.sliding_adaptive_impulses` and
+	`find_best_impulse_adaptive_window` (implemented in `models/WaveAnalyzer.py`).
+	These helpers let the analyzer slide an adaptive time-window across a series
+	and grow the window until an impulse candidate is found (configurable by
+	weeks/bars). Typical parameters include `slide_weeks`, `min_weeks`,
+	`max_weeks`, `grow_weeks`, `up_to` and `top_n`. The example script
+	`scripts/example_12345_impulsive_wave.py` demonstrates usage and orchestration
+	of the sliding-adaptive scan. Outputs are written to `images/` the same way as
+	the single-run examples.
+
+Usage examples
+
+- Create and activate a Python 3.11 venv and install pinned dependencies (recommended):
+
+```bash
+cd /path/to/elliot-wave-analyzer-usamaahmedsh
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+- Run the built-in examples (repo root on PYTHONPATH so local `models` package resolves):
+
+```bash
+# single symbol (defaults to AAPL when none provided)
+PYTHONPATH=$(pwd) .venv/bin/python3 scripts/run_symbol.py AAPL
+
+# multiple symbols
+PYTHONPATH=$(pwd) .venv/bin/python3 scripts/run_symbol.py AAPL MSFT GOOGL
+
+# read symbols from file (one per line)
+PYTHONPATH=$(pwd) .venv/bin/python3 scripts/run_symbol.py -f tickers.txt
+
+# adjust lookback and delay between symbols
+PYTHONPATH=$(pwd) .venv/bin/python3 scripts/run_symbol.py AAPL --days 365 --delay 0.5
+```
+
+Notes
+
+- The scanner writes plotting artifacts (PNG) and serialized payloads (JSON/CSV) into the `images/` directory. Each plotted pattern will also produce a `.json` and `.csv` file next to the image.
+- `scripts/run_symbol.py` deduplicates symbols, uppercases them, and protects each symbol run with a try/except so a single failure doesn't stop a batch.
+- If you prefer the older example, `scripts/example_12345_impulsive_wave.py` is still available and behaves the same for a single symbol.
+
+### Soft scoring (confidence)
+
+- The `WavePattern` class now exposes a heuristic scoring API to rank candidates:
+	- `WavePattern.score_rule(waverule) -> float` returns a score in [0.0, 1.0]
+		representing how well the pattern satisfies the supplied `WaveRule`.
+	- Use the returned `score` to sort or filter multiple valid patterns (higher = more confidence).
+
+### Exports / payload format
+
+When a plot is generated the code now writes three files alongside one another:
+
+- `<base>.png`  — chart image
+- `<base>.json` — full payload describing the detected pattern
+- `<base>.csv`  — flattened CSV with one row per wave (easy to ingest for ML)
+
+JSON top-level keys (example):
+
+- `symbol`, `timeframe`, `rule_name`, `score`, `pattern_type`, `degree`,
+	`idx_start`, `idx_end`, `low`, `high`, `dates_polyline`, `values_polyline`,
+	`labels_polyline`, `waves`
+
+`waves` is a list of per-wave dictionaries with keys such as: `key`, `label`,
+`idx_start`, `idx_end`, `date_start`, `date_end`, `low`, `high`, `low_idx`,
+`high_idx`, `length`, `duration`.
+
+CSV columns (one row per wave):
+
+`symbol, timeframe, rule_name, score, pattern_type, degree, idx_start, idx_end, low, high,`
+`wave_key, wave_label, wave_idx_start, wave_idx_end, wave_date_start, wave_date_end,`
+`wave_low, wave_high, wave_low_idx, wave_high_idx, wave_length, wave_duration`
+
+Quick example: load the flattened CSV from a run into pandas for ML preprocessing:
+
+```python
+import pandas as pd
+df = pd.read_csv('images/20260118_123456_000001.csv')  # use the real filename generated
+print(df.columns)
+```
+
+Implementation notes:
+
+- Helpers that produce these exports live in `models/helpers.py` (`_serialize_wavepattern`,
+	`_write_pattern_json_and_csv`, `_new_base_filename`, `save_chart_as_image`). These are small
+	internal helpers but deliberately keep stable field names for downstream ML use.
+
 --------------------------------------- ORIGINAL README.md ----------------------------------------------
 ## Setup
 use Python 3.9 environment and install all packages via
@@ -35,7 +129,21 @@ Start with `example_monowave.py` to see how the basic concept (finding monowaves
 Then have a look into `example_12345_impulsive_wave.py` to see how the algorithm works for finding 12345 impulsive movements.
 
 ## Helper
-Use `get_data.py` script to download data directly from yahoo finance.
+Use `scripts/fetch_data.py` to download data directly from Yahoo Finance (historical OHLCV). A legacy copy also exists at `backups/get_data.py`.
+
+## Tests
+There are a couple of fast unit tests under the `tests/` directory to exercise basic fetch and monowave logic:
+
+- `tests/test_fetch_data.py` — small sanity tests for the data fetcher/normalizer.
+- `tests/test_monowave.py` — basic tests for monowave detection logic.
+
+Run tests inside the recommended Python 3.11 venv with pytest:
+
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+pytest -q
+```
 
 # Algorithm / Idea
 The basic idea of the algorithm is to try **a lot** of combinations of possible wave
