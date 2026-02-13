@@ -3,6 +3,24 @@
 
 All notable changes to this project are documented in this file.
 
+## 2026-02-13 — GPU batching & pipeline updates
+
+Summary
+
+- Added hybrid GPU-batching pre-score in `models/WaveAnalyzer.scan_impulses` to allow batched in-device scoring of cheap features and only fully evaluate the top candidates per batch (`gpu_enabled`, `gpu_batch_size`, `gpu_top_k`).
+- Added `pipeline/gpu_accel.GPUAccelerator.score_features` which prefers MPS → CUDA → CPU via PyTorch and falls back to a CPU linear scorer when PyTorch is unavailable.
+- Centralized runtime knobs in `configs.yaml` (notable keys: `up_to`, `gpu_enabled`, `gpu_batch_size`, `gpu_top_k`, `pre_score_top_k`, `pre_score_threshold`, `min_volatility`, `max_windows`).
+- `scripts/pipeline_run.py` now supports `--gpu`, writes a single consolidated JSON (`data/results_run_<ts>.json`), and moves the latest result to `output/latest_results.json`; images are saved under `output/images/`.
+
+Benchmark (single-run smoke):
+
+- Command: `PYTHONPATH=. .venv/bin/python3 scripts/pipeline_run.py GOOG --config configs.yaml --source yfinance --out-dir output --processes 6 --gpu` with `up_to=15` in `configs.yaml`.
+- Observed timing (local M4 Pro, PyTorch MPS when available): fetch 0.14s, build_windows ~0s, scan ~115.86s, total ~116.6s. This confirms end-to-end functionality; further tuning of batch/top_k and pre-score features is suggested to reduce total scan time.
+
+Notes
+
+- This is an incremental hybrid approach: expensive enumerations are still CPU-bound; we prune via cheap GPU-batched scoring to reduce full evaluations. A full GPU port (translating inner scans into array kernels) remains a future larger task.
+
 ## 2026-01-18 — Small fixes & CLI runner
 
 Summary

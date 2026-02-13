@@ -1,0 +1,47 @@
+# Pipeline configuration (overrides defaults in pipeline.config.PipelineConfig)
+# Edit these values to change pipeline behavior without modifying code.
+
+days: 365
+slide_weeks: 1
+min_weeks: 4
+max_weeks: 12
+up_to: 15
+grow_weeks: 1
+top_n: 1
+delay: 0.5
+processes: 6
+max_combinations: 200000
+gpu_enabled: true
+concurrency: 12
+max_windows: 500
+out_dir: output
+
+# New knobs
+save_images: false
+save_images_top_n: 1
+chunk_size: 0
+min_volatility: 0.0
+skip_flat_windows: false
+profile: true
+
+# Pre-score knobs (cheap vectorized features to prune windows)
+pre_score_top_k: 0
+pre_score_threshold: 0.0
+# weights: volatility, range, extrema_count, abs(slope)
+pre_score_weights: [0.4, 0.3, 0.2, 0.1]
+
+# Suggested profiles (examples):
+# - Local Apple Silicon (M4 Pro):
+#   processes: 6           # use physical cores or cores-1
+#   concurrency: 12        # network fetch parallelism
+#   chunk_size: 16         # tune for your workload
+#   max_windows: 500       # cap per-symbol windows for exploratory runs
+#   save_images: false
+#
+# - HPC (A100 + 32 threads):
+#   processes: 31          # use number of CPU workers (threads) you want to utilize
+#   concurrency: 64        # many async fetchers / HF readers
+#   chunk_size: 64         # larger chunk size reduces IPC overhead on high-core machines
+#   max_windows: 2000      # increase scan budget if you want exhaustive search
+#   save_images: false     # keep off for bulk runs; enable only top_n small
+

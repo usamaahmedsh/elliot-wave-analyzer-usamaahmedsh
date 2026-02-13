@@ -4,7 +4,7 @@ from unittest.mock import patch, MagicMock
 import os
 
 from models import helpers
-import fetch_data as fd
+import scripts.fetch_data as fd
 
 
 def test_get_top_crypto_coins_mock(monkeypatch):

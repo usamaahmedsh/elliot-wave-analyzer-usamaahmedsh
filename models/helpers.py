@@ -8,6 +8,15 @@ import string
 import json
 from typing import Dict, Any
 
+# configurable images directory (can be changed at runtime by pipeline)
+IMAGES_DIR = "images"
+
+
+def set_images_dir(path: str) -> None:
+    """Set a new images directory for plotting exports."""
+    global IMAGES_DIR
+    IMAGES_DIR = path
+
 
 def timeit(func):
     def wrapper(*arg, **kw):
@@ -20,8 +29,8 @@ def timeit(func):
 
 
 def _ensure_images_dir() -> None:
-    if not os.path.exists("images"):
-        os.mkdir("images")
+    if not os.path.exists(IMAGES_DIR):
+        os.makedirs(IMAGES_DIR, exist_ok=True)
 
 
 def _new_base_filename(prefix: str = "") -> str:
@@ -32,7 +41,7 @@ def _new_base_filename(prefix: str = "") -> str:
     if prefix:
         base = f"{prefix}_{base}"
     # path without extension
-    return os.path.join("images", base)
+    return os.path.join(IMAGES_DIR, base)
 
 
 def save_chart_as_image(fig, base_path: str = None) -> str:
@@ -140,70 +149,10 @@ def _write_pattern_json_and_csv(base_path: str,
     """
     Given a base path (images/xxx_yyy), write .json and .csv files.
     """
+    # Only write a JSON payload now; CSV sidecars were removed per new output policy.
     json_path = base_path + ".json"
-    csv_path = base_path + ".csv"
-
-    # JSON
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, default=str)
-
-    # CSV: flatten per-wave endpoints
-    import csv
-
-    fieldnames = [
-        "symbol",
-        "timeframe",
-        "rule_name",
-        "score",
-        "pattern_type",
-        "degree",
-        "idx_start",
-        "idx_end",
-        "low",
-        "high",
-        "wave_key",
-        "wave_label",
-        "wave_idx_start",
-        "wave_idx_end",
-        "wave_date_start",
-        "wave_date_end",
-        "wave_low",
-        "wave_high",
-        "wave_low_idx",
-        "wave_high_idx",
-        "wave_length",
-        "wave_duration",
-    ]
-
-    with open(csv_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        for w in payload["waves"]:
-            row = {
-                "symbol": payload["symbol"],
-                "timeframe": payload["timeframe"],
-                "rule_name": payload["rule_name"],
-                "score": payload["score"],
-                "pattern_type": payload["pattern_type"],
-                "degree": payload["degree"],
-                "idx_start": payload["idx_start"],
-                "idx_end": payload["idx_end"],
-                "low": payload["low"],
-                "high": payload["high"],
-                "wave_key": w["key"],
-                "wave_label": w["label"],
-                "wave_idx_start": w["idx_start"],
-                "wave_idx_end": w["idx_end"],
-                "wave_date_start": w["date_start"],
-                "wave_date_end": w["date_end"],
-                "wave_low": w["low"],
-                "wave_high": w["high"],
-                "wave_low_idx": w["low_idx"],
-                "wave_high_idx": w["high_idx"],
-                "wave_length": w["length"],
-                "wave_duration": w["duration"],
-            }
-            writer.writerow(row)
 
 
 def plot_cycle(df, wave_cycle, title: str = "",
@@ -235,7 +184,7 @@ def plot_cycle(df, wave_cycle, title: str = "",
     base = _new_base_filename(prefix="cycle")
     base = save_chart_as_image(fig, base_path=base)
 
-    # build JSON/CSV from underlying patterns
+    # build JSON payload only (no CSV)
     payload = {
         "symbol": symbol,
         "timeframe": timeframe,
@@ -250,7 +199,7 @@ def plot_cycle(df, wave_cycle, title: str = "",
         "labels_polyline": wave_cycle.labels,
         "waves": [],  # could be filled with underlying wpup/wpdown if needed
     }
-    _write_pattern_json_and_csv(base, payload)
+    return payload
 
 
 def plot_pattern(df: pd.DataFrame,
@@ -290,7 +239,7 @@ def plot_pattern(df: pd.DataFrame,
         rule_name=rule_name,
         score=score,
     )
-    _write_pattern_json_and_csv(base, payload)
+    return payload
 
 
 def plot_monowave(df, monowave, title: str = "", symbol: str = "", timeframe: str = "1D"):
@@ -315,3 +264,5 @@ def plot_monowave(df, monowave, title: str = "", symbol: str = "", timeframe: st
 
     base = _new_base_filename(prefix="monowave")
     save_chart_as_image(fig, base_path=base)
+    # monowave does not currently emit JSON payloads
+    return None

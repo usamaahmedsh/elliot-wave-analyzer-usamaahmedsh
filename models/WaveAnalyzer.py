@@ -23,17 +23,39 @@ class FoundPattern:
     idx_end: int
 
 
+_options_cache = {}
+
+
 class WaveAnalyzer:
     """
     Find impulse or corrective waves for given dataframe
     """
 
-    def __init__(self, df: pd.DataFrame, verbose: bool = False):
-        self.df = df
-        self.lows = np.array(list(self.df["Low"]))
-        self.highs = np.array(list(self.df["High"]))
-        self.dates = np.array(list(self.df["Date"]))
+    def __init__(self, df: Optional[pd.DataFrame] = None, lows: Optional[np.ndarray] = None, highs: Optional[np.ndarray] = None, dates: Optional[np.ndarray] = None, verbose: bool = False):
+        """
+        Construct WaveAnalyzer either from a pandas DataFrame (old behavior) or directly from numpy arrays.
+        Passing arrays avoids repeated DataFrame slicing and conversion when used inside worker processes.
+        """
         self.verbose = verbose
+        if df is not None:
+            self.df = df
+            # keep arrays as numpy (avoid list->array conversion when possible)
+            try:
+                self.lows = df['Low'].to_numpy()
+                self.highs = df['High'].to_numpy()
+                self.dates = df['Date'].to_numpy()
+            except Exception:
+                self.lows = np.array(list(df['Low']))
+                self.highs = np.array(list(df['High']))
+                self.dates = np.array(list(df['Date']))
+        else:
+            # expect numpy arrays
+            if lows is None or highs is None or dates is None:
+                raise ValueError('Either df or arrays (lows, highs, dates) must be provided')
+            self.df = None
+            self.lows = np.asarray(lows)
+            self.highs = np.asarray(highs)
+            self.dates = np.asarray(dates)
 
         self.impulse_rules = list()
         self.correction_rules = list()
@@ -98,7 +120,19 @@ class WaveAnalyzer:
                 print("Wave 4 has no End in Data")
             return False
 
-        if wave2.low > np.min(self.lows[wave2.low_idx : wave4.low_idx]):
+        # Guard against invalid index ranges which can produce zero-length slices
+        try:
+            s_start = int(wave2.low_idx) if wave2.low_idx is not None else None
+            s_end = int(wave4.low_idx) if wave4.low_idx is not None else None
+        except Exception:
+            s_start = None
+            s_end = None
+
+        if s_start is None or s_end is None or s_end <= s_start:
+            # invalid range -> reject this configuration
+            return False
+
+        if wave2.low > np.min(self.lows[s_start:s_end]):
             return False
 
         wave5 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave4_end, skip=wave_config[4])
@@ -109,7 +143,20 @@ class WaveAnalyzer:
                 print("Wave 5 has no End in Data")
             return False
 
-        if self.lows[wave4.low_idx : wave5.high_idx].any() and wave4.low > np.min(self.lows[wave4.low_idx : wave5.high_idx]):
+        # Guard the slice between wave4.low_idx and wave5.high_idx
+        try:
+            s4 = int(wave4.low_idx) if wave4.low_idx is not None else None
+            e5 = int(wave5.high_idx) if wave5.high_idx is not None else None
+        except Exception:
+            s4 = None
+            e5 = None
+
+        if s4 is None or e5 is None or e5 <= s4:
+            # invalid range -> reject
+            return False
+
+        slice_vals = self.lows[s4:e5]
+        if slice_vals.size > 0 and slice_vals.any() and wave4.low > np.min(slice_vals):
             if self.verbose:
                 print("Low of Wave 4 higher than a low between Wave 4 and Wave 5")
             return False
@@ -198,46 +245,160 @@ class WaveAnalyzer:
     # New: Impulse scanning helpers
     # -------------------------
 
-    def scan_impulses(self, idx_start: int, up_to: int = 10, top_n: int = 5) -> List[FoundPattern]:
+    def scan_impulses(self, idx_start: int, up_to: int = 10, top_n: int = 5, max_combinations: int = None, scan_cfg: dict = None) -> List[FoundPattern]:
         """
         Scan impulse candidates from idx_start for a given up_to and return top-N patterns by score.
         """
-        wave_options_impulse = WaveOptionsGenerator5(up_to=up_to)
+        # Use cached precomputed options for the given up_to to avoid regenerating combinatorial options repeatedly.
+        if up_to in _options_cache:
+            wave_options_impulse_options = _options_cache[up_to]
+        else:
+            wave_options_impulse = WaveOptionsGenerator5(up_to=up_to)
+            wave_options_impulse_options = list(wave_options_impulse.options_sorted)
+            _options_cache[up_to] = wave_options_impulse_options
+
+        # read batching options from scan_cfg if provided
+        if scan_cfg is None:
+            scan_cfg = {}
+        gpu_enabled = bool(scan_cfg.get('gpu_enabled', False))
+        gpu_batch = int(scan_cfg.get('gpu_batch_size', 512))
+        gpu_top_k = int(scan_cfg.get('gpu_top_k', 64))
 
         impulse = Impulse("impulse")
         leading_diagonal = LeadingDiagonal("leading_diagonal")
         rules_to_check = [impulse, leading_diagonal]
 
+        # Cheap numba-accelerated pre-filter: skip windows that do not contain
+        # enough local extrema (peaks/troughs) to form a 5-wave impulsive structure.
+        try:
+            from models.functions import count_extrema
+            # count extrema in the tail of the arrays from idx_start
+            n_ext = count_extrema(self.lows[idx_start:])
+            if n_ext < 4:
+                return []
+        except Exception:
+            # if the fast filter isn't available for some reason, continue normally
+            pass
+
         found: List[FoundPattern] = []
         seen = set()
 
-        for opt in wave_options_impulse.options_sorted:
-            waves_up = self.find_impulsive_wave(idx_start=idx_start, wave_config=opt.values)
-            if not waves_up:
-                continue
+        processed = 0
+        # If GPU batching is enabled, process options in batches: score cheaply and only
+        # fully evaluate the top-k candidates per batch to reduce heavy WavePattern work.
+        if gpu_enabled:
+            try:
+                from pipeline.gpu_accel import GPUAccelerator
+                gpu = GPUAccelerator()
+                use_gpu = True
+            except Exception:
+                gpu = None
+                use_gpu = False
 
-            wp = WavePattern(waves_up, verbose=False)
+            n_opts = len(wave_options_impulse_options)
+            i = 0
+            while i < n_opts:
+                batch = wave_options_impulse_options[i : i + gpu_batch]
+                # compute cheap features per candidate: complexity metric
+                feats = []
+                for opt in batch:
+                    # complexity: normalized sum of skips
+                    cfg_vals = opt.values
+                    complexity = float(sum(cfg_vals)) / (len(cfg_vals) * max(1, up_to))
+                    # window-level proxies: use lows/highs around idx_start for quick range
+                    try:
+                        lo_val = float(np.min(self.lows[idx_start: idx_start + 10]))
+                        hi_val = float(np.max(self.highs[idx_start: idx_start + 10]))
+                        vol_proxy = float(np.std(self.lows[idx_start: idx_start + 10]))
+                    except Exception:
+                        lo_val = 0.0
+                        hi_val = 0.0
+                        vol_proxy = 0.0
+                    feats.append([vol_proxy, (hi_val - lo_val) / (lo_val + 1e-9), 0.0, complexity])
 
-            for rule in rules_to_check:
-                if wp.check_rule(rule):
-                    if wp in seen:
+                if use_gpu and len(feats) > 0:
+                    scores = gpu.score_features(feats)
+                else:
+                    # fallback scoring
+                    scores = [0.4 * f[0] + 0.3 * f[1] + 0.2 * f[2] + 0.1 * f[3] for f in feats]
+
+                # pick top-k candidates in this batch
+                indexed = list(enumerate(batch))
+                scored = list(zip(indexed, scores))
+                scored_sorted = sorted(scored, key=lambda x: x[1], reverse=True)
+                top_candidates = [x[0][1] for x in scored_sorted[:gpu_top_k]]
+
+                # evaluate the top candidates fully
+                for opt in top_candidates:
+                    processed += 1
+                    if max_combinations is not None and processed > max_combinations:
+                        if self.verbose:
+                            print(f"scan_impulses reached max_combinations={max_combinations}, stopping early")
+                        i = n_opts
+                        break
+                    waves_up = self.find_impulsive_wave(idx_start=idx_start, wave_config=opt.values)
+                    if not waves_up:
                         continue
-                    seen.add(wp)
 
-                    score = 0.0
-                    if hasattr(wp, "score_rule"):
-                        score = float(wp.score_rule(rule))
+                    wp = WavePattern(waves_up, verbose=False)
 
-                    found.append(
-                        FoundPattern(
-                            pattern=wp,
-                            rule_name=rule.name,
-                            score=score,
-                            wave_config=opt.values,
-                            idx_start=wp.idx_start,
-                            idx_end=wp.idx_end,
+                    for rule in rules_to_check:
+                        if wp.check_rule(rule):
+                            if wp in seen:
+                                continue
+                            seen.add(wp)
+
+                            score = 0.0
+                            if hasattr(wp, "score_rule"):
+                                score = float(wp.score_rule(rule))
+
+                            found.append(
+                                FoundPattern(
+                                    pattern=wp,
+                                    rule_name=rule.name,
+                                    score=score,
+                                    wave_config=opt.values,
+                                    idx_start=wp.idx_start,
+                                    idx_end=wp.idx_end,
+                                )
+                            )
+
+                i += gpu_batch
+
+        else:
+            for opt in wave_options_impulse_options:
+                processed += 1
+                if max_combinations is not None and processed > max_combinations:
+                    # safety stop - return what we've found so far
+                    if self.verbose:
+                        print(f"scan_impulses reached max_combinations={max_combinations}, stopping early")
+                    break
+                waves_up = self.find_impulsive_wave(idx_start=idx_start, wave_config=opt.values)
+                if not waves_up:
+                    continue
+
+                wp = WavePattern(waves_up, verbose=False)
+
+                for rule in rules_to_check:
+                    if wp.check_rule(rule):
+                        if wp in seen:
+                            continue
+                        seen.add(wp)
+
+                        score = 0.0
+                        if hasattr(wp, "score_rule"):
+                            score = float(wp.score_rule(rule))
+
+                        found.append(
+                            FoundPattern(
+                                pattern=wp,
+                                rule_name=rule.name,
+                                score=score,
+                                wave_config=opt.values,
+                                idx_start=wp.idx_start,
+                                idx_end=wp.idx_end,
+                            )
                         )
-                    )
 
         # Sort by score (desc), then by longer coverage (idx_end desc)
         found.sort(key=lambda x: (x.score, x.idx_end), reverse=True)

@@ -1,0 +1,1412 @@
+[
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-09-04T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      4,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 1.0
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-15T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6933333277702332
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-15T00:00:00.000000000",
+    "date_end": "2025-08-25T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6933333277702332
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-15T00:00:00.000000000",
+    "date_end": "2025-09-04T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      2,
+      1,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7933332920074463
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-15T00:00:00.000000000",
+    "date_end": "2025-09-15T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      2,
+      1,
+      6,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8400000333786011
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-15T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      4,
+      1,
+      2,
+      1,
+      2
+    ],
+    "rule_name": "impulse",
+    "score": 0.9800000190734863
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-06-04T00:00:00.000000000",
+    "window_len": 28,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-06-13T00:00:00.000000000",
+    "window_len": 35,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-06-25T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-07-07T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-07-16T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-07-25T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-08-05T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      4,
+      1,
+      2,
+      1,
+      2
+    ],
+    "rule_name": "impulse",
+    "score": 0.8999999761581421
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-04-25T00:00:00.000000000",
+    "date_end": "2025-08-25T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      4,
+      1,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.9533333778381348
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-06-13T00:00:00.000000000",
+    "window_len": 28,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-06-25T00:00:00.000000000",
+    "window_len": 35,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-07-07T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-07-16T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-07-25T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-08-05T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      4,
+      1,
+      2,
+      1,
+      2
+    ],
+    "rule_name": "impulse",
+    "score": 0.8999999761581421
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-06T00:00:00.000000000",
+    "date_end": "2025-08-25T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      4,
+      1,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.9533333778381348
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-27T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6933333277702332
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-27T00:00:00.000000000",
+    "date_end": "2025-08-25T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6933333277702332
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-27T00:00:00.000000000",
+    "date_end": "2025-09-04T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      2,
+      1,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7933332920074463
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-27T00:00:00.000000000",
+    "date_end": "2025-09-15T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      2,
+      1,
+      6,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8400000333786011
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-05-27T00:00:00.000000000",
+    "date_end": "2025-09-24T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8666666746139526
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-05T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6933333277702332
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-05T00:00:00.000000000",
+    "date_end": "2025-08-25T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6933333277702332
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-05T00:00:00.000000000",
+    "date_end": "2025-09-04T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      2,
+      1,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7933332920074463
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-05T00:00:00.000000000",
+    "date_end": "2025-09-15T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      2,
+      1,
+      6,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8400000333786011
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-05T00:00:00.000000000",
+    "date_end": "2025-09-24T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8666666746139526
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-05T00:00:00.000000000",
+    "date_end": "2025-10-03T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8666666746139526
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-16T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6933333277702332
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-16T00:00:00.000000000",
+    "date_end": "2025-08-25T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6933333277702332
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-16T00:00:00.000000000",
+    "date_end": "2025-09-04T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      2,
+      1,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7933332920074463
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-16T00:00:00.000000000",
+    "date_end": "2025-09-15T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      2,
+      1,
+      6,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8400000333786011
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-16T00:00:00.000000000",
+    "date_end": "2025-09-24T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8666666746139526
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-16T00:00:00.000000000",
+    "date_end": "2025-10-03T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8666666746139526
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-16T00:00:00.000000000",
+    "date_end": "2025-10-14T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8666666746139526
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-26T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 35,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6733333468437195
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-26T00:00:00.000000000",
+    "date_end": "2025-08-25T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      2,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6733333468437195
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-09-24T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      1,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7933332920074463
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-10-03T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      1,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7933332920074463
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-10-14T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      1,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7933332920074463
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-10-23T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      1,
+      1,
+      8,
+      3,
+      1
+    ],
+    "rule_name": "impulse",
+    "score": 0.9333333373069763
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-11-03T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      1,
+      1,
+      8,
+      3,
+      1
+    ],
+    "rule_name": "impulse",
+    "score": 0.9333333373069763
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-26T00:00:00.000000000",
+    "date_end": "2025-09-04T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      2,
+      1,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7733333110809326
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-26T00:00:00.000000000",
+    "date_end": "2025-09-15T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      2,
+      1,
+      6,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8199999928474426
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-26T00:00:00.000000000",
+    "date_end": "2025-09-24T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.846666693687439
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-26T00:00:00.000000000",
+    "date_end": "2025-10-03T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.846666693687439
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-26T00:00:00.000000000",
+    "date_end": "2025-10-14T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      2,
+      1,
+      7,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.846666693687439
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-06-26T00:00:00.000000000",
+    "date_end": "2025-10-23T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      2,
+      1,
+      8,
+      3,
+      1
+    ],
+    "rule_name": "impulse",
+    "score": 0.9866666793823242
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-08-14T00:00:00.000000000",
+    "window_len": 28,
+    "wave_config": [
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6200000047683716
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-08-25T00:00:00.000000000",
+    "window_len": 35,
+    "wave_config": [
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.6200000047683716
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-09-04T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      1,
+      1,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7200000286102295
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-08T00:00:00.000000000",
+    "date_end": "2025-09-15T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      1,
+      1,
+      6,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7666666507720947
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-09-04T00:00:00.000000000",
+    "window_len": 28,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-09-15T00:00:00.000000000",
+    "window_len": 35,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-09-24T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-10-03T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-10-14T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-10-23T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-11-03T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-11-12T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-07-28T00:00:00.000000000",
+    "date_end": "2025-11-21T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5066666603088379
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-09-24T00:00:00.000000000",
+    "window_len": 28,
+    "wave_config": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5733333230018616
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-10-03T00:00:00.000000000",
+    "window_len": 35,
+    "wave_config": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5733333230018616
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-10-14T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5733333230018616
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-10-23T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5733333230018616
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-11-03T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5733333230018616
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-11-12T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      4,
+      3,
+      2,
+      2,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.846666693687439
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-11-21T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      4,
+      3,
+      4,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8866666555404663
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-12-03T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      4,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.90666663646698
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-15T00:00:00.000000000",
+    "date_end": "2025-12-12T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      4,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.90666663646698
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-10-03T00:00:00.000000000",
+    "window_len": 28,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5400000214576721
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-10-14T00:00:00.000000000",
+    "window_len": 35,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5400000214576721
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-10-23T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5400000214576721
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-11-03T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5400000214576721
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-11-12T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      3,
+      3,
+      2,
+      2,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8133333325386047
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-11-21T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      3,
+      3,
+      4,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8533333539962769
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-12-03T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      3,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8733333349227905
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-12-12T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      3,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8733333349227905
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-08-26T00:00:00.000000000",
+    "date_end": "2025-12-23T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      3,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8733333349227905
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2025-10-14T00:00:00.000000000",
+    "window_len": 28,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5199999809265137
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2025-10-23T00:00:00.000000000",
+    "window_len": 35,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5199999809265137
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2025-11-03T00:00:00.000000000",
+    "window_len": 42,
+    "wave_config": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.5199999809265137
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2025-11-12T00:00:00.000000000",
+    "window_len": 49,
+    "wave_config": [
+      2,
+      3,
+      2,
+      2,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.7733333110809326
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2025-11-21T00:00:00.000000000",
+    "window_len": 56,
+    "wave_config": [
+      2,
+      3,
+      4,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8133333325386047
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2025-12-03T00:00:00.000000000",
+    "window_len": 63,
+    "wave_config": [
+      2,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8333333730697632
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2025-12-12T00:00:00.000000000",
+    "window_len": 70,
+    "wave_config": [
+      2,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8333333730697632
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2025-12-23T00:00:00.000000000",
+    "window_len": 77,
+    "wave_config": [
+      2,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8333333730697632
+  },
+  {
+    "symbol": "GOOG",
+    "date_start": "2025-09-05T00:00:00.000000000",
+    "date_end": "2026-01-05T00:00:00.000000000",
+    "window_len": 84,
+    "wave_config": [
+      2,
+      3,
+      5,
+      0,
+      0
+    ],
+    "rule_name": "impulse",
+    "score": 0.8333333730697632
+  }
+]

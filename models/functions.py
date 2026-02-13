@@ -98,3 +98,30 @@ def lo(lows_arr: np.array, highs_arr: np.array, idx_start):
             return low, low_idx
 
     return low, low_idx
+
+
+@njit
+def count_extrema(arr: np.array) -> int:
+    """
+    Count sign changes in the first difference of an array as a cheap proxy
+    for number of local extrema (peaks/troughs). This is a fast filter
+    to skip windows that clearly don't contain enough structure for an
+    impulsive 5-wave pattern.
+    """
+    n = arr.shape[0]
+    if n < 3:
+        return 0
+    cnt = 0
+    prev_sign = 0
+    for i in range(1, n):
+        diff = arr[i] - arr[i - 1]
+        if diff > 0:
+            s = 1
+        elif diff < 0:
+            s = -1
+        else:
+            s = 0
+        if i > 1 and s != 0 and prev_sign != 0 and s != prev_sign:
+            cnt += 1
+        prev_sign = s
+    return cnt

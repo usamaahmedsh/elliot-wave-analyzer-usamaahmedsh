@@ -108,10 +108,67 @@ def run_for_symbols(symbols: Iterable[str], start_days: int = 720, delay: float 
         print("==============================\n")
         try:
             df_daily = get_symbol_daily(symbol, start_days=start_days)
-            scan_impulse(df_daily, symbol=symbol, timeframe="1D")
+            # If sliding mode requested, run the adaptive sliding scan; otherwise run the anchored single-start scan
+            if globals().get('FLAGS', None) and getattr(FLAGS, 'sliding', False):
+                wa = WaveAnalyzer(df=df_daily, verbose=False)
+                results = wa.sliding_adaptive_impulses(
+                    df=df_daily,
+                    symbol=symbol,
+                    timeframe="1D",
+                    slide_weeks=FLAGS.slide_weeks,
+                    min_weeks=FLAGS.min_weeks,
+                    max_weeks=FLAGS.max_weeks,
+                    up_to=FLAGS.up_to,
+                    grow_weeks=FLAGS.grow_weeks,
+                    top_n=FLAGS.top_n,
+                )
+                print(f"[1D sliding] Found {len(results)} windows")
+                for r in results:
+                    best = r["best"]
+                    window_df = r["window_df"]
+                    title = f"{symbol} 1D {r['date_start']} to {r['date_end']} (window={int(r['window_weeks'])}w, cfg={best.wave_config}, score={best.score:.3f})"
+                    plot_pattern(
+                        df=window_df,
+                        wave_pattern=best.pattern,
+                        title=title,
+                        symbol=symbol,
+                        timeframe="1D",
+                        rule_name=best.rule_name,
+                        score=best.score,
+                    )
+            else:
+                scan_impulse(df_daily, symbol=symbol, timeframe="1D")
 
             df_weekly = resample_to_weekly(df_daily)
-            scan_impulse(df_weekly, symbol=symbol, timeframe="1W")
+            if globals().get('FLAGS', None) and getattr(FLAGS, 'sliding', False):
+                wa2 = WaveAnalyzer(df=df_weekly, verbose=False)
+                results2 = wa2.sliding_adaptive_impulses(
+                    df=df_weekly,
+                    symbol=symbol,
+                    timeframe="1W",
+                    slide_weeks=FLAGS.slide_weeks,
+                    min_weeks=FLAGS.min_weeks,
+                    max_weeks=FLAGS.max_weeks,
+                    up_to=FLAGS.up_to,
+                    grow_weeks=FLAGS.grow_weeks,
+                    top_n=FLAGS.top_n,
+                )
+                print(f"[1W sliding] Found {len(results2)} windows")
+                for r in results2:
+                    best = r["best"]
+                    window_df = r["window_df"]
+                    title = f"{symbol} 1W {r['date_start']} to {r['date_end']} (window={int(r['window_weeks'])}w, cfg={best.wave_config}, score={best.score:.3f})"
+                    plot_pattern(
+                        df=window_df,
+                        wave_pattern=best.pattern,
+                        title=title,
+                        symbol=symbol,
+                        timeframe="1W",
+                        rule_name=best.rule_name,
+                        score=best.score,
+                    )
+            else:
+                scan_impulse(df_weekly, symbol=symbol, timeframe="1W")
         except Exception as e:
             print(f"Error processing {symbol}: {e}")
         # polite delay to avoid hitting rate limits when running many symbols
@@ -124,11 +181,22 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("-f", "--file", help="Path to a file containing symbols (one per line)")
     parser.add_argument("-d", "--days", type=int, default=720, help="Lookback days for daily data")
     parser.add_argument("--delay", type=float, default=1.0, help="Delay (seconds) between symbol requests")
+    # Sliding/adaptive options
+    parser.add_argument("--sliding", action="store_true", help="Run sliding adaptive-window scan instead of a single anchored scan")
+    parser.add_argument("--slide-weeks", type=int, default=1, help="Weeks to slide between windows when using --sliding")
+    parser.add_argument("--min-weeks", type=int, default=4, help="Minimum window size in weeks for adaptive growth")
+    parser.add_argument("--max-weeks", type=int, default=12, help="Maximum window size in weeks for adaptive growth")
+    parser.add_argument("--up-to", type=int, default=10, help="WaveOptionsGenerator up_to parameter (combinatorial depth)")
+    parser.add_argument("--grow-weeks", type=int, default=1, help="Grow step in weeks for adaptive window")
+    parser.add_argument("--top-n", type=int, default=1, help="Top-N candidates to keep per window when using sliding mode")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
+    # expose parsed args to module so run_for_symbols can check sliding flags
+    global FLAGS
+    FLAGS = args
     symbols: list[str] = []
     if args.file:
         symbols.extend(_symbols_from_file(args.file))

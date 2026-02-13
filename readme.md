@@ -118,6 +118,34 @@ Implementation notes:
 	`_write_pattern_json_and_csv`, `_new_base_filename`, `save_chart_as_image`). These are small
 	internal helpers but deliberately keep stable field names for downstream ML use.
 
+### New pipeline runner (async + parallel + GPU-ready)
+
+An experimental pipeline orchestrator is available under `scripts/pipeline_run.py` and the
+`pipeline/` package. It is designed to be GPU-agnostic and to parallelize CPU-bound work
+while fetching data asynchronously.
+
+- Async fetcher: `pipeline/fetcher.py` uses `asyncio` + `run_in_executor` to download OHLC data
+	(yfinance) concurrently.
+- Parallel executor: `pipeline/executor.py` uses `multiprocessing.Pool` to scan adaptive windows
+	in parallel (one process per CPU core by default).
+- GPU stub: `pipeline/gpu_accel.py` contains a PyTorch-based scoring example; it is optional and
+	only activated when `--gpu` is provided and PyTorch is installed. The current implementation
+	is a proof-of-concept for moving scoring logic to the device — the full search requires a
+	deeper refactor to be fully GPU accelerated.
+
+Quick-run example (moderate parameters):
+
+```bash
+PYTHONPATH=$(pwd) .venv/bin/python3 scripts/pipeline_run.py AAPL --days 365 --up_to 8 --top_n 3 --slide_weeks 2 --min_weeks 4 --max_weeks 12 --processes 4
+```
+
+Notes:
+- This pipeline keeps the exact same detection logic (WaveAnalyzer) but parallelizes window-level
+	scans and makes data fetch asynchronous. To get orders-of-magnitude speedups on the search
+	itself you would need to rework the inner search loop into a GPU-friendly array kernel; the
+	repo now includes a `gpu_accel.py` stub and the pipeline is structured so that such a kernel
+	could be integrated later.
+
 --------------------------------------- ORIGINAL README.md ----------------------------------------------
 ## Setup
 use Python 3.9 environment and install all packages via
