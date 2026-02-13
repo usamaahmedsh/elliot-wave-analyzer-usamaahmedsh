@@ -24,7 +24,7 @@ First Version of an (not yet) iterative Elliott Wave scanner in financial data.
 
 These contributions expanded the project's data pipeline, improved robustness for large batch downloads, and produced a reusable market dataset for downstream analysis.
 
-## Recent updates (2026-01-18)
+## Recent updates (2026-02-13)
 
 - Fix: `models/helpers.py::convert_yf_data` now robustly handles yfinance outputs where selecting a single OHLC column may return a DataFrame instead of a Series. This prevents an AttributeError when converting to lists and makes data conversion tolerant to varying yfinance return shapes.
 - New CLI: `scripts/run_symbol.py` — a small command-line runner that scans one or many tickers for impulsive wave patterns using the same analyzer logic as `example_12345_impulsive_wave.py`.
