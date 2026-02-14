@@ -257,12 +257,12 @@ class WaveAnalyzer:
             wave_options_impulse_options = list(wave_options_impulse.options_sorted)
             _options_cache[up_to] = wave_options_impulse_options
 
-        # read batching options from scan_cfg if provided
+        # read batching options from scan_cfg if provided (CPU-only optimized path)
         if scan_cfg is None:
             scan_cfg = {}
-        gpu_enabled = bool(scan_cfg.get('gpu_enabled', False))
-        gpu_batch = int(scan_cfg.get('gpu_batch_size', 512))
-        gpu_top_k = int(scan_cfg.get('gpu_top_k', 64))
+        # Read CPU-only batching knobs from scan_cfg (defaults tuned for CPU runs)
+        batch_size = int(scan_cfg.get('cpu_batch_size', 512))
+        top_k = int(scan_cfg.get('cpu_top_k', 64))
 
         impulse = Impulse("impulse")
         leading_diagonal = LeadingDiagonal("leading_diagonal")
@@ -284,96 +284,70 @@ class WaveAnalyzer:
         seen = set()
 
         processed = 0
-        # If GPU batching is enabled, process options in batches: score cheaply and only
-        # fully evaluate the top-k candidates per batch to reduce heavy WavePattern work.
-        if gpu_enabled:
-            try:
-                from pipeline.gpu_accel import GPUAccelerator
-                gpu = GPUAccelerator()
-                use_gpu = True
-            except Exception:
-                gpu = None
-                use_gpu = False
+        # CPU-batched path: process candidate options in batches, compute a cheap
+        # vectorized score per candidate using numpy, then fully evaluate only the
+        # top_k candidates per batch. This reduces the number of expensive
+        # find_impulsive_wave / WavePattern validations.
+        n_opts = len(wave_options_impulse_options)
+        i = 0
 
-            n_opts = len(wave_options_impulse_options)
-            i = 0
-            while i < n_opts:
-                batch = wave_options_impulse_options[i : i + gpu_batch]
-                # compute cheap features per candidate: complexity metric
-                feats = []
-                for opt in batch:
-                    # complexity: normalized sum of skips
-                    cfg_vals = opt.values
-                    complexity = float(sum(cfg_vals)) / (len(cfg_vals) * max(1, up_to))
-                    # window-level proxies: use lows/highs around idx_start for quick range
-                    try:
-                        lo_val = float(np.min(self.lows[idx_start: idx_start + 10]))
-                        hi_val = float(np.max(self.highs[idx_start: idx_start + 10]))
-                        vol_proxy = float(np.std(self.lows[idx_start: idx_start + 10]))
-                    except Exception:
-                        lo_val = 0.0
-                        hi_val = 0.0
-                        vol_proxy = 0.0
-                    feats.append([vol_proxy, (hi_val - lo_val) / (lo_val + 1e-9), 0.0, complexity])
+        # instrumentation counters for this scan call
+        n_pre_scored = 0
+        n_full_evals = 0
+        t_pre_score = 0.0
+        t_full_eval = 0.0
 
-                if use_gpu and len(feats) > 0:
-                    scores = gpu.score_features(feats)
-                else:
-                    # fallback scoring
-                    scores = [0.4 * f[0] + 0.3 * f[1] + 0.2 * f[2] + 0.1 * f[3] for f in feats]
+        # precompute window-level proxies (cheap) once per scan
+        try:
+            slice_window = self.lows[idx_start: idx_start + 10]
+            lo_val = float(np.min(slice_window)) if slice_window.size > 0 else 0.0
+            hi_val = float(np.max(self.highs[idx_start: idx_start + 10])) if slice_window.size > 0 else 0.0
+            vol_proxy = float(np.std(slice_window)) if slice_window.size > 1 else 0.0
+        except Exception:
+            lo_val = 0.0
+            hi_val = 0.0
+            vol_proxy = 0.0
 
-                # pick top-k candidates in this batch
-                indexed = list(enumerate(batch))
-                scored = list(zip(indexed, scores))
-                scored_sorted = sorted(scored, key=lambda x: x[1], reverse=True)
-                top_candidates = [x[0][1] for x in scored_sorted[:gpu_top_k]]
+        base_score = 0.4 * vol_proxy + 0.3 * ((hi_val - lo_val) / (lo_val + 1e-9))
 
-                # evaluate the top candidates fully
-                for opt in top_candidates:
-                    processed += 1
-                    if max_combinations is not None and processed > max_combinations:
-                        if self.verbose:
-                            print(f"scan_impulses reached max_combinations={max_combinations}, stopping early")
-                        i = n_opts
-                        break
-                    waves_up = self.find_impulsive_wave(idx_start=idx_start, wave_config=opt.values)
-                    if not waves_up:
-                        continue
+        while i < n_opts:
+            batch = wave_options_impulse_options[i : i + batch_size]
+            nb = len(batch)
+            if nb == 0:
+                break
 
-                    wp = WavePattern(waves_up, verbose=False)
+            # vectorized compute of complexity (only per-candidate varying part)
+            import time as _time
+            t0 = _time.time()
+            complexities = np.array([float(sum(opt.values)) / (len(opt.values) * max(1, up_to)) for opt in batch], dtype=np.float32)
+            # compute scores vectorized
+            scores = base_score + 0.1 * complexities
+            t_pre_score += _time.time() - t0
+            n_pre_scored += nb
 
-                    for rule in rules_to_check:
-                        if wp.check_rule(rule):
-                            if wp in seen:
-                                continue
-                            seen.add(wp)
+            # select top_k in this batch (fast numpy argsort)
+            if nb > top_k:
+                top_idx = np.argpartition(-scores, top_k - 1)[:top_k]
+                # order them by score descending
+                top_idx = top_idx[np.argsort(-scores[top_idx])]
+            else:
+                top_idx = np.argsort(-scores)
 
-                            score = 0.0
-                            if hasattr(wp, "score_rule"):
-                                score = float(wp.score_rule(rule))
+            top_candidates = [batch[int(j)] for j in top_idx]
 
-                            found.append(
-                                FoundPattern(
-                                    pattern=wp,
-                                    rule_name=rule.name,
-                                    score=score,
-                                    wave_config=opt.values,
-                                    idx_start=wp.idx_start,
-                                    idx_end=wp.idx_end,
-                                )
-                            )
-
-                i += gpu_batch
-
-        else:
-            for opt in wave_options_impulse_options:
+            # fully evaluate top candidates
+            for opt in top_candidates:
                 processed += 1
+                n_full_evals += 1
                 if max_combinations is not None and processed > max_combinations:
-                    # safety stop - return what we've found so far
                     if self.verbose:
                         print(f"scan_impulses reached max_combinations={max_combinations}, stopping early")
+                    i = n_opts
                     break
+
+                t1 = _time.time()
                 waves_up = self.find_impulsive_wave(idx_start=idx_start, wave_config=opt.values)
+                t_full_eval += _time.time() - t1
                 if not waves_up:
                     continue
 
@@ -399,6 +373,20 @@ class WaveAnalyzer:
                                 idx_end=wp.idx_end,
                             )
                         )
+
+            i += batch_size
+
+        # attach last-scan instrumentation so callers can inspect (optional)
+        try:
+            self._last_scan_stats = {
+                'n_options': n_opts,
+                'n_pre_scored': int(n_pre_scored),
+                'n_full_evals': int(n_full_evals),
+                'time_pre_score': float(t_pre_score),
+                'time_full_eval': float(t_full_eval),
+            }
+        except Exception:
+            pass
 
         # Sort by score (desc), then by longer coverage (idx_end desc)
         found.sort(key=lambda x: (x.score, x.idx_end), reverse=True)

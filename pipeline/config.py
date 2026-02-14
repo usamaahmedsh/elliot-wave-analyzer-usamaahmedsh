@@ -17,7 +17,6 @@ class PipelineConfig:
     max_combinations: int = 200_000  # safety cap
     concurrency: int = 8
     max_windows: int = 1000
-    gpu_enabled: bool = False
     # New knobs
     save_images: bool = True
     save_images_top_n: int = 1
@@ -30,9 +29,13 @@ class PipelineConfig:
     pre_score_top_k: int = 0  # 0 means don't use top-k pre-score
     pre_score_threshold: float = 0.0  # score threshold to keep windows
     pre_score_weights: tuple = (0.4, 0.3, 0.2, 0.1)  # weights: volatility, range, extrema, abs(slope)
-    # GPU batching knobs
-    gpu_batch_size: int = 512
-    gpu_top_k: int = 64
+    # Shared memory usage for price arrays (lows/highs/dates). When True the
+    # orchestrator will allocate shared buffers which worker processes will map
+    # by name to avoid copying large arrays via IPC.
+    use_shared_memory: bool = False
+    # CPU batching knobs (used by scan_impulses)
+    cpu_batch_size: int = 512
+    cpu_top_k: int = 64
 
     @classmethod
     def load_from_file(cls, path: str = "configs.yaml") -> "PipelineConfig":

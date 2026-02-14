@@ -26,12 +26,11 @@ CFG=configs.yaml
 OUTDIR=output
 SRC=hf
 PROCS=4
-GPU_FLAG=""
 
 echo -e "${YELLOW}Using config: ${CFG}${NC}"
 
 echo -e "${YELLOW}Starting pipeline...${NC}"
-PYTHONPATH=. python3 scripts/pipeline_run.py AAPL MSFT TSLA --config "$CFG" --source "$SRC" --processes $PROCS --out-dir "$OUTDIR" $GPU_FLAG
+PYTHONPATH=. python3 scripts/pipeline_run.py AAPL MSFT TSLA --config "$CFG" --source "$SRC" --processes $PROCS --out-dir "$OUTDIR"
 
 echo -e "${GREEN}Pipeline finished. Results in ${OUTDIR}${NC}"
 

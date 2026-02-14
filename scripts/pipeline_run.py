@@ -9,10 +9,10 @@ from pathlib import Path
 import zipfile
 import numpy as np
 
-from pipeline.config import PipelineConfig
 from pipeline.fetcher import fetch_symbols
+from pipeline.config import PipelineConfig
 from pipeline.executor import parallel_scan_windows
-from pipeline.gpu_accel import GPUAccelerator
+from pipeline.numba_warm import prewarm_numba
 import json
 from pathlib import Path
 
@@ -34,20 +34,41 @@ def build_windows_for_df(df, cfg: PipelineConfig):
         highs_arr = np.array(list(df['High']))
         dates_arr = np.array(list(df['Date']))
 
+    shm_objs = None
+    shm_meta = None
+    # Optionally allocate shared memory for large arrays to avoid IPC copies
+    if getattr(cfg, 'use_shared_memory', False):
+        try:
+            from pipeline.shared_memory import create_shared_arrays
+
+            arrays = {'lows': lows_arr, 'highs': highs_arr, 'dates': dates_arr}
+            shm_meta, shm_objs = create_shared_arrays(arrays)
+        except Exception:
+            shm_meta = None
+            shm_objs = None
+
     windows = []
     start_row = 0
     while start_row <= len(df) - min_len:
         for window_len in range(min_len, cfg.max_weeks * bars_per_week + 1, cfg.grow_weeks * bars_per_week):
             if start_row + window_len > len(df):
                 break
-            # include numpy arrays in the context so workers can avoid pandas slicing/copying
-            windows.append((start_row, window_len, {'base_df': df, 'lows': lows_arr, 'highs': highs_arr, 'dates': dates_arr}))
+            # include numpy arrays or shared metadata in the context so workers can avoid pandas slicing/copying
+            ctx = {'base_df': df}
+            if shm_meta is not None:
+                ctx['shared'] = shm_meta
+            else:
+                ctx.update({'lows': lows_arr, 'highs': highs_arr, 'dates': dates_arr})
+            windows.append((start_row, window_len, ctx))
         start_row += slide_step
-    return windows
+    # return windows and any created shared-memory objects for cleanup by the caller
+    return windows, shm_objs
 
 
 async def run_pipeline(symbols, cfg: PipelineConfig):
     # async fetch (respect config concurrency)
+    # Pre-warm numba JITs in main process to avoid compilation inside workers.
+    prewarm_numba()
     phase_times = {}
     t0 = time.time()
     fetch_start = time.time()
@@ -62,7 +83,7 @@ async def run_pipeline(symbols, cfg: PipelineConfig):
             continue
 
         bw_start = time.time()
-        windows = build_windows_for_df(df, cfg)
+        windows, shm_objs = build_windows_for_df(df, cfg)
         print(f"{s}: prepared {len(windows)} windows to scan (cfg up_to={cfg.up_to})")
 
         # cheap volatility pre-filter: drop windows whose close-return std is below min_volatility
@@ -150,14 +171,9 @@ async def run_pipeline(symbols, cfg: PipelineConfig):
                     ext = 0
                 feats.append([vol, ran, float(ext), slope])
 
-            # score features (use GPU scorer if available)
-            gpu = GPUAccelerator() if cfg.gpu_enabled else None
-            if gpu is not None:
-                scores = gpu.score_features(feats)
-            else:
-                # linear combination
-                w0, w1, w2, w3 = pre_weights
-                scores = [w0 * f[0] + w1 * f[1] + w2 * min(f[2] / 10.0, 1.0) + w3 * f[3] for f in feats]
+            # score features (CPU linear combination)
+            w0, w1, w2, w3 = pre_weights
+            scores = [w0 * f[0] + w1 * f[1] + w2 * min(f[2] / 10.0, 1.0) + w3 * f[3] for f in feats]
 
             # attach scores and filter
             scored = list(zip(windows, scores))
@@ -173,27 +189,46 @@ async def run_pipeline(symbols, cfg: PipelineConfig):
             'top_n': cfg.top_n,
             'max_combinations': cfg.max_combinations,
             'chunk_size': cfg.chunk_size,
+            'cpu_batch_size': getattr(cfg, 'cpu_batch_size', 512),
+            'cpu_top_k': getattr(cfg, 'cpu_top_k', 64),
         }
 
         scan_start = time.time()
         results = parallel_scan_windows(windows, cfg=cfg_dict, processes=cfg.processes)
+        # cleanup shared memory segments if we created them for this symbol
+        try:
+            if shm_objs is not None:
+                from pipeline.shared_memory import cleanup_shared_objects
+
+                cleanup_shared_objects(shm_objs)
+        except Exception:
+            pass
         phase_times[s]['scan'] = time.time() - scan_start
 
-        # optional GPU scoring (batched)
-        gpu = GPUAccelerator() if cfg.gpu_enabled else None
-        if gpu is not None and results:
-            bests = [r['best'] for r in results if r and 'best' in r]
-            if bests:
-                try:
-                    new_scores = gpu.score_candidates(bests)
-                    for r, sc in zip([r for r in results if r and 'best' in r], new_scores):
-                        try:
-                            r['best'].score = sc
-                        except Exception:
-                            pass
-                except Exception:
-                    # if GPU scoring fails, continue with original scores
-                    pass
+        # aggregate scan statistics from workers (if provided)
+        try:
+            total_pre = 0
+            total_full = 0
+            total_pre_time = 0.0
+            total_full_time = 0.0
+            for r in results:
+                st = r.get('scan_stats') if r else None
+                if st:
+                    total_pre += int(st.get('n_pre_scored', 0))
+                    total_full += int(st.get('n_full_evals', 0))
+                    total_pre_time += float(st.get('time_pre_score', 0.0))
+                    total_full_time += float(st.get('time_full_eval', 0.0))
+            phase_times[s]['scan_stats'] = {
+                'n_pre_scored': total_pre,
+                'n_full_evals': total_full,
+                'time_pre_score': total_pre_time,
+                'time_full_eval': total_full_time,
+            }
+            print(f"{s}: scan_stats pre_scored={total_pre} full_evals={total_full}")
+        except Exception:
+            pass
+
+        # (CPU-only pipeline: no optional GPU scoring step)
 
         all_results[s] = results
 
@@ -275,7 +310,6 @@ def parse_args():
     p.add_argument('--config', type=str, default='configs.yaml', help='path to YAML config file')
     p.add_argument('--source', type=str, default='yfinance', choices=['yfinance', 'hf'], help='data source')
     p.add_argument('--processes', type=int, default=None)
-    p.add_argument('--gpu', action='store_true')
     p.add_argument('--out-dir', type=str, default='output', help='output directory (contains images/ and latest_results.json)')
     return p.parse_args()
 
@@ -286,8 +320,7 @@ if __name__ == '__main__':
     # allow CLI overrides for a couple of knobs
     if args.processes is not None:
         cfg.processes = args.processes
-    if args.gpu:
-        cfg.gpu_enabled = True
+    # GPU flag removed: pipeline is CPU-first
 
     # prepare output dirs and configure helpers
     out_dir = Path(args.out_dir)

@@ -3,23 +3,26 @@
 
 All notable changes to this project are documented in this file.
 
-## 2026-02-13 — GPU batching & pipeline updates
+## 2026-02-13 — CPU batching, shared-memory & numba pre-warm
 
 Summary
 
-- Added hybrid GPU-batching pre-score in `models/WaveAnalyzer.scan_impulses` to allow batched in-device scoring of cheap features and only fully evaluate the top candidates per batch (`gpu_enabled`, `gpu_batch_size`, `gpu_top_k`).
-- Added `pipeline/gpu_accel.GPUAccelerator.score_features` which prefers MPS → CUDA → CPU via PyTorch and falls back to a CPU linear scorer when PyTorch is unavailable.
-- Centralized runtime knobs in `configs.yaml` (notable keys: `up_to`, `gpu_enabled`, `gpu_batch_size`, `gpu_top_k`, `pre_score_top_k`, `pre_score_threshold`, `min_volatility`, `max_windows`).
-- `scripts/pipeline_run.py` now supports `--gpu`, writes a single consolidated JSON (`data/results_run_<ts>.json`), and moves the latest result to `output/latest_results.json`; images are saved under `output/images/`.
+- Re-focused pipeline to CPU-first, high-throughput scans with batching, shared-memory backing for price arrays, and numba pre-warm to avoid JIT overhead in worker processes.
+- Implemented CPU-batched pre-score + top-k pruning in `models/WaveAnalyzer.scan_impulses` (vectorized numpy pre-score, then full evaluation only for top candidates per batch).
+- Added shared-memory helpers so the orchestrator can allocate `lows`/`highs`/`dates` once and worker processes map lightweight views to avoid copy-heavy IPC.
+- Added `pipeline/numba_warm.py` to pre-warm numba-compiled numeric primitives (`hi`, `lo`, `next_hi`, `next_lo`, `count_extrema`) and to precompute common `WaveOptions` combinatorics to eliminate first-call overhead.
+- Centralized CPU runtime knobs in `configs.yaml` (notable keys: `up_to`, `cpu_batch_size`, `cpu_top_k`, `pre_score_top_k`, `pre_score_threshold`, `min_volatility`, `max_windows`, `use_shared_memory`).
+- Removed the optional GPU stub and command-line `--gpu` pathway; the pipeline is now explicitly CPU-first and simpler to run across machines without PyTorch.
 
 Benchmark (single-run smoke):
 
-- Command: `PYTHONPATH=. .venv/bin/python3 scripts/pipeline_run.py GOOG --config configs.yaml --source yfinance --out-dir output --processes 6 --gpu` with `up_to=15` in `configs.yaml`.
-- Observed timing (local M4 Pro, PyTorch MPS when available): fetch 0.14s, build_windows ~0s, scan ~115.86s, total ~116.6s. This confirms end-to-end functionality; further tuning of batch/top_k and pre-score features is suggested to reduce total scan time.
+- Example: `PYTHONPATH=. .venv/bin/python3 scripts/pipeline_run.py GOOG --config configs.yaml --source yfinance --out-dir output --processes 6` with `up_to=15`.
+- Observed timing (local profiling runs): CPU-only batched scan has produced significantly improved wall-time vs earlier hybrid experiments; further tuning of `cpu_batch_size` / `cpu_top_k` is recommended via a short sweep.
 
 Notes
 
-- This is an incremental hybrid approach: expensive enumerations are still CPU-bound; we prune via cheap GPU-batched scoring to reduce full evaluations. A full GPU port (translating inner scans into array kernels) remains a future larger task.
+- The pipeline keeps the existing detection semantics (WaveAnalyzer) while optimizing CPU execution: batching, shared-memory to avoid copies, and numba primitives to speed hot numeric paths.
+- Future work: targeted numba ports for per-candidate hotspots (after collecting multi-worker profiles), and a possible GPU rewrite remains an option but is not part of the current CPU-first code path.
 
 ## 2026-01-18 — Small fixes & CLI runner
 

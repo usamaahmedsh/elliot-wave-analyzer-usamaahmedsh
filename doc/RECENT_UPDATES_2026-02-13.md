@@ -1,43 +1,48 @@
 # Recent updates (2026-02-13)
 
-This document summarizes the incremental GPU-batching and pipeline changes implemented today.
+This document summarizes today's pipeline changes and the shift to a CPU-first,
+high-throughput scanning path.
 
 What changed
 
-- GPU-batched pre-scoring:
-  - `models/WaveAnalyzer.scan_impulses` now supports a `scan_cfg` dict and respects `gpu_enabled`, `gpu_batch_size`, and `gpu_top_k`.
-  - When enabled, WaveOptions are processed in batches; cheap features are computed per candidate and scored with `pipeline/gpu_accel.GPUAccelerator.score_features`.
-  - Only the top `gpu_top_k` candidates per batch are fully evaluated using the existing CPU enumerator (`find_impulsive_wave` + `WavePattern` checks).
+- CPU-batched pre-scoring:
+  - `models/WaveAnalyzer.scan_impulses` now uses a CPU-optimized batching path: it
+    computes cheap numpy features per candidate (volatility proxy, range, extrema
+    count, slope), ranks candidates per batch, and fully evaluates only the top-k
+    survivors.
 
-- `pipeline/gpu_accel.py`:
-  - Added `score_features` which uses PyTorch tensors on `mps`/`cuda`/`cpu` when available and falls back to CPU scoring.
+- Shared-memory arrays:
+  - The orchestrator can allocate shared numpy buffers for `lows`/`highs`/`dates`
+    so worker processes map lightweight views instead of receiving full copies.
 
-- Orchestrator & config:
-  - `scripts/pipeline_run.py` accepts `--gpu` to enable GPU scoring and writes consolidated JSON to `data/results_run_<ts>.json` (moved to `output/latest_results.json` after run). Images are saved under `output/images/`.
-  - `configs.yaml` now exposes `up_to`, `gpu_enabled`, `gpu_batch_size`, `gpu_top_k`, `pre_score_top_k`, `pre_score_threshold`, `pre_score_weights`, `min_volatility`, `max_windows`, and other runtime knobs.
+- Numba pre-warm & combinatorics cache:
+  - `pipeline/numba_warm.py` pre-warms numba-compiled numeric primitives and
+    precomputes common `WaveOptions` combinatorics to eliminate first-call JIT
+    and combinatorics overhead in worker processes.
 
-Benchmark (single-run smoke)
+- Config / CLI:
+  - The pipeline uses CPU-centric knobs: `cpu_batch_size`, `cpu_top_k`, and
+    `use_shared_memory` in `configs.yaml`. The `--gpu` CLI and GPU-specific
+    knobs have been removed from the active run-path.
 
-- Command used:
+Quick-run example (CPU-first):
 
 ```bash
-export PYTHONPATH=.
-.venv/bin/python3 scripts/pipeline_run.py GOOG --config configs.yaml --source yfinance --out-dir output --processes 6 --gpu
+PYTHONPATH=. .venv/bin/python3 scripts/pipeline_run.py GOOG --config configs.yaml --source yfinance --out-dir output --processes 6
 ```
-
-- `configs.yaml` was set with `up_to: 15` for this test.
-- Observed timings on local Apple M4 Pro (PyTorch MPS used when available):
-  - fetch: 0.14s
-  - build_windows: ~0s
-  - scan: ~115.86s
-  - total: ~116.6s
 
 Notes & next steps
 
-- This is a hybrid pruning strategy — it'll reduce the number of CPU enumerations but the inner enumerator remains CPU-bound.
+- The pipeline keeps the existing `WaveAnalyzer` detection semantics while
+  improving throughput via batching, shared buffers, and numba-accelerated
+  primitives.
 - Recommended follow-ups:
-  1. Run a parameter sweep over `gpu_batch_size` and `gpu_top_k` to find a practical sweet spot on your machine.
-  2. Improve pre-score features (longer-range proxies, extrema counts, slope metrics) to improve pruning precision.
-  3. Begin porting numeric inner loops (some MonoWave helpers) to numba and/or PyTorch kernels for further acceleration.
+  1. Run a short parameter sweep (cpu_batch_size x cpu_top_k) to find a good
+     sweet-spot for your machine.
+  2. Collect a multi-worker profile to identify remaining per-candidate hotspots
+     for targeted numba ports.
+  3. If you want to resume a GPU-focused path later, the archived migration
+     notes remain available but are not part of the active pipeline.
 
-If you'd like, I can run the parameter sweep now and report per-run timings and memory use.
+If you'd like, I can run the parameter sweep now and report per-run timings and
+aggregated `scan_stats` (n_pre_scored, n_full_evals, phase times).

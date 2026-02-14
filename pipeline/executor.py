@@ -4,6 +4,10 @@ from functools import partial
 import math
 
 from models.WaveAnalyzer import WaveAnalyzer
+from typing import Optional
+
+# Per-process cache for attached shared-memory views. Keys are shared array names.
+_SHM_CACHE: Dict[str, Dict[str, Any]] = {}
 
 
 def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[str, Any]:
@@ -15,9 +19,42 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
     start_row, window_len, context = window_tuple
 
     # Prefer operating on numpy arrays passed in the context to avoid pandas slicing/pickling overhead.
+    # If shared memory metadata is provided in the context, attach shared views (cached per-process).
     lows = context.get('lows')
     highs = context.get('highs')
     dates = context.get('dates')
+    shared_meta = context.get('shared')
+
+    if shared_meta is not None:
+        # lazy import to avoid requiring multiprocessing.shared_memory in callers
+        try:
+            from pipeline.shared_memory import attach_shared_view
+        except Exception:
+            attach_shared_view = None
+
+        if attach_shared_view is not None:
+            # Attach each shared buffer once per process and cache the numpy views
+            for key, meta in shared_meta.items():
+                # use name as cache key (unique across arrays)
+                name = meta.get('name')
+                if name not in _SHM_CACHE:
+                    try:
+                        view = attach_shared_view(meta)
+                        _SHM_CACHE[name] = {'view': view, 'meta': meta}
+                    except Exception:
+                        # fallback to leaving _SHM_CACHE untouched
+                        _SHM_CACHE[name] = None
+
+            # rebind local vars to views if available
+            if 'lows' in shared_meta:
+                sm = shared_meta['lows']['name']
+                lows = None if _SHM_CACHE.get(sm) is None else _SHM_CACHE[sm]['view']
+            if 'highs' in shared_meta:
+                sm = shared_meta['highs']['name']
+                highs = None if _SHM_CACHE.get(sm) is None else _SHM_CACHE[sm]['view']
+            if 'dates' in shared_meta:
+                sm = shared_meta['dates']['name']
+                dates = None if _SHM_CACHE.get(sm) is None else _SHM_CACHE[sm]['view']
 
     if lows is None or highs is None or dates is None:
         # fallback to DataFrame slicing if arrays are not available
@@ -54,6 +91,15 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
     # return minimal information; avoid returning DataFrame across process boundary
     date_start = dates[start_row] if dates is not None else context['base_df'].iloc[start_row]['Date']
     date_end = dates[min(start_row + window_len - 1, len(dates) - 1)] if dates is not None else context['base_df'].iloc[min(start_row + window_len - 1, len(context['base_df']) - 1)]['Date']
+    # if dates were stored as int64 (datetime64 view in shared memory), convert back
+    try:
+        import numpy as _np
+        if hasattr(date_start, '__int__') and getattr(_np, 'issubdtype')(_np.dtype(type(date_start)), _np.integer):
+            date_start = _np.datetime64(int(date_start), 'ns')
+        if hasattr(date_end, '__int__') and getattr(_np, 'issubdtype')(_np.dtype(type(date_end)), _np.integer):
+            date_end = _np.datetime64(int(date_end), 'ns')
+    except Exception:
+        pass
     return {
         'start_row': start_row,
         'window_len': window_len,
@@ -61,6 +107,7 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
         'date_end': date_end,
         'best': best,
         'all': candidates,
+        'scan_stats': getattr(wa, '_last_scan_stats', None),
     }
 
 
@@ -75,11 +122,14 @@ def parallel_scan_windows(windows: List[Tuple[int, int, dict]], cfg: dict, proce
 
     # Pre-warm numba-compiled functions in main process to avoid JIT cost in child forks.
     try:
-        from models.functions import hi, lo  # noqa: F401
+        from models.functions import hi, lo, next_hi, next_lo, count_extrema  # noqa: F401
         import numpy as _np
-        # call hi/lo on a tiny array to trigger compilation
+        # call numba functions on tiny arrays to trigger compilation in main process
         _ = hi(_np.array([1.0, 2.0, 1.5]), _np.array([1.0, 2.0, 1.5]), 0)
         _ = lo(_np.array([1.0, 0.5, 0.8]), _np.array([1.0, 0.5, 0.8]), 0)
+        _ = next_hi(_np.array([1.0, 2.0, 1.5]), _np.array([1.0, 2.0, 1.5]), 0, 0.0)
+        _ = next_lo(_np.array([1.0, 0.5, 0.8]), _np.array([1.0, 0.5, 0.8]), 0, 0.0)
+        _ = count_extrema(_np.array([1.0, 2.0, 1.0]))
     except Exception:
         # ignore warmup failures
         pass
