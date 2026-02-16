@@ -5,23 +5,35 @@ days: 365
 slide_weeks: 1
 min_weeks: 4
 max_weeks: 12
-up_to: 15
+up_to: 20
 grow_weeks: 1
-top_n: 1
+top_n: 10
 delay: 0.5
-processes: 6
+processes: 30  # Use 30 of 32 cores (leave 2 for system overhead)
 max_combinations: 200000
 # CPU batching knobs (used when running CPU-only optimized path)
-cpu_batch_size: 512
-cpu_top_k: 64
-concurrency: 12
+cpu_batch_size: 1024      # Increased for better throughput
+cpu_top_k: 256            # Increased to pass more to GPU (if enabled)
+concurrency: 30           # Match process count for consistency
 out_dir: output
+
+# Pattern scanning mode: 'all' scans impulsive + corrective, 'impulses' scans only impulsive waves
+scan_pattern_types: all
+
+# Multi-start search: try multiple pivot points (local extrema) as wave starts
+# Set to true to enable, false for single-start (faster)
+enable_multi_start: true
+max_start_points: 5
+
+# Overlapping windows: set overlap_ratio > 0 to create overlapping time windows
+# overlap_ratio=0.5 means 50% overlap (catches patterns spanning boundaries)
+window_overlap_ratio: 0.3
 
 # Enable shared memory for quick testing (workers will map lows/highs/dates)
 use_shared_memory: true
 
 # For quick profiling runs, lower the window budget so the run is fast. Set to 50 for quick test.
-max_windows: 50
+max_windows: 500
 
 # New knobs
 save_images: false

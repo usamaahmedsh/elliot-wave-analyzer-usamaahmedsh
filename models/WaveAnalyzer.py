@@ -11,6 +11,7 @@ from models.WaveOptions import WaveOptionsGenerator5, WaveOptionsGenerator3
 from models.WaveCycle import WaveCycle
 from models.WavePattern import WavePattern
 from models.WaveRules import Impulse, Correction, TDWave, LeadingDiagonal
+from models.EnsembleScoring import EnsembleScorer
 
 
 @dataclass
@@ -21,9 +22,34 @@ class FoundPattern:
     wave_config: List[int]
     idx_start: int
     idx_end: int
+    ensemble_score: Optional[float] = None
+    fib_score: Optional[float] = None
 
 
 _options_cache = {}
+_ensemble_scorer = EnsembleScorer(fib_weight=0.5, rule_weight=0.3, time_weight=0.1, complexity_weight=0.1)
+
+# Reusable pre-computed window features cache (avoid recomputing per pattern type)
+_window_features_cache = {}
+
+
+def _get_or_create_options(up_to: int, pattern_type: str = 'impulse'):
+    """Cache WaveOptions to avoid repeated generation."""
+    cache_key = (up_to, pattern_type)
+    if cache_key in _options_cache:
+        return _options_cache[cache_key]
+    
+    if pattern_type == 'impulse':
+        gen = WaveOptionsGenerator5(up_to=up_to)
+        options = list(gen.options_sorted)
+    elif pattern_type == 'corrective':
+        gen = WaveOptionsGenerator3(up_to=up_to)
+        options = gen.get_all_options()
+    else:
+        options = []
+    
+    _options_cache[cache_key] = options
+    return options
 
 
 class WaveAnalyzer:
@@ -69,6 +95,39 @@ class WaveAnalyzer:
         find the absolute low in the dataframe. Can be used to start the wave analysis from this low.
         """
         return np.min(self.lows)
+
+    def find_local_extrema(self, window_size: int = 5, min_distance: int = 3) -> List[int]:
+        """
+        Find local minima (potential wave start points) using a simple rolling window approach.
+        
+        Args:
+            window_size: Size of window to check for local minimum
+            min_distance: Minimum distance between extrema
+            
+        Returns:
+            List of indices representing local minima
+        """
+        n = len(self.lows)
+        if n < window_size:
+            return [int(np.argmin(self.lows))]
+        
+        extrema = []
+        
+        for i in range(window_size, n - window_size):
+            # Check if current point is lower than neighbors
+            window_lows = self.lows[i - window_size:i + window_size + 1]
+            if self.lows[i] == np.min(window_lows):
+                # Check minimum distance from previous extrema
+                if not extrema or (i - extrema[-1]) >= min_distance:
+                    extrema.append(i)
+        
+        # Always include global minimum if not already there
+        global_min = int(np.argmin(self.lows))
+        if global_min not in extrema:
+            extrema.append(global_min)
+            extrema.sort()
+        
+        return extrema
 
     def set_combinatorial_limits(self, n_up: int = 10, n_down: int = 10):
         """
@@ -359,18 +418,26 @@ class WaveAnalyzer:
                             continue
                         seen.add(wp)
 
-                        score = 0.0
+                        # Base rule satisfaction score
+                        rule_score = 0.0
                         if hasattr(wp, "score_rule"):
-                            score = float(wp.score_rule(rule))
+                            rule_score = float(wp.score_rule(rule))
+
+                        # Compute ensemble score (Fibonacci + time + complexity)
+                        ensemble_details = _ensemble_scorer.score_with_details(wp, rule_score=rule_score)
+                        ensemble_score = ensemble_details['ensemble_score']
+                        fib_score = ensemble_details.get('fibonacci_score', 0.5)
 
                         found.append(
                             FoundPattern(
                                 pattern=wp,
                                 rule_name=rule.name,
-                                score=score,
+                                score=rule_score,
                                 wave_config=opt.values,
                                 idx_start=wp.idx_start,
                                 idx_end=wp.idx_end,
+                                ensemble_score=ensemble_score,
+                                fib_score=fib_score
                             )
                         )
 
@@ -388,9 +455,172 @@ class WaveAnalyzer:
         except Exception:
             pass
 
-        # Sort by score (desc), then by longer coverage (idx_end desc)
-        found.sort(key=lambda x: (x.score, x.idx_end), reverse=True)
+        # Sort by ensemble_score (desc), then by longer coverage (idx_end desc)
+        found.sort(key=lambda x: (x.ensemble_score if x.ensemble_score is not None else x.score, x.idx_end), reverse=True)
         return found[:top_n]
+
+    def scan_correctives(self, idx_start: int, up_to: int = 10, top_n: int = 5, max_combinations: int = None, scan_cfg: dict = None) -> List[FoundPattern]:
+        """Scan for corrective wave patterns (ABC, etc.) starting from idx_start."""
+        scan_cfg = scan_cfg or {}
+        batch_size = int(scan_cfg.get('cpu_batch_size', 512))
+        top_k = int(scan_cfg.get('cpu_top_k', 64))
+        max_combinations = max_combinations or 1_000_000
+        
+        # Use cached options
+        options = _get_or_create_options(up_to, 'corrective')
+        
+        # Use cached window features
+        base_score = 0.0
+        cache_key = (id(self.lows), idx_start)
+        if cache_key in _window_features_cache:
+            base_score = _window_features_cache[cache_key]
+        else:
+            try:
+                slice_window = self.lows[idx_start: idx_start + 10]
+                if slice_window.size > 0:
+                    lo_val = float(np.min(slice_window))
+                    hi_val = float(np.max(self.highs[idx_start: idx_start + 10]))
+                    vol_proxy = float(np.std(slice_window)) if slice_window.size > 1 else 0.0
+                    base_score = 0.4 * vol_proxy + 0.3 * ((hi_val - lo_val) / (lo_val + 1e-9))
+                _window_features_cache[cache_key] = base_score
+            except Exception:
+                base_score = 0.0
+        
+        found = []
+        seen = set()
+        n_pre_scored = 0
+        n_full_evals = 0
+        
+        for i in range(0, len(options), batch_size):
+            if n_full_evals >= max_combinations:
+                break
+            
+            batch = options[i:i + batch_size]
+            if not batch:
+                break
+
+            # Vectorized pre-score
+            complexities = np.array([float(sum(opt.values)) / (len(opt.values) * max(1, up_to)) for opt in batch], dtype=np.float32)
+            scores = base_score + 0.1 * complexities
+            n_pre_scored += len(batch)
+
+            # Top-k selection
+            nb = len(batch)
+            top_idx = np.argpartition(-scores, min(top_k - 1, nb - 1))[:top_k] if nb > top_k else np.arange(nb)
+            top_idx = top_idx[np.argsort(-scores[top_idx])]
+            
+            # Evaluate top candidates
+            for j in top_idx:
+                if n_full_evals >= max_combinations:
+                    break
+                    
+                opt = batch[int(j)]
+                waves = self.find_corrective_wave(idx_start=idx_start, wave_config=opt.values)
+                n_full_evals += 1
+                
+                if not waves or len(waves) == 0:
+                    continue
+                
+                pat = WavePattern.corrective(waves, idx_start=idx_start)
+                if not pat.validate():
+                    continue
+                    
+                if pat in seen:
+                    continue
+                seen.add(pat)
+                
+                # Compute scores
+                rule_score = pat.score()
+                ensemble_details = _ensemble_scorer.score_with_details(pat, rule_score=rule_score)
+                
+                found.append(FoundPattern(
+                    pattern=pat,
+                    rule_name='Corrective',
+                    score=rule_score,
+                    wave_config=opt.values,
+                    idx_start=idx_start,
+                    idx_end=waves[-1].idx_end,
+                    ensemble_score=ensemble_details['ensemble_score'],
+                    fib_score=ensemble_details.get('fibonacci_score', 0.5)
+                ))
+        
+        self._last_scan_stats = {
+            'n_pre_scored': n_pre_scored,
+            'n_full_evals': n_full_evals,
+            'pattern_type': 'corrective'
+        }
+        
+        found.sort(key=lambda x: (x.ensemble_score if x.ensemble_score else x.score, x.idx_end), reverse=True)
+        return found[:top_n]
+
+    def scan_all_patterns(self, idx_start: int, up_to: int = 10, top_n: int = 5, max_combinations: int = None, scan_cfg: dict = None) -> List[FoundPattern]:
+        """
+        Scan for ALL pattern types (impulsive, corrective) and return combined top_n results.
+        This maximizes recall by checking every pattern type.
+        """
+        all_found = []
+        
+        # Scan each pattern type (ask for more from each, then combine)
+        impulses = self.scan_impulses(idx_start, up_to, top_n=top_n*2, max_combinations=max_combinations, scan_cfg=scan_cfg)
+        all_found.extend(impulses)
+        
+        correctives = self.scan_correctives(idx_start, up_to, top_n=top_n*2, max_combinations=max_combinations, scan_cfg=scan_cfg)
+        all_found.extend(correctives)
+        
+        # Sort by ensemble_score and return top_n
+        all_found.sort(key=lambda x: (x.ensemble_score if x.ensemble_score is not None else x.score, x.idx_end), reverse=True)
+        return all_found[:top_n]
+
+    def scan_multi_start(self, up_to: int = 10, top_n: int = 5, max_combinations: int = None, scan_cfg: dict = None, 
+                        max_starts: int = 5, pattern_types: str = 'all') -> List[FoundPattern]:
+        """
+        Multi-start search: try multiple pivot points (local extrema) as potential wave starts.
+        Optimized with early deduplication to avoid redundant scans.
+        """
+        # Find local extrema (potential start points)
+        extrema = self.find_local_extrema(window_size=5, min_distance=10)
+        
+        # Limit and prioritize start points
+        if len(extrema) > max_starts:
+            global_min = int(np.argmin(self.lows))
+            # Keep first max_starts-1 plus global min
+            extrema_set = set(extrema[:max_starts - 1])
+            extrema_set.add(global_min)
+            extrema = sorted(list(extrema_set))[:max_starts]
+        
+        # Use set for O(1) deduplication
+        seen_patterns = set()
+        unique_patterns = []
+        
+        # Map pattern_types to scan function (avoid repeated conditionals)
+        scan_funcs = {
+            'all': self.scan_all_patterns,
+            'impulses': self.scan_impulses,
+            'correctives': self.scan_correctives
+        }
+        scan_func = scan_funcs.get(pattern_types, self.scan_all_patterns)
+        
+        for start_idx in extrema:
+            try:
+                patterns = scan_func(
+                    idx_start=start_idx,
+                    up_to=up_to,
+                    top_n=top_n,
+                    max_combinations=max_combinations,
+                    scan_cfg=scan_cfg
+                )
+                
+                # Deduplicate on-the-fly
+                for p in patterns:
+                    if p.pattern not in seen_patterns:
+                        seen_patterns.add(p.pattern)
+                        unique_patterns.append(p)
+            except Exception:
+                continue
+        
+        # Sort by ensemble score and return top-N
+        unique_patterns.sort(key=lambda x: (x.ensemble_score if x.ensemble_score else x.score, x.idx_end), reverse=True)
+        return unique_patterns[:top_n]
 
     # -------------------------
     # New: Adaptive window growth

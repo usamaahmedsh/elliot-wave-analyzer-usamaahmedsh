@@ -77,12 +77,45 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
         except Exception:
             return {}
 
-    candidates = wa.scan_impulses(
-        idx_start=local_idx_start,
-        up_to=cfg.get('up_to', 8),
-        top_n=cfg.get('top_n', 1),
-        max_combinations=cfg.get('max_combinations', None),
-    )
+    # Choose scan method based on config
+    scan_mode = cfg.get('scan_pattern_types', 'all')
+    enable_multi_start = cfg.get('enable_multi_start', False)
+    max_start_points = cfg.get('max_start_points', 5)
+    
+    scan_cfg = {
+        'cpu_batch_size': cfg.get('cpu_batch_size', 512),
+        'cpu_top_k': cfg.get('cpu_top_k', 64)
+    }
+    
+    # Use multi-start search if enabled (tries multiple pivot points)
+    if enable_multi_start:
+        candidates = wa.scan_multi_start(
+            up_to=cfg.get('up_to', 8),
+            top_n=cfg.get('top_n', 1),
+            max_combinations=cfg.get('max_combinations', None),
+            scan_cfg=scan_cfg,
+            max_starts=max_start_points,
+            pattern_types=scan_mode
+        )
+    elif scan_mode == 'all':
+        # Scan ALL pattern types (impulsive + corrective) for maximum recall
+        candidates = wa.scan_all_patterns(
+            idx_start=local_idx_start,
+            up_to=cfg.get('up_to', 8),
+            top_n=cfg.get('top_n', 1),
+            max_combinations=cfg.get('max_combinations', None),
+            scan_cfg=scan_cfg
+        )
+    else:
+        # Default: scan only impulsive patterns
+        candidates = wa.scan_impulses(
+            idx_start=local_idx_start,
+            up_to=cfg.get('up_to', 8),
+            top_n=cfg.get('top_n', 1),
+            max_combinations=cfg.get('max_combinations', None),
+            scan_cfg=scan_cfg
+        )
+
 
     if not candidates:
         return {}
@@ -108,6 +141,9 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
         'best': best,
         'all': candidates,
         'scan_stats': getattr(wa, '_last_scan_stats', None),
+        # Include ensemble scoring details
+        'ensemble_score': best.ensemble_score if hasattr(best, 'ensemble_score') else None,
+        'fib_score': best.fib_score if hasattr(best, 'fib_score') else None,
     }
 
 

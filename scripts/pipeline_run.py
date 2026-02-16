@@ -1,377 +1,421 @@
 #!/usr/bin/env python3
-"""Orchestrator for the new pipeline: async fetch -> parallel window scans -> optional GPU scoring -> export results
+"""
+Enhanced Pipeline Runner with:
+- Hugging Face dataset integration
+- Checkpoint/resume support
+- Verbose progress tracking
+- HPC compatibility
 """
 import argparse
 import asyncio
-import time
+import json
 import os
+import pickle
+import sys
+import time
 from pathlib import Path
-import zipfile
-import numpy as np
+from typing import Dict, List, Set
 
-from pipeline.fetcher import fetch_symbols
+import numpy as np
+from tqdm import tqdm
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 from pipeline.config import PipelineConfig
 from pipeline.executor import parallel_scan_windows
 from pipeline.numba_warm import prewarm_numba
-import json
-from pathlib import Path
+
+
+class CheckpointManager:
+    """Manages checkpoints for resumable pipeline runs"""
+    
+    def __init__(self, checkpoint_dir: Path):
+        self.checkpoint_dir = Path(checkpoint_dir)
+        self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        self.processed_file = self.checkpoint_dir / "processed_symbols.json"
+        self.results_file = self.checkpoint_dir / "partial_results.json"
+        
+    def load_processed_symbols(self) -> Set[str]:
+        """Load set of already processed symbols"""
+        if self.processed_file.exists():
+            with open(self.processed_file, 'r') as f:
+                return set(json.load(f))
+        return set()
+    
+    def save_processed_symbol(self, symbol: str):
+        """Mark a symbol as processed"""
+        processed = self.load_processed_symbols()
+        processed.add(symbol)
+        with open(self.processed_file, 'w') as f:
+            json.dump(list(processed), f)
+    
+    def save_partial_results(self, results: List[Dict]):
+        """Save partial results"""
+        with open(self.results_file, 'w') as f:
+            json.dump(results, f, indent=2, default=str)
+    
+    def load_partial_results(self) -> List[Dict]:
+        """Load partial results"""
+        if self.results_file.exists():
+            with open(self.results_file, 'r') as f:
+                return json.load(f)
+        return []
+
+
+def load_hf_dataset(dataset_name: str, symbols: List[str] = None, verbose: bool = True):
+    """
+    Load data from Hugging Face dataset
+    
+    Args:
+        dataset_name: HF dataset name (e.g., 'usamaahmedsh/financial-markets-dataset-15y-train')
+        symbols: List of specific symbols to load (None = all)
+        verbose: Show progress
+    """
+    try:
+        from datasets import load_dataset
+        import pandas as pd
+        
+        if verbose:
+            print(f"📦 Loading dataset from Hugging Face: {dataset_name}")
+        
+        # Load dataset
+        dataset = load_dataset(dataset_name, split='train')
+        
+        if verbose:
+            print(f"✅ Loaded {len(dataset)} rows")
+        
+        # Convert to pandas
+        df = dataset.to_pandas()
+        
+        # Group by ticker
+        ticker_data = {}
+        
+        if symbols:
+            # Filter to requested symbols
+            df_filtered = df[df['ticker'].isin(symbols)]
+            if verbose:
+                print(f"🔍 Filtered to {len(symbols)} symbols: {', '.join(symbols)}")
+        else:
+            df_filtered = df
+            symbols = df['ticker'].unique().tolist()
+            if verbose:
+                print(f"📊 Found {len(symbols)} unique symbols")
+        
+        # Group by ticker
+        for ticker in (tqdm(symbols, desc="Processing tickers") if verbose else symbols):
+            ticker_df = df_filtered[df_filtered['ticker'] == ticker].copy()
+            
+            if len(ticker_df) == 0:
+                if verbose:
+                    print(f"⚠️  No data found for {ticker}")
+                continue
+            
+            # Sort by date
+            ticker_df = ticker_df.sort_values('Date')
+            
+            # Ensure required columns exist
+            required_cols = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume']
+            if not all(col in ticker_df.columns for col in required_cols):
+                if verbose:
+                    print(f"⚠️  Missing columns for {ticker}, skipping")
+                continue
+            
+            ticker_data[ticker] = ticker_df
+        
+        if verbose:
+            print(f"✅ Loaded data for {len(ticker_data)} symbols")
+            
+        return ticker_data
+        
+    except ImportError:
+        print("❌ ERROR: 'datasets' library not installed")
+        print("Install with: pip install datasets")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ ERROR loading dataset: {e}")
+        sys.exit(1)
 
 
 def build_windows_for_df(df, cfg: PipelineConfig):
-    # compute bars per week heuristic (same as WaveAnalyzer)
-    bars_per_week = 1 if False else 7
-    slide_step = cfg.slide_weeks * bars_per_week
+    """Build time windows from dataframe"""
+    bars_per_week = 7  # Daily data
+    
+    overlap_ratio = getattr(cfg, 'window_overlap_ratio', 0.0)
+    
+    if overlap_ratio > 0:
+        base_slide = cfg.slide_weeks * bars_per_week
+        slide_step = max(1, int(base_slide * (1.0 - overlap_ratio)))
+    else:
+        slide_step = cfg.slide_weeks * bars_per_week
+    
     min_len = cfg.min_weeks * bars_per_week
 
-    # prepare base arrays once to avoid repeated conversions in workers
-    try:
-        lows_arr = df['Low'].to_numpy()
-        highs_arr = df['High'].to_numpy()
-        dates_arr = df['Date'].to_numpy()
-    except Exception:
-        # fallback: convert via list
-        lows_arr = np.array(list(df['Low']))
-        highs_arr = np.array(list(df['High']))
-        dates_arr = np.array(list(df['Date']))
+    # Prepare arrays
+    lows_arr = df['Low'].to_numpy()
+    highs_arr = df['High'].to_numpy()
+    dates_arr = df['Date'].to_numpy()
 
-    shm_objs = None
-    shm_meta = None
-    # Optionally allocate shared memory for large arrays to avoid IPC copies
-    if getattr(cfg, 'use_shared_memory', False):
-        try:
-            from pipeline.shared_memory import create_shared_arrays
-
-            arrays = {'lows': lows_arr, 'highs': highs_arr, 'dates': dates_arr}
-            shm_meta, shm_objs = create_shared_arrays(arrays)
-        except Exception:
-            shm_meta = None
-            shm_objs = None
-
+    n_total = len(lows_arr)
     windows = []
-    start_row = 0
-    while start_row <= len(df) - min_len:
-        for window_len in range(min_len, cfg.max_weeks * bars_per_week + 1, cfg.grow_weeks * bars_per_week):
-            if start_row + window_len > len(df):
-                break
-            # include numpy arrays or shared metadata in the context so workers can avoid pandas slicing/copying
-            ctx = {'base_df': df}
-            if shm_meta is not None:
-                ctx['shared'] = shm_meta
-            else:
-                ctx.update({'lows': lows_arr, 'highs': highs_arr, 'dates': dates_arr})
-            windows.append((start_row, window_len, ctx))
-        start_row += slide_step
-    # return windows and any created shared-memory objects for cleanup by the caller
-    return windows, shm_objs
+    
+    for start_idx in range(0, n_total, slide_step):
+        end_idx = start_idx + cfg.max_weeks * bars_per_week
+        if end_idx > n_total:
+            end_idx = n_total
+        
+        if (end_idx - start_idx) < min_len:
+            break
+        
+        windows.append((start_idx, end_idx))
+        
+        if len(windows) >= cfg.max_windows:
+            break
+    
+    return windows, (lows_arr, highs_arr, dates_arr)
 
 
-async def run_pipeline(symbols, cfg: PipelineConfig):
-    # async fetch (respect config concurrency)
-    # Pre-warm numba JITs in main process to avoid compilation inside workers.
+def run_pipeline(
+    symbols: List[str],
+    config_path: str,
+    output_path: str,
+    checkpoint_dir: str = None,
+    hf_dataset: str = None,
+    verbose: bool = True,
+    resume: bool = False
+):
+    """
+    Run the pattern detection pipeline
+    
+    Args:
+        symbols: List of ticker symbols
+        config_path: Path to config file
+        output_path: Path to save results
+        checkpoint_dir: Directory for checkpoints
+        hf_dataset: Hugging Face dataset name
+        verbose: Show progress
+        resume: Resume from checkpoint
+    """
+    start_time = time.time()
+    
+    # Load config
+    cfg = PipelineConfig.from_yaml(config_path)
+    
+    # Setup checkpoint manager
+    checkpoint_mgr = None
+    if checkpoint_dir:
+        checkpoint_mgr = CheckpointManager(Path(checkpoint_dir))
+        
+        if resume:
+            processed = checkpoint_mgr.load_processed_symbols()
+            if verbose and processed:
+                print(f"📂 Resuming: {len(processed)} symbols already processed")
+                print(f"   Already done: {', '.join(sorted(processed))}")
+            
+            # Filter out processed symbols
+            symbols = [s for s in symbols if s not in processed]
+            if not symbols:
+                print("✅ All symbols already processed!")
+                return
+            
+            if verbose:
+                print(f"🔄 Remaining: {len(symbols)} symbols to process")
+    
+    # Pre-warm Numba
+    if verbose:
+        print("🔥 Pre-warming Numba JIT...")
     prewarm_numba()
-    phase_times = {}
-    t0 = time.time()
-    fetch_start = time.time()
-    fetched = await fetch_symbols(symbols, start_days=cfg.days, concurrency=cfg.concurrency)
-    phase_times['fetch'] = time.time() - fetch_start
-
-    all_results = {}
-    all_payloads = []
-    for s, df in fetched.items():
-        if df.empty:
-            print(f"No data for {s}, skipping")
+    
+    # Load data
+    if hf_dataset:
+        ticker_data = load_hf_dataset(hf_dataset, symbols, verbose)
+    else:
+        # Fallback to yfinance
+        if verbose:
+            print("📥 Fetching data from yfinance...")
+        from pipeline.fetcher import fetch_symbols
+        ticker_data = asyncio.run(fetch_symbols(symbols, concurrency=cfg.concurrency))
+    
+    # Collect all results
+    all_results = []
+    
+    # Load partial results if resuming
+    if resume and checkpoint_mgr:
+        partial = checkpoint_mgr.load_partial_results()
+        if partial:
+            all_results.extend(partial)
+            if verbose:
+                print(f"📂 Loaded {len(partial)} patterns from previous runs")
+    
+    # Process each symbol
+    total_symbols = len(symbols)
+    
+    if verbose:
+        print(f"\n{'='*70}")
+        print(f"🚀 Starting pattern detection for {total_symbols} symbols")
+        print(f"{'='*70}\n")
+    
+    for idx, symbol in enumerate(symbols, 1):
+        if verbose:
+            print(f"\n[{idx}/{total_symbols}] Processing {symbol}...")
+            print(f"   Progress: {idx/total_symbols*100:.1f}% complete")
+            print(f"   Remaining: {total_symbols - idx} symbols")
+        
+        df = ticker_data.get(symbol)
+        if df is None or len(df) == 0:
+            if verbose:
+                print(f"   ⚠️  No data available for {symbol}, skipping")
             continue
-
-        bw_start = time.time()
-        windows, shm_objs = build_windows_for_df(df, cfg)
-        print(f"{s}: prepared {len(windows)} windows to scan (cfg up_to={cfg.up_to})")
-
-        # cheap volatility pre-filter: drop windows whose close-return std is below min_volatility
-        if getattr(cfg, 'min_volatility', 0.0) and len(windows) > 0:
-            filtered = []
-            for w in windows:
-                start_row, window_len, context = w
-                wnd = context['base_df'].iloc[start_row : start_row + window_len]
-                # prefer 'Close' or 'Adj Close'
-                if 'Close' in wnd.columns:
-                    series = wnd['Close'].astype(float)
-                elif 'Adj Close' in wnd.columns:
-                    series = wnd['Adj Close'].astype(float)
-                else:
-                    # fallback to first numeric column
-                    series = wnd.select_dtypes(include=['number']).iloc[:, 0]
-                if series.size < 2:
-                    vol = 0.0
-                else:
-                    ret = series.pct_change().dropna()
-                    vol = float(ret.std()) if not ret.empty else 0.0
-                if vol >= float(cfg.min_volatility):
-                    filtered.append(w)
-            print(f"{s}: filtered windows by volatility {len(windows)} -> {len(filtered)} (min_vol={cfg.min_volatility})")
-            windows = filtered
-
-        # optional skip flat windows: if enabled, require simple price range > small epsilon
-        if getattr(cfg, 'skip_flat_windows', False) and len(windows) > 0:
-            filtered2 = []
-            for w in windows:
-                start_row, window_len, context = w
-                wnd = context['base_df'].iloc[start_row : start_row + window_len]
-                if 'Low' in wnd.columns and 'High' in wnd.columns:
-                    lo = float(wnd['Low'].min())
-                    hi = float(wnd['High'].max())
-                else:
-                    nums = wnd.select_dtypes(include=['number'])
-                    lo = float(nums.min().min())
-                    hi = float(nums.max().max())
-                if (hi - lo) / (lo + 1e-9) > 1e-4:
-                    filtered2.append(w)
-            print(f"{s}: skipped flat windows {len(windows)} -> {len(filtered2)}")
-            windows = filtered2
-
-        phase_times.setdefault(s, {})
-        phase_times[s]['build_windows'] = time.time() - bw_start
-
-        # limit number of windows to keep runtime reasonable (use config cap)
-        max_windows = max(1, min(len(windows), cfg.max_windows))
-        windows = windows[:max_windows]
-
-        # --- vectorized pre-score: compute cheap features per-window and prune ---
-        pre_top_k = int(getattr(cfg, 'pre_score_top_k', 0))
-        pre_thresh = float(getattr(cfg, 'pre_score_threshold', 0.0))
-        pre_weights = getattr(cfg, 'pre_score_weights', (0.4, 0.3, 0.2, 0.1))
-        if (pre_top_k > 0 or pre_thresh > 0.0) and len(windows) > 0:
-            feats = []
-            for w in windows:
-                sr, wl, ctx = w
-                lows_arr = ctx.get('lows')
-                highs_arr = ctx.get('highs')
-                if lows_arr is None:
-                    wnd = ctx['base_df'].iloc[sr: sr + wl]
-                    lows_win = wnd['Low'].to_numpy()
-                    highs_win = wnd['High'].to_numpy()
-                else:
-                    lows_win = lows_arr[sr: sr + wl]
-                    highs_win = highs_arr[sr: sr + wl]
-                # volatility: std of pct changes of lows (or closes)
-                if lows_win.size < 2:
-                    vol = 0.0
-                else:
-                    rets = (lows_win[1:] - lows_win[:-1]) / (lows_win[:-1] + 1e-9)
-                    vol = float(rets.std())
-                lo = float(lows_win.min())
-                hi = float(highs_win.max())
-                ran = (hi - lo) / (lo + 1e-9)
-                # slope: simple (last-first)/n
-                slope = abs(float((lows_win[-1] - lows_win[0]) / (len(lows_win) + 1e-9)))
-                # extrema count via fast numba helper if available
-                try:
-                    from models.functions import count_extrema
-                    ext = int(count_extrema(lows_win))
-                except Exception:
-                    ext = 0
-                feats.append([vol, ran, float(ext), slope])
-
-            # score features (CPU linear combination)
-            w0, w1, w2, w3 = pre_weights
-            scores = [w0 * f[0] + w1 * f[1] + w2 * min(f[2] / 10.0, 1.0) + w3 * f[3] for f in feats]
-
-            # attach scores and filter
-            scored = list(zip(windows, scores))
-            # apply threshold then optionally top_k
-            if pre_thresh > 0.0:
-                scored = [ws for ws in scored if ws[1] >= pre_thresh]
-            if pre_top_k > 0 and scored:
-                scored = sorted(scored, key=lambda x: x[1], reverse=True)[:pre_top_k]
-            windows = [ws[0] for ws in scored]
-
-        cfg_dict = {
-            'up_to': cfg.up_to,
-            'top_n': cfg.top_n,
-            'max_combinations': cfg.max_combinations,
-            'chunk_size': cfg.chunk_size,
-            'cpu_batch_size': getattr(cfg, 'cpu_batch_size', 512),
-            'cpu_top_k': getattr(cfg, 'cpu_top_k', 64),
-        }
-
-        scan_start = time.time()
-        results = parallel_scan_windows(windows, cfg=cfg_dict, processes=cfg.processes)
-        # cleanup shared memory segments if we created them for this symbol
+        
+        if verbose:
+            print(f"   📊 Data: {len(df)} bars from {df['Date'].min()} to {df['Date'].max()}")
+        
+        # Build windows
         try:
-            if shm_objs is not None:
-                from pipeline.shared_memory import cleanup_shared_objects
-
-                cleanup_shared_objects(shm_objs)
-        except Exception:
-            pass
-        phase_times[s]['scan'] = time.time() - scan_start
-
-        # aggregate scan statistics from workers (if provided)
-        try:
-            total_pre = 0
-            total_full = 0
-            total_pre_time = 0.0
-            total_full_time = 0.0
-            for r in results:
-                st = r.get('scan_stats') if r else None
-                if st:
-                    total_pre += int(st.get('n_pre_scored', 0))
-                    total_full += int(st.get('n_full_evals', 0))
-                    total_pre_time += float(st.get('time_pre_score', 0.0))
-                    total_full_time += float(st.get('time_full_eval', 0.0))
-            phase_times[s]['scan_stats'] = {
-                'n_pre_scored': total_pre,
-                'n_full_evals': total_full,
-                'time_pre_score': total_pre_time,
-                'time_full_eval': total_full_time,
-            }
-            print(f"{s}: scan_stats pre_scored={total_pre} full_evals={total_full}")
-        except Exception:
-            pass
-
-        # (CPU-only pipeline: no optional GPU scoring step)
-
-        all_results[s] = results
-
-        # export detections: save images per-detection and collect payloads into a single JSON later
-        # the images directory is configured in the script's main block via set_images_dir(...)
-        from models.helpers import plot_pattern
-        # determine top-N results to plot to limit I/O
-        to_plot_idx = set()
-        if cfg.save_images and results:
-            try:
-                sorted_idx = sorted(range(len(results)), key=lambda i: getattr(results[i]['best'], 'score', 0.0), reverse=True)
-                top_n = max(1, int(getattr(cfg, 'save_images_top_n', 1)))
-                to_plot_idx = set(sorted_idx[:top_n])
-            except Exception:
-                to_plot_idx = set()
-
-        for i, r in enumerate(results):
-            best = r['best']
-            # reconstruct window DataFrame only when needed (avoids pickling DataFrames across processes)
-            window_df = df.iloc[r['start_row'] : r['start_row'] + r['window_len']].reset_index(drop=True)
-            title = f"{s} {r['date_start']} to {r['date_end']} (window={int(r['window_len']/7)}w, cfg={best.wave_config}, score={best.score:.3f})"
-            if cfg.save_images and i in to_plot_idx:
-                payload = plot_pattern(
-                    df=window_df,
-                    wave_pattern=best.pattern,
-                    title=title,
-                    symbol=s,
-                    timeframe='1D',
-                    rule_name=best.rule_name,
-                    score=best.score,
-                )
-            else:
-                # skip plotting but collect a minimal payload
-                payload = {
-                    'symbol': s,
-                    'date_start': r.get('date_start'),
-                    'date_end': r.get('date_end'),
-                    'window_len': int(r.get('window_len', 0)),
-                    'wave_config': getattr(best, 'wave_config', None),
-                    'rule_name': getattr(best, 'rule_name', None),
-                    'score': getattr(best, 'score', None),
-                }
-            if payload is not None:
-                # attach extra metadata about detection window
-                payload.update({
-                    "date_start": r.get("date_start"),
-                    "date_end": r.get("date_end"),
-                    "window_len": int(r.get("window_len", 0)),
-                    "wave_config": getattr(best, "wave_config", None),
-                })
-                all_payloads.append(payload)
-
-    # write a single consolidated JSON result file into data/
-    ts = time.strftime('%Y%m%d_%H%M%S')
-    out_data_dir = Path('data')
-    out_data_dir.mkdir(exist_ok=True)
-    results_path = out_data_dir / f'results_run_{ts}.json'
-    with results_path.open('w', encoding='utf-8') as f:
-        json.dump(all_payloads, f, indent=2, default=str)
-
-    print(f"Wrote {results_path} (images remain under ./images)")
-    phase_times['total'] = time.time() - t0
-    # print profiling summary if requested
-    if getattr(cfg, 'profile', False):
-        print('\nProfiling summary (seconds):')
-        for k, v in phase_times.items():
-            if isinstance(v, dict):
-                print(f"Symbol: {k}")
-                for kk, vv in v.items():
-                    print(f"  {kk}: {vv:.2f}")
-            else:
-                print(f"{k}: {v:.2f}")
-    return all_results
+            windows, (lows, highs, dates) = build_windows_for_df(df, cfg)
+            
+            if verbose:
+                print(f"   🔍 Generated {len(windows)} windows")
+            
+            if not windows:
+                if verbose:
+                    print(f"   ⚠️  No valid windows, skipping")
+                continue
+            
+            # Run pattern detection
+            if verbose:
+                print(f"   ⚙️  Running wave analyzer...")
+            
+            window_start = time.time()
+            symbol_results = parallel_scan_windows(
+                ticker=symbol,
+                lows=lows,
+                highs=highs,
+                dates=dates,
+                windows=windows,
+                cfg=cfg
+            )
+            window_time = time.time() - window_start
+            
+            if verbose:
+                print(f"   ✅ Found {len(symbol_results)} patterns in {window_time:.1f}s")
+                if symbol_results:
+                    print(f"   📈 Top score: {max(r.get('score', 0) for r in symbol_results):.3f}")
+            
+            all_results.extend(symbol_results)
+            
+            # Save checkpoint
+            if checkpoint_mgr:
+                checkpoint_mgr.save_processed_symbol(symbol)
+                checkpoint_mgr.save_partial_results(all_results)
+                if verbose:
+                    print(f"   💾 Checkpoint saved")
+        
+        except Exception as e:
+            if verbose:
+                print(f"   ❌ Error processing {symbol}: {e}")
+                import traceback
+                traceback.print_exc()
+            continue
+    
+    # Save final results
+    if verbose:
+        print(f"\n{'='*70}")
+        print(f"💾 Saving results to {output_path}")
+    
+    output_data = {
+        'metadata': {
+            'total_symbols': total_symbols,
+            'total_patterns': len(all_results),
+            'config': config_path,
+            'hf_dataset': hf_dataset,
+            'runtime_seconds': time.time() - start_time
+        },
+        'patterns': all_results
+    }
+    
+    with open(output_path, 'w') as f:
+        json.dump(output_data, f, indent=2, default=str)
+    
+    elapsed = time.time() - start_time
+    
+    if verbose:
+        print(f"\n{'='*70}")
+        print(f"✅ Pipeline Complete!")
+        print(f"{'='*70}")
+        print(f"📊 Summary:")
+        print(f"   Symbols processed: {total_symbols}")
+        print(f"   Patterns detected: {len(all_results)}")
+        print(f"   Total runtime: {elapsed:.1f}s ({elapsed/60:.1f} min)")
+        if total_symbols > 0:
+            print(f"   Avg per symbol: {elapsed/total_symbols:.1f}s")
+        print(f"   Output: {output_path}")
+        print(f"{'='*70}\n")
 
 
-def parse_args():
-    p = argparse.ArgumentParser()
-    p.add_argument('symbols', nargs='+')
-    p.add_argument('--config', type=str, default='configs.yaml', help='path to YAML config file')
-    p.add_argument('--source', type=str, default='yfinance', choices=['yfinance', 'hf'], help='data source')
-    p.add_argument('--processes', type=int, default=None)
-    p.add_argument('--out-dir', type=str, default='output', help='output directory (contains images/ and latest_results.json)')
-    return p.parse_args()
+def main():
+    parser = argparse.ArgumentParser(
+        description="Elliott Wave Pattern Detection Pipeline"
+    )
+    parser.add_argument(
+        '--symbols',
+        type=str,
+        required=True,
+        help='Comma-separated list of ticker symbols'
+    )
+    parser.add_argument(
+        '--config',
+        type=str,
+        default='configs.yaml',
+        help='Path to config file'
+    )
+    parser.add_argument(
+        '--output',
+        type=str,
+        default='output/results.json',
+        help='Path to save results'
+    )
+    parser.add_argument(
+        '--checkpoint-dir',
+        type=str,
+        help='Directory for checkpoints'
+    )
+    parser.add_argument(
+        '--hf-dataset',
+        type=str,
+        help='Hugging Face dataset name'
+    )
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        help='Show verbose progress'
+    )
+    parser.add_argument(
+        '--resume',
+        action='store_true',
+        help='Resume from checkpoint'
+    )
+    
+    args = parser.parse_args()
+    
+    # Parse symbols
+    symbols = [s.strip() for s in args.symbols.split(',')]
+    
+    # Create output directory
+    Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+    
+    # Run pipeline
+    run_pipeline(
+        symbols=symbols,
+        config_path=args.config,
+        output_path=args.output,
+        checkpoint_dir=args.checkpoint_dir,
+        hf_dataset=args.hf_dataset,
+        verbose=args.verbose,
+        resume=args.resume
+    )
 
 
 if __name__ == '__main__':
-    args = parse_args()
-    cfg = PipelineConfig.load_from_file(args.config)
-    # allow CLI overrides for a couple of knobs
-    if args.processes is not None:
-        cfg.processes = args.processes
-    # GPU flag removed: pipeline is CPU-first
-
-    # prepare output dirs and configure helpers
-    out_dir = Path(args.out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_images = out_dir / 'images'
-    out_images.mkdir(parents=True, exist_ok=True)
-
-    # set images dir used by models.helpers
-    from models.helpers import set_images_dir
-    set_images_dir(str(out_images))
-
-    # delete previous runs (timestamped files) before starting a fresh run
-    import glob
-    for f in glob.glob('data/results_run_*.json'):
-        try:
-            Path(f).unlink()
-        except Exception:
-            pass
-    try:
-        (out_dir / 'latest_results.json').unlink()
-    except Exception:
-        pass
-    # clear images dir
-    for p in out_images.glob('*'):
-        try:
-            if p.is_file():
-                p.unlink()
-        except Exception:
-            pass
-
-    # pass source through to fetcher by capturing it in the coroutine
-    async def _run():
-        # monkeypatch fetch_symbols import location by partialing source argument
-        from functools import partial
-        import pipeline.fetcher as fetcher_mod
-        fetcher_mod.fetch_symbols = partial(fetcher_mod.fetch_symbols, source=(args.source))
-
-        # ensure this run uses last 365 days as requested
-        cfg.days = 365
-
-        # run pipeline
-        results = await run_pipeline(args.symbols, cfg)
-
-        # after run, move consolidated results (timestamped) to out_dir/latest_results.json if present
-        # run_pipeline writes a timestamped results file in data/; attempt to find the most recent one
-        import glob
-        from pathlib import Path as _P
-        matches = sorted(glob.glob('data/results_run_*.json'))
-        if matches:
-            latest = matches[-1]
-            _P(latest).rename(out_dir / 'latest_results.json')
-        return results
-
-    asyncio.run(_run())
+    main()
