@@ -598,7 +598,20 @@ This project is forked from and builds upon the foundational Elliott Wave detect
 
 ## License
 
-This project is open source. See repository for license details.
+This project is licensed under the **Apache License 2.0**.
+
+You are free to use, modify, and distribute this software under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for the full license text.
+
+**Key Points:**
+- ✅ Free for commercial and private use
+- ✅ Modification and distribution permitted
+- ✅ Patent grant included
+- ⚠️ Must include copyright notice and license
+- ⚠️ Changes must be documented
+- ❌ No trademark rights granted
+- ❌ No warranty provided
+
+For more information, visit: https://www.apache.org/licenses/LICENSE-2.0
 
 ## Citation
 
