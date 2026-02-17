@@ -29,38 +29,96 @@ from pipeline.numba_warm import prewarm_numba
 
 
 class CheckpointManager:
-    """Manages checkpoints for resumable pipeline runs"""
+    """Manages checkpoints for resumable pipeline runs with enhanced error tracking"""
     
     def __init__(self, checkpoint_dir: Path):
         self.checkpoint_dir = Path(checkpoint_dir)
         self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
         self.processed_file = self.checkpoint_dir / "processed_symbols.json"
         self.results_file = self.checkpoint_dir / "partial_results.json"
+        self.failed_file = self.checkpoint_dir / "failed_symbols.json"
+        self.stats_file = self.checkpoint_dir / "runtime_stats.json"
         
     def load_processed_symbols(self) -> Set[str]:
         """Load set of already processed symbols"""
-        if self.processed_file.exists():
-            with open(self.processed_file, 'r') as f:
-                return set(json.load(f))
+        try:
+            if self.processed_file.exists():
+                with open(self.processed_file, 'r') as f:
+                    return set(json.load(f))
+        except Exception as e:
+            print(f"⚠️  Warning: Could not load processed symbols: {e}")
         return set()
+    
+    def load_failed_symbols(self) -> Dict[str, str]:
+        """Load dict of failed symbols with error messages"""
+        try:
+            if self.failed_file.exists():
+                with open(self.failed_file, 'r') as f:
+                    return json.load(f)
+        except Exception as e:
+            print(f"⚠️  Warning: Could not load failed symbols: {e}")
+        return {}
     
     def save_processed_symbol(self, symbol: str):
         """Mark a symbol as processed"""
-        processed = self.load_processed_symbols()
-        processed.add(symbol)
-        with open(self.processed_file, 'w') as f:
-            json.dump(list(processed), f)
+        try:
+            processed = self.load_processed_symbols()
+            processed.add(symbol)
+            with open(self.processed_file, 'w') as f:
+                json.dump(sorted(list(processed)), f, indent=2)
+        except Exception as e:
+            print(f"⚠️  Warning: Could not save processed symbol {symbol}: {e}")
+    
+    def save_failed_symbol(self, symbol: str, error_msg: str):
+        """Mark a symbol as failed with error message"""
+        try:
+            failed = self.load_failed_symbols()
+            failed[symbol] = error_msg
+            with open(self.failed_file, 'w') as f:
+                json.dump(failed, f, indent=2)
+        except Exception as e:
+            print(f"⚠️  Warning: Could not save failed symbol {symbol}: {e}")
     
     def save_partial_results(self, results: List[Dict]):
-        """Save partial results"""
-        with open(self.results_file, 'w') as f:
-            json.dump(results, f, indent=2, default=str)
+        """Save partial results with backup"""
+        try:
+            # Create backup of existing results
+            if self.results_file.exists():
+                backup_file = self.checkpoint_dir / "partial_results.backup.json"
+                import shutil
+                shutil.copy2(self.results_file, backup_file)
+            
+            # Save new results
+            with open(self.results_file, 'w') as f:
+                json.dump(results, f, indent=2, default=str)
+        except Exception as e:
+            print(f"⚠️  Warning: Could not save partial results: {e}")
+    
+    def save_runtime_stats(self, stats: Dict):
+        """Save runtime statistics"""
+        try:
+            with open(self.stats_file, 'w') as f:
+                json.dump(stats, f, indent=2, default=str)
+        except Exception as e:
+            print(f"⚠️  Warning: Could not save runtime stats: {e}")
     
     def load_partial_results(self) -> List[Dict]:
-        """Load partial results"""
-        if self.results_file.exists():
-            with open(self.results_file, 'r') as f:
-                return json.load(f)
+        """Load partial results with fallback to backup"""
+        try:
+            if self.results_file.exists():
+                with open(self.results_file, 'r') as f:
+                    return json.load(f)
+        except Exception as e:
+            print(f"⚠️  Warning: Could not load partial results: {e}")
+            # Try backup
+            backup_file = self.checkpoint_dir / "partial_results.backup.json"
+            if backup_file.exists():
+                print(f"   Attempting to load from backup...")
+                try:
+                    with open(backup_file, 'r') as f:
+                        return json.load(f)
+                except Exception as e2:
+                    print(f"   Backup also failed: {e2}")
         return []
 
 
@@ -262,6 +320,8 @@ def run_pipeline(
     
     # Process each symbol
     total_symbols = len(symbols)
+    symbol_times = []  # Track time per symbol for estimation
+    patterns_count = []  # Track patterns per symbol
     
     if verbose:
         print(f"\n{'='*70}")
@@ -269,30 +329,77 @@ def run_pipeline(
         print(f"{'='*70}\n")
     
     for idx, symbol in enumerate(symbols, 1):
+        symbol_start_time = time.time()
+        
         if verbose:
             print(f"\n[{idx}/{total_symbols}] Processing {symbol}...")
             print(f"   Progress: {idx/total_symbols*100:.1f}% complete")
             print(f"   Remaining: {total_symbols - idx} symbols")
-        
-        df = ticker_data.get(symbol)
-        if df is None or len(df) == 0:
-            if verbose:
-                print(f"   ⚠️  No data available for {symbol}, skipping")
-            continue
-        
-        if verbose:
-            print(f"   📊 Data: {len(df)} bars from {df['Date'].min()} to {df['Date'].max()}")
-        
-        # Build windows
+            
+            # Time estimation based on completed symbols
+            if symbol_times:
+                avg_time = sum(symbol_times) / len(symbol_times)
+                remaining_count = total_symbols - idx + 1  # +1 to include current
+                estimated_remaining_sec = avg_time * remaining_count
+                
+                # Format time nicely
+                if estimated_remaining_sec < 3600:
+                    est_str = f"{estimated_remaining_sec/60:.1f} minutes"
+                elif estimated_remaining_sec < 86400:
+                    est_str = f"{estimated_remaining_sec/3600:.1f} hours"
+                else:
+                    est_str = f"{estimated_remaining_sec/86400:.1f} days ({estimated_remaining_sec/3600:.1f} hours)"
+                
+                print(f"   ⏱️  Estimated remaining: {est_str} (avg {avg_time:.1f}s per symbol)")
+                
+                # ETA calculation
+                eta_timestamp = time.time() + estimated_remaining_sec
+                eta_str = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(eta_timestamp))
+                print(f"   🎯 Estimated completion: {eta_str}")
+                
+                # Show cumulative stats
+                if patterns_count:
+                    total_patterns_so_far = sum(patterns_count)
+                    avg_patterns = total_patterns_so_far / len(patterns_count)
+                    estimated_total_patterns = int(avg_patterns * total_symbols)
+                    print(f"   📊 Patterns so far: {total_patterns_so_far} (avg {avg_patterns:.1f} per symbol)")
+                    print(f"   📈 Estimated total patterns: ~{estimated_total_patterns:,}")
+
+        # Wrap entire symbol processing in try-except
         try:
-            windows, (lows, highs, dates) = build_windows_for_df(df, cfg)
+            df = ticker_data.get(symbol)
+            if df is None or len(df) == 0:
+                if verbose:
+                    print(f"   ⚠️  No data available for {symbol}, skipping")
+                if checkpoint_mgr:
+                    checkpoint_mgr.save_failed_symbol(symbol, "No data available")
+                continue
             
             if verbose:
-                print(f"   🔍 Generated {len(windows)} windows")
+                print(f"   📊 Data: {len(df)} bars from {df['Date'].min()} to {df['Date'].max()}")
             
-            if not windows:
+            # Build windows
+            try:
+                windows, (lows, highs, dates) = build_windows_for_df(df, cfg)
+                
                 if verbose:
-                    print(f"   ⚠️  No valid windows, skipping")
+                    print(f"   🔍 Generated {len(windows)} windows")
+                
+                if not windows:
+                    if verbose:
+                        print(f"   ⚠️  No valid windows, skipping")
+                    if checkpoint_mgr:
+                        checkpoint_mgr.save_failed_symbol(symbol, "No valid windows generated")
+                    continue
+            except Exception as e:
+                error_msg = f"Window generation failed: {str(e)}"
+                if verbose:
+                    print(f"   ❌ {error_msg}")
+                if checkpoint_mgr:
+                    checkpoint_mgr.save_failed_symbol(symbol, error_msg)
+                symbol_elapsed = time.time() - symbol_start_time
+                symbol_times.append(symbol_elapsed)
+                patterns_count.append(0)
                 continue
             
             # Run pattern detection
@@ -324,58 +431,66 @@ def run_pipeline(
             }
             
             window_start = time.time()
-            symbol_results = parallel_scan_windows(
-                windows=prepared_windows,
-                cfg=cfg_dict,
-                processes=cfg.processes
-            )
+            try:
+                symbol_results = parallel_scan_windows(
+                    windows=prepared_windows,
+                    cfg=cfg_dict,
+                    processes=cfg.processes
+                )
+            except Exception as e:
+                error_msg = f"Pattern detection failed: {str(e)}"
+                if verbose:
+                    print(f"   ❌ {error_msg}")
+                if checkpoint_mgr:
+                    checkpoint_mgr.save_failed_symbol(symbol, error_msg)
+                symbol_elapsed = time.time() - symbol_start_time
+                symbol_times.append(symbol_elapsed)
+                patterns_count.append(0)
+                continue
+            
             window_time = time.time() - window_start
+            
+            patterns_count.append(len(symbol_results))
             
             if verbose:
                 print(f"   ✅ Found {len(symbol_results)} patterns in {window_time:.1f}s")
                 if symbol_results:
-                    print(f"   📈 Top score: {max(r.get('ensemble_score', r.get('score', 0)) for r in symbol_results if r):.3f}")
+                    top_score = max((r.get('ensemble_score', r.get('score', 0)) for r in symbol_results if r), default=0)
+                    print(f"   📈 Top score: {top_score:.3f}")
             
             # Save images for top patterns if enabled
             if getattr(cfg, 'save_images', False) and symbol_results:
-                save_top_n = getattr(cfg, 'save_images_top_n', 5)
-                if verbose:
-                    print(f"   🖼️  Saving top {min(save_top_n, len(symbol_results))} pattern images...")
-                
-                # Set images directory for this symbol
-                from models.helpers import set_images_dir
-                images_dir = Path(cfg.out_dir) / "images" / symbol
-                images_dir.mkdir(parents=True, exist_ok=True)
-                set_images_dir(str(images_dir))
-                
-                # Sort by ensemble_score (if available) or score
-                sorted_results = sorted(
-                    [r for r in symbol_results if r],
-                    key=lambda x: x.get('ensemble_score', x.get('score', 0)),
-                    reverse=True
-                )[:save_top_n]
-                
-                for i, result in enumerate(sorted_results, 1):
-                    try:
-                        # Extract pattern from result
-                        best_pattern = result.get('best')
-                        if not best_pattern:
-                            continue
-                        
-                        # Get the FoundPattern object (it's stored as a string representation)
-                        # We need to extract it from the 'all' list which has FoundPattern objects
-                        all_patterns = result.get('all', [])
-                        if not all_patterns:
-                            continue
-                        
-                        found_pattern = all_patterns[0] if isinstance(all_patterns, list) else best_pattern
-                        
-                        # Extract the WavePattern object
-                        if hasattr(found_pattern, 'pattern'):
+                try:
+                    save_top_n = getattr(cfg, 'save_images_top_n', 5)
+                    if verbose:
+                        print(f"   🖼️  Saving top {min(save_top_n, len(symbol_results))} pattern images...")
+                    
+                    # Set images directory for this symbol
+                    from models.helpers import set_images_dir
+                    images_dir = Path(cfg.out_dir) / "images" / symbol
+                    images_dir.mkdir(parents=True, exist_ok=True)
+                    set_images_dir(str(images_dir))
+                    
+                    # Sort by ensemble_score (if available) or score
+                    sorted_results = sorted(
+                        [r for r in symbol_results if r],
+                        key=lambda x: x.get('ensemble_score', x.get('score', 0)),
+                        reverse=True
+                    )[:save_top_n]
+                    
+                    saved_count = 0
+                    for i, result in enumerate(sorted_results, 1):
+                        try:
+                            # Get the pattern object (temporary, will be removed before JSON export)
+                            found_pattern = result.get('_pattern_obj')
+                            if not found_pattern or not hasattr(found_pattern, 'pattern'):
+                                continue
+                            
+                            # Extract pattern details
                             wave_pattern = found_pattern.pattern
-                            score = getattr(found_pattern, 'score', 0)
-                            ensemble_score = getattr(found_pattern, 'ensemble_score', score)
-                            rule_name = getattr(found_pattern, 'rule_name', 'unknown')
+                            best_dict = result.get('best', {})
+                            rule_name = best_dict.get('rule_name', 'unknown')
+                            ensemble_score = result.get('ensemble_score', 0)
                             
                             # Create a DataFrame slice for this pattern
                             start_row = result.get('start_row', 0)
@@ -397,12 +512,22 @@ def run_pipeline(
                                 rule_name=rule_name,
                                 score=ensemble_score
                             )
+                            saved_count += 1
                             
                             if verbose and i <= 3:
                                 print(f"      Saved pattern #{i}: {rule_name}, score={ensemble_score:.3f}")
-                    except Exception as e:
-                        if verbose:
-                            print(f"      ⚠️  Failed to save image #{i}: {e}")
+                        except Exception as e:
+                            if verbose and i <= 3:
+                                print(f"      ⚠️  Failed to save image #{i}: {e}")
+                            continue
+                    
+                    if verbose and saved_count > 0:
+                        print(f"   ✅ Saved {saved_count}/{save_top_n} images")
+                        
+                except Exception as e:
+                    if verbose:
+                        print(f"   ⚠️  Image saving failed: {e}")
+                    # Continue even if image saving fails
                         continue
             
             all_results.extend(symbol_results)
@@ -432,24 +557,63 @@ def run_pipeline(
                 poor = len([p for p in symbol_results if p.get('ensemble_score', 0) < 0.50])
                 print(f"      Quality: Excellent={excellent}, Good={good}, Fair={fair}, Poor={poor}")
             
-            # Save checkpoint
+            # Save checkpoint after each symbol
             if checkpoint_mgr:
-                checkpoint_mgr.save_processed_symbol(symbol)
-                checkpoint_mgr.save_partial_results(all_results)
-                if verbose:
-                    print(f"   💾 Checkpoint saved")
+                try:
+                    checkpoint_mgr.save_processed_symbol(symbol)
+                    checkpoint_mgr.save_partial_results(all_results)
+                    
+                    # Save runtime stats every 10 symbols
+                    if idx % 10 == 0 or idx == total_symbols:
+                        runtime_stats = {
+                            'symbols_processed': idx,
+                            'total_symbols': total_symbols,
+                            'patterns_found': len(all_results),
+                            'avg_time_per_symbol': sum(symbol_times) / len(symbol_times) if symbol_times else 0,
+                            'avg_patterns_per_symbol': sum(patterns_count) / len(patterns_count) if patterns_count else 0,
+                            'elapsed_time': time.time() - start_time,
+                            'last_updated': time.strftime('%Y-%m-%d %H:%M:%S')
+                        }
+                        checkpoint_mgr.save_runtime_stats(runtime_stats)
+                    
+                    if verbose:
+                        print(f"   💾 Checkpoint saved ({idx}/{total_symbols} symbols)")
+                except Exception as e:
+                    if verbose:
+                        print(f"   ⚠️  Checkpoint save failed: {e}")
+            
+            # Track symbol processing time for estimation
+            symbol_elapsed = time.time() - symbol_start_time
+            symbol_times.append(symbol_elapsed)
+            
+            if verbose:
+                print(f"   ⏲️  Symbol completed in {symbol_elapsed:.1f}s")
         
         except Exception as e:
+            error_msg = f"Unexpected error: {str(e)}"
             if verbose:
-                print(f"   ❌ Error processing {symbol}: {e}")
+                print(f"   ❌ {error_msg}")
                 import traceback
                 traceback.print_exc()
+            
+            # Save to failed symbols
+            if checkpoint_mgr:
+                checkpoint_mgr.save_failed_symbol(symbol, error_msg)
+            
+            # Still track time even on error for better estimates
+            symbol_elapsed = time.time() - symbol_start_time
+            symbol_times.append(symbol_elapsed)
             continue
     
     # Save final results
     if verbose:
         print(f"\n{'='*70}")
         print(f"💾 Saving results to {output_path}")
+    
+    # Clean up pattern objects before JSON export (they can't be serialized)
+    for result in all_results:
+        if '_pattern_obj' in result:
+            del result['_pattern_obj']
     
     output_data = {
         'metadata': {
@@ -467,17 +631,72 @@ def run_pipeline(
     
     elapsed = time.time() - start_time
     
+    # Load failed symbols for summary
+    failed_symbols = {}
+    if checkpoint_mgr:
+        failed_symbols = checkpoint_mgr.load_failed_symbols()
+    
     if verbose:
         print(f"\n{'='*70}")
         print(f"✅ Pipeline Complete!")
         print(f"{'='*70}")
         print(f"📊 Summary:")
-        print(f"   Symbols processed: {total_symbols}")
-        print(f"   Patterns detected: {len(all_results)}")
-        print(f"   Total runtime: {elapsed:.1f}s ({elapsed/60:.1f} min)")
-        if total_symbols > 0:
-            print(f"   Avg per symbol: {elapsed/total_symbols:.1f}s")
+        print(f"   Symbols attempted: {total_symbols}")
+        
+        successful = total_symbols - len(failed_symbols)
+        if failed_symbols:
+            print(f"   Successfully processed: {successful}")
+            print(f"   Failed: {len(failed_symbols)}")
+        else:
+            print(f"   Successfully processed: {total_symbols} (100%)")
+        
+        print(f"   Total patterns detected: {len(all_results)}")
+        
+        # Format total runtime nicely
+        if elapsed < 3600:
+            runtime_str = f"{elapsed:.1f}s ({elapsed/60:.1f} min)"
+        elif elapsed < 86400:
+            runtime_str = f"{elapsed/3600:.1f} hours ({elapsed/60:.0f} min)"
+        else:
+            runtime_str = f"{elapsed/86400:.1f} days ({elapsed/3600:.1f} hours)"
+        
+        print(f"   Total runtime: {runtime_str}")
+        
+        if symbol_times:
+            avg_time = sum(symbol_times) / len(symbol_times)
+            min_time = min(symbol_times)
+            max_time = max(symbol_times)
+            
+            print(f"   Time per symbol:")
+            print(f"      Average: {avg_time:.1f}s")
+            print(f"      Min: {min_time:.1f}s")
+            print(f"      Max: {max_time:.1f}s")
+            
+            # Patterns per symbol stats
+            if all_results:
+                from collections import Counter
+                patterns_per_symbol = Counter(r.get('symbol', 'unknown') for r in all_results)
+                if patterns_per_symbol:
+                    avg_patterns = len(all_results) / len(patterns_per_symbol)
+                    min_patterns = min(patterns_per_symbol.values())
+                    max_patterns = max(patterns_per_symbol.values())
+                    print(f"   Patterns per symbol:")
+                    print(f"      Average: {avg_patterns:.1f}")
+                    print(f"      Min: {min_patterns}")
+                    print(f"      Max: {max_patterns}")
+        
         print(f"   Output: {output_path}")
+        
+        # Show failed symbols if any
+        if failed_symbols:
+            print(f"\n   ⚠️  Failed Symbols ({len(failed_symbols)}):")
+            for sym, error in list(failed_symbols.items())[:10]:  # Show first 10
+                print(f"      {sym}: {error[:60]}...")
+            if len(failed_symbols) > 10:
+                print(f"      ... and {len(failed_symbols) - 10} more")
+                if checkpoint_mgr:
+                    print(f"      See {checkpoint_mgr.failed_file} for full list")
+        
         print(f"{'='*70}\n")
 
 
@@ -488,8 +707,15 @@ def main():
     parser.add_argument(
         '--symbols',
         type=str,
-        required=True,
-        help='Comma-separated list of ticker symbols'
+        required=False,
+        default=None,
+        help='Comma-separated list of ticker symbols (default: read from data/sp500_tickers.txt)'
+    )
+    parser.add_argument(
+        '--symbols-file',
+        type=str,
+        default=None,
+        help='Path to file with symbols (one per line). Default: data/sp500_tickers.txt'
     )
     parser.add_argument(
         '--config',
@@ -526,8 +752,31 @@ def main():
     
     args = parser.parse_args()
     
-    # Parse symbols
-    symbols = [s.strip() for s in args.symbols.split(',')]
+    # Parse symbols from various sources
+    symbols = None
+    
+    if args.symbols:
+        # Explicit comma-separated symbols
+        symbols = [s.strip() for s in args.symbols.split(',')]
+        print(f"📋 Using {len(symbols)} symbols from --symbols argument")
+    elif args.symbols_file:
+        # Read from specified file
+        symbols_path = Path(args.symbols_file)
+        if not symbols_path.exists():
+            print(f"❌ ERROR: Symbols file not found: {args.symbols_file}")
+            sys.exit(1)
+        symbols = [line.strip() for line in symbols_path.read_text().splitlines() if line.strip()]
+        print(f"📋 Loaded {len(symbols)} symbols from {args.symbols_file}")
+    else:
+        # Default: read from data/sp500_tickers.txt
+        default_symbols_file = project_root / "data" / "sp500_tickers.txt"
+        if default_symbols_file.exists():
+            symbols = [line.strip() for line in default_symbols_file.read_text().splitlines() if line.strip()]
+            print(f"📋 Loaded {len(symbols)} symbols from {default_symbols_file}")
+        else:
+            print(f"❌ ERROR: No symbols provided and default file not found: {default_symbols_file}")
+            print("Use --symbols 'AAPL,MSFT,...' or --symbols-file path/to/file.txt")
+            sys.exit(1)
     
     # Create output directory
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)

@@ -11,8 +11,15 @@ async def _download_to_df(symbol: str, start_days: int) -> pd.DataFrame:
 
     def _download():
         end_date = pd.Timestamp.now()
-        start_date = end_date - pd.DateOffset(days=start_days)
-        raw = yf.download(symbol, start=start_date, end=end_date)
+        
+        # If start_days is 0 or negative, fetch ALL available history
+        if start_days <= 0:
+            # yfinance default: fetch maximum available history
+            raw = yf.download(symbol, period="max")
+        else:
+            start_date = end_date - pd.DateOffset(days=start_days)
+            raw = yf.download(symbol, start=start_date, end=end_date)
+        
         return convert_yf_data(raw)
 
     df = await loop.run_in_executor(None, _download)
@@ -63,7 +70,7 @@ async def fetch_symbols(symbols: List[str], start_days: int = 720, concurrency: 
         def _slice_symbol(s: str):
             try:
                 now = pd.Timestamp.now()
-                start_date = now - pd.DateOffset(days=start_days)
+                
                 # detect the column that contains the ticker/symbol name
                 possible_symbol_cols = [c for c in pdf.columns if c.lower() in ("ticker", "symbol", "tickers", "ticker_symbol")]
                 symbol_col = possible_symbol_cols[0] if possible_symbol_cols else None
@@ -79,10 +86,19 @@ async def fetch_symbols(symbols: List[str], start_days: int = 720, concurrency: 
                 if sub.empty:
                     return s, pd.DataFrame()
                 sub = sub.sort_values(by="Date")
-                sub = sub[(sub["Date"] >= start_date) & (sub["Date"] <= now)]
+                
+                # If start_days <= 0, use ALL available data
+                if start_days <= 0:
+                    # No date filtering, use all data
+                    df_filtered = sub
+                else:
+                    start_date = now - pd.DateOffset(days=start_days)
+                    df_filtered = sub[(sub["Date"] >= start_date) & (sub["Date"] <= now)]
+                
                 # keep columns Date/Open/High/Low/Close if present
-                cols = [c for c in ["Date", "Open", "High", "Low", "Close"] if c in sub.columns]
-                df_out = sub[cols].reset_index(drop=True)
+                cols = [c for c in ["Date", "Open", "High", "Low", "Close"] if c in df_filtered.columns]
+                df_out = df_filtered[cols].reset_index(drop=True)
+                return s, df_out
                 return s, df_out
             except Exception as e:
                 print(f"hf slice error for {s}: {e}")

@@ -1,0 +1,10 @@
+{
+  "metadata": {
+    "total_symbols": 2,
+    "total_patterns": 0,
+    "config": "configs.yaml",
+    "hf_dataset": null,
+    "runtime_seconds": 4.351995944976807
+  },
+  "patterns": []
+}

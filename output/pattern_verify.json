@@ -1,10 +1,10 @@
 {
   "metadata": {
     "total_symbols": 1,
-    "total_patterns": 18,
+    "total_patterns": 13,
     "config": "configs.yaml",
     "hf_dataset": null,
-    "runtime_seconds": 90.88189506530762
+    "runtime_seconds": 50.4340238571167
   },
   "patterns": [
     {
@@ -31,143 +31,8 @@
         "n_full_evals": 64,
         "pattern_type": "corrective"
       },
-      "ensemble_score": 0.8990557401148701,
-      "fib_score": 0.8401114802297404
-    },
-    {
-      "symbol": "AAPL",
-      "start_row": 833,
-      "window_len": 728,
-      "date_start": "2014-06-16T00:00:00",
-      "date_end": "2017-05-04T00:00:00",
-      "best": {
-        "rule_name": "Corrective",
-        "score": 0.5,
-        "wave_config": [
-          3,
-          7,
-          6,
-          null,
-          null
-        ],
-        "idx_start": 117,
-        "idx_end": 481
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.5304833333333333,
-      "fib_score": 0.5
-    },
-    {
-      "symbol": "AAPL",
-      "start_row": 840,
-      "window_len": 728,
-      "date_start": "2014-06-25T00:00:00",
-      "date_end": "2017-05-15T00:00:00",
-      "best": {
-        "rule_name": "Corrective",
-        "score": 0.5,
-        "wave_config": [
-          3,
-          7,
-          6,
-          null,
-          null
-        ],
-        "idx_start": 110,
-        "idx_end": 474
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.5304833333333333,
-      "fib_score": 0.5
-    },
-    {
-      "symbol": "AAPL",
-      "start_row": 847,
-      "window_len": 728,
-      "date_start": "2014-07-07T00:00:00",
-      "date_end": "2017-05-24T00:00:00",
-      "best": {
-        "rule_name": "Corrective",
-        "score": 0.5,
-        "wave_config": [
-          3,
-          7,
-          6,
-          null,
-          null
-        ],
-        "idx_start": 103,
-        "idx_end": 467
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.5304833333333333,
-      "fib_score": 0.5
-    },
-    {
-      "symbol": "AAPL",
-      "start_row": 854,
-      "window_len": 728,
-      "date_start": "2014-07-16T00:00:00",
-      "date_end": "2017-06-05T00:00:00",
-      "best": {
-        "rule_name": "Corrective",
-        "score": 0.5,
-        "wave_config": [
-          3,
-          7,
-          6,
-          null,
-          null
-        ],
-        "idx_start": 96,
-        "idx_end": 460
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.5304833333333333,
-      "fib_score": 0.5
-    },
-    {
-      "symbol": "AAPL",
-      "start_row": 861,
-      "window_len": 728,
-      "date_start": "2014-07-25T00:00:00",
-      "date_end": "2017-06-14T00:00:00",
-      "best": {
-        "rule_name": "Corrective",
-        "score": 0.5,
-        "wave_config": [
-          3,
-          7,
-          6,
-          null,
-          null
-        ],
-        "idx_start": 89,
-        "idx_end": 453
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.5304833333333333,
-      "fib_score": 0.5
+      "ensemble_score": 0.8990555912095565,
+      "fib_score": 0.840111182419113
     },
     {
       "symbol": "AAPL",

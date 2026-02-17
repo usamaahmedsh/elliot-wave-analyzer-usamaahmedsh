@@ -153,6 +153,8 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
         # Include ensemble scoring details
         'ensemble_score': float(best.ensemble_score) if hasattr(best, 'ensemble_score') else 0.0,
         'fib_score': float(best.fib_score) if hasattr(best, 'fib_score') else 0.0,
+        # Keep the actual pattern object for image generation (will be removed before JSON export)
+        '_pattern_obj': best if hasattr(best, 'pattern') else None,
     }
 
 
