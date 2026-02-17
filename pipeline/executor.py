@@ -133,17 +133,26 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
             date_end = _np.datetime64(int(date_end), 'ns')
     except Exception:
         pass
+    # Serialize best pattern for JSON compatibility
+    best_dict = {
+        'rule_name': best.rule_name if hasattr(best, 'rule_name') else 'unknown',
+        'score': float(best.score) if hasattr(best, 'score') else 0.0,
+        'wave_config': best.wave_config if hasattr(best, 'wave_config') else [],
+        'idx_start': best.idx_start if hasattr(best, 'idx_start') else 0,
+        'idx_end': best.idx_end if hasattr(best, 'idx_end') else 0,
+    }
+    
     return {
+        'symbol': context.get('symbol', 'UNKNOWN'),
         'start_row': start_row,
         'window_len': window_len,
         'date_start': date_start,
         'date_end': date_end,
-        'best': best,
-        'all': candidates,
+        'best': best_dict,
         'scan_stats': getattr(wa, '_last_scan_stats', None),
         # Include ensemble scoring details
-        'ensemble_score': best.ensemble_score if hasattr(best, 'ensemble_score') else None,
-        'fib_score': best.fib_score if hasattr(best, 'fib_score') else None,
+        'ensemble_score': float(best.ensemble_score) if hasattr(best, 'ensemble_score') else 0.0,
+        'fib_score': float(best.fib_score) if hasattr(best, 'fib_score') else 0.0,
     }
 
 

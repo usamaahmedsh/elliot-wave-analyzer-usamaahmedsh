@@ -1,43 +1,56 @@
-# Pipeline configuration (overrides defaults in pipeline.config.PipelineConfig)
-# Edit these values to change pipeline behavior without modifying code.
+# Pipeline configuration optimized for Mac M4 Pro
+# Tuned for maximum pattern detection with efficient resource usage
 
-days: 365
-slide_weeks: 1
-min_weeks: 4
-max_weeks: 12
-up_to: 20
+# AUTO DEVICE DETECTION (recommended)
+# Set to true to automatically detect hardware and optimize settings
+# - Detects CUDA GPUs (HPC/NVIDIA)
+# - Detects Apple Silicon GPU (Mac M1/M2/M3/M4)
+# - Falls back to optimized CPU settings
+# When enabled, automatically sets: processes, cpu_batch_size, concurrency
+auto_detect_device: true
+
+days: 5475  # 15 years of historical data
+slide_weeks: 2  # Larger steps for faster scanning (trade-off: might miss some patterns)
+min_weeks: 8  # Minimum 2 months to catch meaningful patterns
+max_weeks: 104  # 2 years max window to capture longer Elliott Wave cycles
+up_to: 8  # Higher complexity = more pattern variations (5=simple, 8=moderate, 12=complex)
 grow_weeks: 1
-top_n: 10
+top_n: 20  # Keep more top patterns per window (increased from 10)
 delay: 0.5
-processes: 30  # Use 30 of 32 cores (leave 2 for system overhead)
-max_combinations: 200000
-# CPU batching knobs (used when running CPU-only optimized path)
-cpu_batch_size: 1024      # Increased for better throughput
-cpu_top_k: 256            # Increased to pass more to GPU (if enabled)
-concurrency: 30           # Match process count for consistency
+
+# These will be AUTO-DETECTED if auto_detect_device=true
+# Only used if auto_detect_device=false
+processes: 10  # Will use 10 workers (auto-detected for M4 Pro)
+cpu_batch_size: 1024  # Larger batches for better vectorization
+concurrency: 12  # Network fetch parallelism
+
+max_combinations: 500000  # Increased from 200k to explore more candidates
 out_dir: output
 
 # Pattern scanning mode: 'all' scans impulsive + corrective, 'impulses' scans only impulsive waves
-scan_pattern_types: all
+scan_pattern_types: all  # Scan both impulsive and corrective patterns
 
 # Multi-start search: try multiple pivot points (local extrema) as wave starts
 # Set to true to enable, false for single-start (faster)
-enable_multi_start: true
-max_start_points: 5
+enable_multi_start: true  # Enable to find patterns at different starting points
+max_start_points: 8  # Try more starting points for better coverage (increased from 5)
 
 # Overlapping windows: set overlap_ratio > 0 to create overlapping time windows
 # overlap_ratio=0.5 means 50% overlap (catches patterns spanning boundaries)
-window_overlap_ratio: 0.3
+window_overlap_ratio: 0.5  # 50% overlap to catch patterns at window boundaries
 
 # Enable shared memory for quick testing (workers will map lows/highs/dates)
 use_shared_memory: true
 
 # For quick profiling runs, lower the window budget so the run is fast. Set to 50 for quick test.
-max_windows: 500
+max_windows: 500  # Scan 500 windows per symbol for comprehensive coverage
 
-# New knobs
-save_images: false
-save_images_top_n: 1
+# Image saving - ENABLED for manual review
+save_images: true  # Save pattern visualizations
+save_images_top_n: 5  # Save top 5 patterns per symbol
+
+# Inline pattern analysis - show quality statistics during pipeline run
+analyze_patterns: false  # Set to true to see score distributions per symbol in real-time
 chunk_size: 0
 min_volatility: 0.0
 skip_flat_windows: false

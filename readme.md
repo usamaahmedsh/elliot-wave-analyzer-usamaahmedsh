@@ -1,335 +1,619 @@
+# Elliott Wave Analyzer
 
-# ElliottWaveAnalyzer
-First Version of an (not yet) iterative Elliott Wave scanner in financial data.
+A high-performance Python pipeline for detecting Elliott Wave patterns in financial market data. Automatically identifies both **impulsive (12345)** and **corrective (ABC)** wave patterns across multiple stocks with configurable complexity and quality thresholds.
 
-## 🚀 Quick Start - Run Entire Pipeline in One Command!
+**Forked from:** [drstevendev/ElliottWaveAnalyzer](https://github.com/drstevendev/ElliottWaveAnalyzer)  
+*Original base algorithm developed by drstevendev*
 
-**The easiest way to get started** - fully automated setup and execution:
+## Overview
 
-```bash
-# Quick test (30 seconds)
-bin/quickstart.sh
+Elliott Wave Theory is a form of technical analysis that identifies recurring wave patterns in financial markets. This tool automates the detection of these patterns across hundreds of stocks, scoring them based on:
 
-# Full pipeline with automatic setup
-bin/run_pipeline.sh AAPL,MSFT,GOOG
+- **Fibonacci Ratios**: Wave retracements and extensions align with golden ratios (0.382, 0.618, 1.618)
+- **Elliott Wave Rules**: Strict compliance with wave structure rules
+- **Time Proportions**: Temporal relationships between waves
+- **Pattern Complexity**: Simpler patterns (fewer sub-waves) score higher
 
-# On HPC with SLURM
-sbatch utils/hpc/submit_hpc.sh
-```
+## Features
 
-That's it! The script will:
-✅ Create virtual environment (if needed)  
-✅ Install all dependencies (if needed)  
-✅ Load data from Hugging Face dataset  
-✅ Run pattern detection with checkpoints  
-✅ Evaluate results  
-✅ Generate reports  
-✅ Save everything to `output/`  
+### �� Pattern Detection
+- **Dual Pattern Types**: Detects both impulsive (5-wave) and corrective (3-wave) patterns
+- **Configurable Complexity**: Adjust `up_to` parameter (3-12) to find simple or complex multi-degree patterns
+- **Multi-Start Search**: Tries multiple pivot points per window to catch patterns not starting at global extrema
+- **Window Overlap**: Configurable overlap (0-80%) to catch patterns spanning window boundaries
+- **Ensemble Scoring**: Sophisticated scoring combining Fibonacci analysis, rule compliance, and pattern quality
 
-**See [Automation Guide](docs/guides/AUTOMATION_GUIDE.md) | [HPC Guide](docs/guides/HPC_GUIDE.md)**
+### ⚡ Performance
+- **Cross-Platform**: Auto-detects Mac (MPS), NVIDIA (CUDA), or CPU and optimizes accordingly
+- **Parallel Processing**: 10 workers on Mac M4 Pro, 30+ on HPC systems
+- **Shared Memory**: Workers use memory-mapped arrays to avoid copying price data
+- **Batch Vectorization**: Pre-scores candidates in batches (512-2048) before full evaluation
+- **~75 seconds per symbol** (500 windows, 15 years of data, up_to=8)
 
----
+### 📊 Data & Output
+- **15 Years of History**: Fetches daily OHLCV data from yfinance (or HuggingFace datasets)
+- **JSON Results**: Comprehensive pattern metadata including scores, wave configurations, date ranges
+- **Image Export**: Saves top-N pattern visualizations as PNG files for manual review
+- **Checkpoint/Resume**: Can resume interrupted runs from saved progress
 
-## 🖥️ HPC & SLURM Support (NEW!)
+## Installation
 
-**Optimized for High-Performance Computing clusters:**
+### Prerequisites
+- Python 3.10+ (tested on 3.10-3.14)
+- 8GB+ RAM recommended
+- Optional: GPU (Apple Silicon MPS or NVIDIA CUDA)
 
-```bash
-# Quick interactive test
-utils/hpc/run_hpc.sh AAPL,MSFT,GOOG
-
-# Submit batch job
-sbatch utils/hpc/submit_hpc.sh "AAPL,MSFT,GOOG,TSLA,NVDA"
-
-# Resume interrupted job
-bin/run_pipeline.sh --hpc --resume output/hpc_batch_20260215_143022
-```
-
-**Features:**
-- ✅ Auto-loads Python & CUDA modules
-- ✅ Uses Hugging Face dataset (315 symbols, 15 years)
-- ✅ Checkpoint/resume support (fault-tolerant)
-- ✅ Verbose progress tracking (symbol-by-symbol)
-- ✅ Process all 315 symbols in ~30-45 min (with GPU)
-
-**See [HPC Guide](docs/guides/HPC_GUIDE.md) for complete documentation.**
-
----
-
-## ⚡ Performance Optimizations
-
-**Optimized for high-performance hardware!** With GPU + multi-core CPU support:
-- **20-50x faster** than baseline (up to 100x with additional optimizations)
-- Supports 1 GPU (140GB) + 32 CPU cores
-- Process S&P 500 in ~25 minutes (vs 8+ hours)
-
-### Manual Setup (Advanced)
-```bash
-# 1. Install GPU dependencies (optional but recommended)
-pip install cupy-cuda12x  # or cupy-cuda11x for CUDA 11
-
-# 2. Use optimized config
-cp configs_high_perf.yaml configs.yaml
-
-# 3. Run benchmark
-python scripts/benchmark_performance.py --symbols AAPL,MSFT,GOOG
-
-# 4. Run full pipeline
-python scripts/pipeline_run.py --symbols AAPL,MSFT,GOOG
-```
-
-### 📚 Documentation
-- **[Automation Guide](docs/guides/AUTOMATION_GUIDE.md)** ⭐ **NEW!** - One-command pipeline automation
-- **[HPC Guide](docs/guides/HPC_GUIDE.md)** ⭐ **NEW!** - HPC/SLURM cluster deployment
-- **[Hardware Optimization Summary](docs/summaries/HARDWARE_OPTIMIZATION_SUMMARY.md)** - Complete optimization overview
-- **[GPU Acceleration Guide](docs/guides/GPU_ACCELERATION_GUIDE.md)** - GPU setup and tuning
-- **[Evaluation Quick Start](docs/guides/EVALUATION_QUICKSTART.md)** - How to measure accuracy
-- **[Directory Structure](DIRECTORY_STRUCTURE.md)** - Project organization
-
-**Quick References:**
-- [HPC Quick Reference](docs/references/HPC_QUICK_REF.md) - Common HPC commands
-- [Automation Quick Reference](docs/references/AUTOMATION_QUICK_REF.md) - Automation commands
-- [Pipeline Flow](docs/summaries/PIPELINE_FLOW.md) - Visual pipeline overview
-
----
-
-## 
-
-- Forked from the repository https://github.com/drstevendev/ElliottWaveAnalyzer
-- HF Link: https://huggingface.co/datasets/usamaahmedsh/financial-markets-dataset-15y-train
-
-## Contributions by usamaahmedsh (2026-01-15)
-
-- Dataset engineering and ingestion:
-	- Implemented a yfinance-based, daily-only batch fetcher to download OHLCV histories (top-N per market) and produce unified parquet outputs (`data/all_markets_15y.parquet`, `data/all_markets_20y.parquet`).
-	- Added per-ticker parquet caching, aggressive parallel downloads, and OHLC normalization to fill missing Open/High/Low values from Close when necessary.
-
-- Coverage and recovery:
-	- Expanded market candidate lists across equities, crypto, ETFs, commodities, bonds, FX, indices, REITs, sectors, futures and volatility instruments.
-	- Implemented retry logic, symbol-normalization heuristics, and a manifest to record per-ticker success/failure and date ranges.
-	- Merged retry results into the final combined dataset and added a sanity-check script (`scripts/sanity_check.py`) to validate date ranges and completeness.
-
-- Tooling and reproducibility:
-	- Created upload tooling and helpers to publish the dataset to the Hugging Face Hub (`scripts/upload_to_hf.py` and `scripts/push_parquet_as_dataset.py`).
-	- Added dataset metadata and a short dataset README at `data/README_dataset.md` and `data/all_markets_15y_metadata.json` to make the artifact reproducible and discoverable.
-
-These contributions expanded the project's data pipeline, improved robustness for large batch downloads, and produced a reusable market dataset for downstream analysis.
-
-## Recent updates (2026-02-13)
-
-- Fix: `models/helpers.py::convert_yf_data` now robustly handles yfinance outputs where selecting a single OHLC column may return a DataFrame instead of a Series. This prevents an AttributeError when converting to lists and makes data conversion tolerant to varying yfinance return shapes.
-- New CLI: `scripts/run_symbol.py` — a small command-line runner that scans one or many tickers for impulsive wave patterns using the same analyzer logic as `example_12345_impulsive_wave.py`.
-
-- New: Sliding adaptive-window scan: `WaveAnalyzer.sliding_adaptive_impulses` and
-	`find_best_impulse_adaptive_window` (implemented in `models/WaveAnalyzer.py`).
-	These helpers let the analyzer slide an adaptive time-window across a series
-	and grow the window until an impulse candidate is found (configurable by
-	weeks/bars). Typical parameters include `slide_weeks`, `min_weeks`,
-	`max_weeks`, `grow_weeks`, `up_to` and `top_n`. The example script
-	`scripts/example_12345_impulsive_wave.py` demonstrates usage and orchestration
-	of the sliding-adaptive scan. Outputs are written to `images/` the same way as
-	the single-run examples.
-
-Usage examples
-
-- Create and activate a Python 3.11 venv and install pinned dependencies (recommended):
+### Setup
 
 ```bash
-cd /path/to/elliot-wave-analyzer-usamaahmedsh
-python3.11 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
+# Clone repository
+git clone https://github.com/usamaahmedsh/elliot-wave-analyzer-usamaahmedsh.git
+cd elliot-wave-analyzer-usamaahmedsh
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# For Apple Silicon GPU support (optional)
+pip install torch torchvision torchaudio
+
+# For image export (optional)
+pip install kaleido
 ```
 
-- Run the built-in examples (repo root on PYTHONPATH so local `models` package resolves):
+## Quick Start
+
+### Basic Usage
 
 ```bash
-# single symbol (defaults to AAPL when none provided)
-PYTHONPATH=$(pwd) .venv/bin/python3 scripts/run_symbol.py AAPL
+# Analyze a single stock
+python scripts/pipeline_run.py --symbols AAPL --verbose
 
-# multiple symbols
-PYTHONPATH=$(pwd) .venv/bin/python3 scripts/run_symbol.py AAPL MSFT GOOGL
+# Analyze multiple stocks
+python scripts/pipeline_run.py --symbols "AAPL,MSFT,GOOG" --verbose
 
-# read symbols from file (one per line)
-PYTHONPATH=$(pwd) .venv/bin/python3 scripts/run_symbol.py -f tickers.txt
+# With inline pattern analysis (shows stats per symbol)
+python scripts/pipeline_run.py --symbols AAPL --verbose
+# (Enable in configs.yaml: analyze_patterns: true)
 
-# adjust lookback and delay between symbols
-PYTHONPATH=$(pwd) .venv/bin/python3 scripts/run_symbol.py AAPL --days 365 --delay 0.5
+# Analyze with custom output path
+python scripts/pipeline_run.py \
+  --symbols "AAPL,MSFT" \
+  --output results/my_analysis.json \
+  --verbose
 ```
 
-Notes
+### With Checkpointing (Recommended for large runs)
 
-- The scanner writes plotting artifacts (PNG) and serialized payloads (JSON/CSV) into the `images/` directory. Each plotted pattern will also produce a `.json` and `.csv` file next to the image.
-- `scripts/run_symbol.py` deduplicates symbols, uppercases them, and protects each symbol run with a try/except so a single failure doesn't stop a batch.
-- If you prefer the older example, `scripts/example_12345_impulsive_wave.py` is still available and behaves the same for a single symbol.
+```bash
+python scripts/pipeline_run.py \
+  --symbols "AAPL,MSFT,GOOG,AMZN,TSLA" \
+  --checkpoint-dir output/checkpoints \
+  --resume \
+  --verbose
+```
 
-### Soft scoring (confidence)
+### Results
 
-- The `WavePattern` class now exposes a heuristic scoring API to rank candidates:
-	- `WavePattern.score_rule(waverule) -> float` returns a score in [0.0, 1.0]
-		representing how well the pattern satisfies the supplied `WaveRule`.
-	- Use the returned `score` to sort or filter multiple valid patterns (higher = more confidence).
+After running, you'll find:
+- **JSON file**: `output/results.json` - All detected patterns with metadata
+- **Images**: `output/images/{SYMBOL}/pattern_*.png` - Top 5 visualizations per symbol
+- **Checkpoints**: `output/checkpoints/` - Resume data (if enabled)
 
-### Exports / payload format
+### Inline Pattern Analysis
 
-When a plot is generated the code now writes three files alongside one another:
+Enable `analyze_patterns: true` in `configs.yaml` to see quality statistics during pipeline execution:
 
-- `<base>.png`  — chart image
-- `<base>.json` — full payload describing the detected pattern
-- `<base>.csv`  — flattened CSV with one row per wave (easy to ingest for ML)
+```
+[1/1] Processing AAPL...
+   ✅ Found 18 patterns in 69.0s
+   📈 Top score: 0.899
+   📊 Pattern Analysis:
+      Ensemble: mean=0.551, median=0.530, max=0.899
+      Types: impulse:1, Corrective:17
+      Quality: Excellent=1, Good=0, Fair=17, Poor=0
+```
 
-JSON top-level keys (example):
+## Configuration
 
-- `symbol`, `timeframe`, `rule_name`, `score`, `pattern_type`, `degree`,
-	`idx_start`, `idx_end`, `low`, `high`, `dates_polyline`, `values_polyline`,
-	`labels_polyline`, `waves`
+The pipeline is controlled via `configs.yaml`. Key parameters:
 
-`waves` is a list of per-wave dictionaries with keys such as: `key`, `label`,
-`idx_start`, `idx_end`, `date_start`, `date_end`, `low`, `high`, `low_idx`,
-`high_idx`, `length`, `duration`.
+### Pattern Detection Quality
 
-CSV columns (one row per wave):
+| Parameter | Default | Range | Effect |
+|-----------|---------|-------|--------|
+| `up_to` | 8 | 3-12 | Wave complexity (higher = more sub-waves detected) |
+| `top_n` | 20 | 5-50 | Number of top candidates kept per window |
+| `max_combinations` | 500000 | 50k-1M | Search depth per window |
+| `max_start_points` | 8 | 1-10 | Pivot points tried per window |
+| `scan_pattern_types` | all | all/impulses | Pattern types to scan |
 
-`symbol, timeframe, rule_name, score, pattern_type, degree, idx_start, idx_end, low, high,`
-`wave_key, wave_label, wave_idx_start, wave_idx_end, wave_date_start, wave_date_end,`
-`wave_low, wave_high, wave_low_idx, wave_high_idx, wave_length, wave_duration`
+### Window Configuration
 
-Quick example: load the flattened CSV from a run into pandas for ML preprocessing:
+| Parameter | Default | Range | Effect |
+|-----------|---------|-------|--------|
+| `max_weeks` | 104 | 12-208 | Maximum window size (weeks) |
+| `min_weeks` | 8 | 2-20 | Minimum window size (weeks) |
+| `slide_weeks` | 2 | 1-8 | Window slide step (weeks) |
+| `max_windows` | 500 | 50-2000 | Windows scanned per symbol |
+| `window_overlap_ratio` | 0.5 | 0.0-0.8 | Window overlap (0.5 = 50%) |
+
+### Resource Optimization
+
+| Parameter | Default | Auto-Detected | Effect |
+|-----------|---------|---------------|--------|
+| `processes` | 10 | ✅ Yes | Worker threads |
+| `cpu_batch_size` | 1024 | ✅ Yes | Vectorization batch size |
+| `concurrency` | 12 | ✅ Yes | Network fetch parallelism |
+| `auto_detect_device` | true | - | Enable hardware auto-detection |
+
+### Image Export & Analysis
+
+| Parameter | Default | Effect |
+|-----------|---------|--------|
+| `save_images` | true | Enable/disable PNG export |
+| `save_images_top_n` | 5 | Images saved per symbol |
+| `analyze_patterns` | false | Show inline quality stats during run |
+
+## Understanding the Output
+
+### JSON Structure
+
+```json
+{
+  "metadata": {
+    "total_symbols": 3,
+    "total_patterns": 237,
+    "runtime_seconds": 223.7
+  },
+  "patterns": [
+    {
+      "start_row": 825,
+      "window_len": 364,
+      "date_start": "2014-06-04",
+      "date_end": "2015-11-10",
+      "ensemble_score": 0.786,
+      "fib_score": 0.633,
+      "best": {
+        "rule_name": "impulse",
+        "score": 1.0,
+        "wave_config": [2, 2, 4, 4, 3]
+      }
+    }
+  ]
+}
+```
+
+### Pattern Scores
+
+- **ensemble_score** (0.0-1.0): Overall quality combining all factors
+  - **0.85-1.0**: Excellent patterns, strong Fibonacci alignment
+  - **0.70-0.85**: Good patterns, moderate alignment
+  - **0.50-0.70**: Fair patterns, weak alignment
+  - **<0.50**: Low quality, consider filtering out
+
+- **fib_score** (0.0-1.0): Fibonacci ratio alignment only
+- **score** (0.0-1.0): Rule compliance score
+
+### Wave Configuration
+
+Example: `[2, 2, 4, 4, 3]` means:
+- **Wave 1**: Skip 2 intermediate highs
+- **Wave 2**: Skip 2 intermediate lows
+- **Wave 3**: Skip 4 intermediate highs
+- **Wave 4**: Skip 4 intermediate lows
+- **Wave 5**: Skip 3 intermediate highs
+
+Higher numbers = more complex sub-wave structure.
+
+## Tuning for Your Use Case
+
+### Scenario 1: Fast Screening (10s per symbol)
+```yaml
+up_to: 5
+max_windows: 200
+slide_weeks: 4
+max_start_points: 3
+max_combinations: 100000
+```
+**Expected**: 20-30 patterns/symbol, lower quality
+
+### Scenario 2: Balanced Quality (75s per symbol) ⭐ Recommended
+```yaml
+up_to: 8
+max_windows: 500
+slide_weeks: 2
+max_start_points: 8
+max_combinations: 500000
+```
+**Expected**: 70-80 patterns/symbol, high quality (0.85-0.90 scores)
+
+### Scenario 3: Maximum Quality (300s per symbol)
+```yaml
+up_to: 12
+max_windows: 1000
+slide_weeks: 1
+max_start_points: 10
+max_combinations: 1000000
+```
+**Expected**: 150-250 patterns/symbol, exhaustive search
+
+### Scenario 4: Quick Test (3s per symbol)
+```yaml
+up_to: 5
+max_windows: 50
+slide_weeks: 8
+max_start_points: 1
+enable_multi_start: false
+```
+**Expected**: 5-15 patterns/symbol, fast validation
+
+## Performance Benchmarks
+
+### Mac M4 Pro (12 cores, 16 GPU cores)
+
+| Symbols | Time | Patterns | Avg/Symbol | Windows |
+|---------|------|----------|------------|---------|
+| 1 (AAPL) | 72s | 79 | 79 | 500 |
+| 3 (AAPL,GOOG,MSFT) | 224s | 237 | 79 | 1,500 |
+| 315 (S&P 500) | ~6.5 hrs | ~25,000 | 79 | 157,500 |
+
+**Hardware Utilization**: ~90% of available cores
+
+### HPC System (32 cores, Tesla A100)
+
+| Symbols | Time | Patterns | Avg/Symbol | Workers |
+|---------|------|----------|------------|---------|
+| 315 (estimated) | ~2.5 hrs | ~25,000 | 79 | 30 |
+
+**Note**: Actual performance depends on `up_to`, `max_windows`, and hardware specs.
+
+## Architecture
+
+### Pipeline Flow
+
+```
+1. Data Fetching (yfinance or HuggingFace)
+   ↓
+2. Window Generation (sliding windows with overlap)
+   ↓
+3. Parallel Pattern Detection (multi-process)
+   ├─ Pre-scoring (vectorized batches)
+   ├─ Top-K selection
+   └─ Full evaluation (Elliott Wave rules)
+   ↓
+4. Ensemble Scoring (Fibonacci + rules + time)
+   ↓
+5. Image Export (top-N patterns)
+   ↓
+6. JSON Output
+```
+
+### Directory Structure
+
+```
+elliot-wave-analyzer-usamaahmedsh/
+├── configs.yaml              # Main configuration file
+├── requirements.txt          # Python dependencies
+├── readme.md                 # This file
+├── CHANGELOG.md             # Version history
+│
+├── data/                     # Stock ticker lists
+│   ├── sp500_tickers.txt
+│   └── international_tickers.txt
+│
+├── models/                   # Core detection logic
+│   ├── WaveAnalyzer.py      # Main analyzer
+│   ├── WavePattern.py       # Pattern representation
+│   ├── MonoWave.py          # Single wave detection
+│   ├── WaveRules.py         # Elliott Wave rules
+│   ├── EnsembleScoring.py   # Scoring algorithms
+│   └── helpers.py           # Plotting utilities
+│
+├── pipeline/                 # Pipeline infrastructure
+│   ├── config.py            # Configuration loading
+│   ├── executor.py          # Parallel execution
+│   ├── device.py            # Hardware detection
+│   ├── fetcher.py           # Data fetching
+│   └── shared_memory.py     # Memory optimization
+│
+├── scripts/                  # Executable scripts
+│   └── pipeline_run.py      # Main entry point
+│
+├── tools/                    # Performance tools
+│   └── sweep_cpu_batch.py   # Parameter tuning
+│
+└── output/                   # Results (created at runtime)
+    ├── results.json
+    ├── images/
+    │   ├── AAPL/
+    │   ├── MSFT/
+    │   └── GOOG/
+    └── checkpoints/
+```
+
+## Advanced Usage
+
+### Custom Data Sources
+
+Use HuggingFace datasets instead of yfinance:
+
+```bash
+python scripts/pipeline_run.py \
+  --symbols "AAPL,MSFT" \
+  --hf-dataset "usamaahmedsh/financial-markets-dataset-15y-train" \
+  --verbose
+```
+
+### Filtering Results by Score
 
 ```python
-import pandas as pd
-df = pd.read_csv('images/20260118_123456_000001.csv')  # use the real filename generated
-print(df.columns)
+import json
+
+# Load results
+with open('output/results.json', 'r') as f:
+    data = json.load(f)
+
+# Filter high-quality patterns only
+high_quality = [
+    p for p in data['patterns']
+    if p.get('ensemble_score', 0) > 0.85
+]
+
+print(f"Found {len(high_quality)} high-quality patterns")
 ```
 
-Implementation notes:
-
-- Helpers that produce these exports live in `models/helpers.py` (`_serialize_wavepattern`,
-	`_write_pattern_json_and_csv`, `_new_base_filename`, `save_chart_as_image`). These are small
-	internal helpers but deliberately keep stable field names for downstream ML use.
-
-### New pipeline runner (async + parallel, CPU-optimized)
-
-An experimental pipeline orchestrator is available under `scripts/pipeline_run.py` and the
-`pipeline/` package. It parallelizes CPU-bound work while fetching data asynchronously and
-is currently optimized for CPU execution (multiprocessing + shared-memory for large arrays).
-
-- Async fetcher: `pipeline/fetcher.py` uses `asyncio` + `run_in_executor` to download OHLC data
-	(yfinance) concurrently.
-- Parallel executor: `pipeline/executor.py` uses `multiprocessing.Pool` to scan adaptive windows
-	in parallel (one process per CPU worker by default).
-
-Quick-run example (moderate parameters):
+### Batch Processing Script
 
 ```bash
-PYTHONPATH=$(pwd) .venv/bin/python3 scripts/pipeline_run.py AAPL --days 365 --up_to 8 --top_n 3 --slide_weeks 2 --min_weeks 4 --max_weeks 12 --processes 4
+#!/bin/bash
+# process_sp500.sh
+
+source venv/bin/activate
+
+# Read symbols from file (50 at a time)
+BATCH_SIZE=50
+TOTAL=$(wc -l < data/sp500_tickers.txt)
+
+for i in $(seq 0 $BATCH_SIZE $TOTAL); do
+    SYMBOLS=$(tail -n +$((i+1)) data/sp500_tickers.txt | head -$BATCH_SIZE | tr '\n' ',' | sed 's/,$//')
+    
+    echo "Processing batch $((i/BATCH_SIZE + 1))..."
+    
+    python scripts/pipeline_run.py \
+        --symbols "$SYMBOLS" \
+        --output "output/batch_$((i/BATCH_SIZE + 1)).json" \
+        --verbose
+done
+
+echo "All batches complete!"
 ```
 
-Notes:
-- The pipeline keeps the existing `WaveAnalyzer` detection logic but parallelizes window-level
-	scans and uses shared-memory to avoid copying large numpy arrays into worker processes.
-- For large-scale search speedups we focus on CPU-side optimizations (batching, pre-scoring,
-	numba-accelerated primitives and shared buffers). A full GPU rewrite of the inner search is
-	considered out-of-scope for the current CPU-first workflow.
+## Evaluation Tools
 
---------------------------------------- ORIGINAL README.md ----------------------------------------------
-## Setup
-use Python 3.9 environment and install all packages via
-`pip install -r requirements.txt`
+The toolkit includes two evaluation tools to analyze pattern quality and profitability.
 
-## Quickstart
-Start with `example_monowave.py` to see how the basic concept (finding monowaves) works and play with the parameter `skip_n`.
+### 1. Pattern Quality Analysis
 
-Then have a look into `example_12345_impulsive_wave.py` to see how the algorithm works for finding 12345 impulsive movements.
-
-## Helper
-Use `scripts/fetch_data.py` to download data directly from Yahoo Finance (historical OHLCV). A legacy copy also exists at `backups/get_data.py`.
-
-## Tests
-There are a couple of fast unit tests under the `tests/` directory to exercise basic fetch and monowave logic:
-
-- `tests/test_fetch_data.py` — small sanity tests for the data fetcher/normalizer.
-- `tests/test_monowave.py` — basic tests for monowave detection logic.
-
-Run tests inside the recommended Python 3.11 venv with pytest:
+Analyze score distributions, quality tiers, and pattern type breakdowns:
 
 ```bash
-source .venv/bin/activate
+# Basic analysis
+python tools/analyze_patterns.py
+
+# With per-symbol breakdown
+python tools/analyze_patterns.py --by-symbol
+
+# Filter to high-quality patterns only
+python tools/analyze_patterns.py --min-score 0.70
+
+# Export filtered patterns
+python tools/analyze_patterns.py --min-score 0.85 --export-filtered output/high_quality.json
+```
+
+**Output includes:**
+- Score distributions (ensemble, Fibonacci, rule compliance)
+- Quality tier breakdown (Excellent/Good/Fair/Poor)
+- Pattern type counts (impulsive vs corrective)
+- Per-symbol statistics
+
+**Example output:**
+```
+OVERALL SCORE DISTRIBUTION
+  Ensemble Score:
+    Count:   18
+    Min:     0.530
+    Median:  0.530
+    Mean:    0.551
+    Max:     0.899
+    StdDev:  0.087
+
+QUALITY TIERS
+  Excellent (0.85-1.0)     1 patterns (5.6%)
+  Good (0.70-0.85)         0 patterns (0.0%)
+  Fair (0.50-0.70)        17 patterns (94.4%)
+  Poor (<0.50)             0 patterns (0.0%)
+```
+
+### 2. Backtesting Framework
+
+Simulate trading based on detected patterns and measure profitability:
+
+```bash
+# Basic backtest (default: 20-day hold, 5% stop-loss, 10% take-profit)
+python tools/backtest_patterns.py
+
+# Backtest specific symbol only
+python tools/backtest_patterns.py --symbol AAPL
+
+# Backtest specific pattern type
+python tools/backtest_patterns.py --pattern-type impulse --min-score 0.85
+
+# Custom parameters
+python tools/backtest_patterns.py \
+  --symbol AAPL \
+  --min-score 0.70 \
+  --holding-days 30 \
+  --stop-loss 0.03 \
+  --take-profit 0.15 \
+  --position-size 10000
+
+# Export trade log to CSV
+python tools/backtest_patterns.py --export-trades output/trades.csv
+```
+  --holding-days 30 \
+  --stop-loss 0.03 \
+  --take-profit 0.15 \
+  --position-size 10000
+
+# Export trade log to CSV
+python tools/backtest_patterns.py --export-trades output/trades.csv
+```
+
+**Trading Strategy:**
+- **Entry:** At pattern end date (after detection)
+- **Position:** Long on impulsive patterns (skip corrective)
+- **Exit:** First of:
+  - Stop-loss hit (default: -5%)
+  - Take-profit hit (default: +10%)
+  - Maximum holding period (default: 20 days)
+
+**Performance Metrics:**
+- Win rate, average return, median return
+- Sharpe ratio (risk-adjusted returns)
+- Maximum drawdown
+- Profit factor (total profit / total loss)
+- Best/worst trades
+
+**Example output:**
+```
+BACKTEST RESULTS
+📊 Trade Statistics:
+  Total Trades:     1
+  Winning Trades:   1 (100.0%)
+  Avg Holding:      43.0 days
+
+💰 Returns:
+  Total Return:     4.21%
+  Average Return:   4.21%
+  Best Trade:       4.21%
+
+📈 Performance Metrics:
+  Sharpe Ratio:     0.000
+  Max Drawdown:     0.00%
+  Profit Factor:    inf
+  Net P/L:          $42.14
+
+🏆 Top 5 Best Trades:
+  1. AAPL: +4.21% (score=0.899, 2017-04-04 → 2017-05-17)
+```
+
+**Note:** Backtesting uses historical data and does not guarantee future performance. Results include survivorship bias and assume perfect execution.
+
+## Troubleshooting
+
+### "No patterns found"
+
+1. Check `up_to` value (try 5-8 for most stocks)
+2. Increase `max_windows` (try 500-1000)
+3. Enable `enable_multi_start: true`
+4. Increase `window_overlap_ratio` (try 0.5)
+
+### "Too slow"
+
+1. Reduce `max_windows` (try 200-300)
+2. Reduce `up_to` (try 5-6)
+3. Increase `slide_weeks` (try 3-4)
+4. Reduce `max_combinations` (try 200000)
+
+### "Out of memory"
+
+1. Reduce `processes` (try 6-8 on 12-core Mac)
+2. Reduce `max_windows`
+3. Set `use_shared_memory: true` (default)
+4. Process fewer symbols at once
+
+### "ModuleNotFoundError"
+
+```bash
 pip install -r requirements.txt
-pytest -q
 ```
 
-# Algorithm / Idea
-The basic idea of the algorithm is to try **a lot** of combinations of possible wave
-patterns for a given OHLC chart and validate each one against a given
-set of rules (e.g. against an 12345 impulsive movement).
+## Roadmap
 
-# Class Structure
-## MonoWave
-The smallest element in a chart (or a trend) is called a MonoWave: 
-The impulsive movement from a given low (or high) to the next high 
-(or down to the low), where each candle (exactly: high / low) 
-forms a new high (or new low respectively). 
+### Real-Time & Emerging Pattern Detection 🚀
 
-The MonoWave ends, once a candle breaks this "micro trend".
+The next major feature is **real-time pattern detection mode** to identify incomplete Elliott Waves as they form:
 
-There is `MonoWaveUp` and the `MonoWaveDown`, denoting the direction of the wave.
+**Planned Features:**
+- **Streaming Data Integration**: Connect to live market data feeds (WebSocket, REST APIs)
+- **Incomplete Wave Detection**: Identify patterns in progress (e.g., Wave 3 forming, expecting Wave 4-5)
+- **Market Trend Analysis**: Real-time trend classification (bullish/bearish/neutral)
+- **Alert System**: Notifications when high-probability patterns emerge
+- **Confidence Scoring**: Probability estimates for incomplete patterns
+- **Continuation Prediction**: Forecast likely completion points for in-progress waves
 
-### WaveOptions
-`WaveOptions` are a set of integers denoting how many of the (local) highs or lows should be
-skipped to form a MonoWave.
+**Use Cases:**
+- Monitor watchlist for emerging patterns throughout trading day
+- Get alerts when Wave 3 completes (strongest wave, highest profit potential)
+- Identify potential entry points before Wave 5 completion
+- Track pattern invalidation (e.g., Wave 4 overlaps Wave 1)
 
-### Parameters
-The essential idea is, that with the parameter `skip=`, smaller corrections can be skipped. In case of an upwards trend, 
-e.g. `skip=2` will skip the next 2 maxima.
+**Technical Approach:**
+- Sliding window analysis on most recent N bars
+- Incremental pattern matching as new bars arrive
+- Lower `up_to` values for faster detection (3-5 vs 8-12)
+- Probabilistic scoring for incomplete patterns
+- Pattern lifecycle tracking (forming → maturing → complete → invalidated)
 
-![](doc/img/monowave_skip.png)
+To contribute or discuss this feature, see [GitHub Issues](https://github.com/usamaahmedsh/elliot-wave-analyzer-usamaahmedsh/issues).
 
-## WavePattern
-A `WavePattern` is the chaining of e.g. in case for an Impulse 5 `MonoWaves` (alternating between up and down direction). It is initialized with a list of `MonoWave`.
+## Contributing
 
-## WaveRule
-`WavePattern` can be validated against a set of rules. E. g. form a valid 12345 impulsive waves, certain rules have to apply for the 
-monowaves, e.g. wave 3 must not be the shortest wave, top of wave 3 must be over the top of wave 1 etc. 
+Contributions welcome! Areas for improvement:
 
-Own rules can be created via inheritance from the base class. There are rules
-implemented for 12345 Impulse. Leading Triangle and for ABC Corrections.
+- [ ] Additional pattern types (triangles, flats, zigzags)
+- [ ] **Real-time & emerging pattern detection** 🚀 *(see Roadmap above)*
+- [ ] Web dashboard for results
+- [ ] Machine learning-based scoring
+- [x] Backtesting framework ✅
+- [x] Pattern quality analysis ✅
+- [x] Inline pattern statistics ✅
 
-To create an own rule, the `.set_conditions()` method has to be implemented for every inherited rule. The method has a `dict`, having
-arbitrarily named keys, having `{'waves': list 'function': ..., 'message': ...}` as value.
+## Credits
 
-For `waves` you pass a list of waves which are used to validate a specific rule, e.g. `[wave1, wave2]`.
+**Original Algorithm:** [drstevendev/ElliottWaveAnalyzer](https://github.com/drstevendev/ElliottWaveAnalyzer)  
+This project is forked from and builds upon the foundational Elliott Wave detection algorithm developed by **drstevendev**.
 
-For `function` you use a `lambda` function to check, e.g. `lambda wave1, wave2: wave2.low > wave1.low`
+**Enhancements & Extensions:**
+- Cross-platform optimization (Mac MPS, CUDA, CPU)
+- Multi-pattern type support (impulsive + corrective)
+- Ensemble scoring with Fibonacci analysis
+- Backtesting framework
+- Pattern quality analysis tools
+- Production-ready pipeline infrastructure
 
-For `message` you enter a message to display (in case `WavePattern(..., verbose=True)` is set).
+## License
 
-Note that only if all rules in the `conditions` are `True` the whole `WaveRule` is valid.
+This project is open source. See repository for license details.
 
-### Check WavePattern against Rule
-Once you have a `WavePattern` (chaining of 5 `MonoWave` for an impulse or 3 `MonoWave` for a correction)
- You can check against a `WaveRule` via the `.check_rule(waverule: WaveRule)` method.
+## Citation
 
-## WaveCycle
-A `WaveCycle` is the combination of an impulsive (12345) and a corrective (ABC) movement.
-Not working atm.
+If you use this tool in research, please cite:
 
-## WaveAnalyzer
-Is used to find impulsive and corrective movements.
-Not working atm.
+```
+Elliott Wave Analyzer (2026)
+https://github.com/usamaahmedsh/elliot-wave-analyzer-usamaahmedsh
+```
 
-### WaveOptionsGenerator
-There are three `WaveOptionsGenerators` available at the moment to fit the needs for creating
-tuples of 2, 3 and 5 integers (for a 12 `TDWave`, an ABC `Correction` and a 12345 `Impulse`).
+## Contact
 
-The generators already remove invalid combinations, e.g. [1,2,0,4,5], as after selecting the next minimum (3rd index is 0), for the 4th and 5th wave skipping is not allowed.
+- **Issues**: https://github.com/usamaahmedsh/elliot-wave-analyzer-usamaahmedsh/issues
+- **Author**: Usama Ahmed
 
-As unordered sets are used, the generators have the `.options_sorted` property to go from low numbers to high ones. This means that
-first, the shortest (time wise) movements will be found.
+---
 
-## Helpers
-Contains some plotting functions to plot a `MonoWave` (a single movement), a `WavePattern` (e.g. 12345 or ABC) and a `WaveCycle` (12345-ABC).
-
-# Plotting
-For different models there are plotting functions. E.g. use `plot_monowave` to plot a `MonoWave` instance or `plot_pattern` for a `WavePattern`.
+**Happy Pattern Hunting! 📈**

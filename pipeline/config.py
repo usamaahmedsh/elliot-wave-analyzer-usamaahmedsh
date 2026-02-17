@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 
 @dataclass
@@ -36,25 +36,52 @@ class PipelineConfig:
     # CPU batching knobs (used by scan_impulses)
     cpu_batch_size: int = 512
     cpu_top_k: int = 64
+    # Additional pipeline knobs
+    window_overlap_ratio: float = 0.2
+    enable_multi_start: bool = False
+    max_start_points: int = 3
+    scan_pattern_types: str = 'all'  # 'all', 'impulses', or 'corrective'
+    # Auto-detect device (overrides processes and batch_size if True)
+    auto_detect_device: bool = True
+    # Pattern analysis during pipeline run
+    analyze_patterns: bool = False
 
     @classmethod
-    def load_from_file(cls, path: str = "configs.yaml") -> "PipelineConfig":
+    def load_from_file(cls, path: str = "configs.yaml", auto_detect: bool = True) -> "PipelineConfig":
         """Load configuration from a YAML file if present, falling back to defaults.
 
         The YAML keys map directly to the dataclass fields.
+        
+        Args:
+            path: Path to YAML config file
+            auto_detect: If True, auto-detect device and override processes/batch_size
         """
         p = Path(path)
         if not p.exists():
-            return cls()
+            cfg = cls()
+        else:
+            try:
+                import yaml
 
-        try:
-            import yaml
-
-            with p.open("r", encoding="utf-8") as f:
-                data: Dict[str, Any] = yaml.safe_load(f) or {}
-            # Only pass known fields
-            valid = {k: v for k, v in data.items() if k in cls.__annotations__}
-            return cls(**valid)
-        except Exception:
-            # if anything goes wrong, return defaults
-            return cls()
+                with p.open("r", encoding="utf-8") as f:
+                    data: Dict[str, Any] = yaml.safe_load(f) or {}
+                # Only pass known fields
+                valid = {k: v for k, v in data.items() if k in cls.__annotations__}
+                cfg = cls(**valid)
+            except Exception:
+                # if anything goes wrong, return defaults
+                cfg = cls()
+        
+        # Auto-detect device if enabled
+        if auto_detect and cfg.auto_detect_device:
+            try:
+                from pipeline.device import get_optimal_config
+                device_cfg = get_optimal_config()
+                cfg.processes = device_cfg.num_workers
+                cfg.cpu_batch_size = device_cfg.batch_size
+                cfg.concurrency = device_cfg.num_workers
+            except Exception:
+                # If device detection fails, keep config as-is
+                pass
+        
+        return cfg

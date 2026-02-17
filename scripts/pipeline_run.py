@@ -199,8 +199,18 @@ def run_pipeline(
     """
     start_time = time.time()
     
-    # Load config
-    cfg = PipelineConfig.from_yaml(config_path)
+    # Load config with auto device detection
+    cfg = PipelineConfig.load_from_file(config_path, auto_detect=True)
+    
+    # Show device info
+    if verbose:
+        try:
+            from pipeline.device import get_optimal_config, print_device_info
+            device_cfg = get_optimal_config()
+            print_device_info(device_cfg)
+            print()
+        except Exception:
+            pass
     
     # Setup checkpoint manager
     checkpoint_mgr = None
@@ -235,7 +245,9 @@ def run_pipeline(
         if verbose:
             print("📥 Fetching data from yfinance...")
         from pipeline.fetcher import fetch_symbols
-        ticker_data = asyncio.run(fetch_symbols(symbols, concurrency=cfg.concurrency))
+        # Use cfg.days for historical data (365 = 1 year, 5475 = 15 years)
+        start_days = getattr(cfg, 'days', 720)
+        ticker_data = asyncio.run(fetch_symbols(symbols, start_days=start_days, concurrency=cfg.concurrency))
     
     # Collect all results
     all_results = []
@@ -287,23 +299,138 @@ def run_pipeline(
             if verbose:
                 print(f"   ⚙️  Running wave analyzer...")
             
+            # Prepare windows in the format expected by parallel_scan_windows
+            # Convert (start_idx, end_idx) to (start_row, window_len, context)
+            prepared_windows = []
+            for start_idx, end_idx in windows:
+                window_len = end_idx - start_idx
+                context = {
+                    'symbol': symbol,
+                    'lows': lows,
+                    'highs': highs,
+                    'dates': dates
+                }
+                prepared_windows.append((start_idx, window_len, context))
+            
+            # Prepare config dict for executor
+            cfg_dict = {
+                'up_to': cfg.up_to,
+                'top_n': cfg.top_n,
+                'cpu_batch_size': cfg.cpu_batch_size,
+                'scan_pattern_types': getattr(cfg, 'scan_pattern_types', 'all'),
+                'enable_multi_start': getattr(cfg, 'enable_multi_start', False),
+                'max_start_points': getattr(cfg, 'max_start_points', 5),
+                'max_combinations': cfg.max_combinations
+            }
+            
             window_start = time.time()
             symbol_results = parallel_scan_windows(
-                ticker=symbol,
-                lows=lows,
-                highs=highs,
-                dates=dates,
-                windows=windows,
-                cfg=cfg
+                windows=prepared_windows,
+                cfg=cfg_dict,
+                processes=cfg.processes
             )
             window_time = time.time() - window_start
             
             if verbose:
                 print(f"   ✅ Found {len(symbol_results)} patterns in {window_time:.1f}s")
                 if symbol_results:
-                    print(f"   📈 Top score: {max(r.get('score', 0) for r in symbol_results):.3f}")
+                    print(f"   📈 Top score: {max(r.get('ensemble_score', r.get('score', 0)) for r in symbol_results if r):.3f}")
+            
+            # Save images for top patterns if enabled
+            if getattr(cfg, 'save_images', False) and symbol_results:
+                save_top_n = getattr(cfg, 'save_images_top_n', 5)
+                if verbose:
+                    print(f"   🖼️  Saving top {min(save_top_n, len(symbol_results))} pattern images...")
+                
+                # Set images directory for this symbol
+                from models.helpers import set_images_dir
+                images_dir = Path(cfg.out_dir) / "images" / symbol
+                images_dir.mkdir(parents=True, exist_ok=True)
+                set_images_dir(str(images_dir))
+                
+                # Sort by ensemble_score (if available) or score
+                sorted_results = sorted(
+                    [r for r in symbol_results if r],
+                    key=lambda x: x.get('ensemble_score', x.get('score', 0)),
+                    reverse=True
+                )[:save_top_n]
+                
+                for i, result in enumerate(sorted_results, 1):
+                    try:
+                        # Extract pattern from result
+                        best_pattern = result.get('best')
+                        if not best_pattern:
+                            continue
+                        
+                        # Get the FoundPattern object (it's stored as a string representation)
+                        # We need to extract it from the 'all' list which has FoundPattern objects
+                        all_patterns = result.get('all', [])
+                        if not all_patterns:
+                            continue
+                        
+                        found_pattern = all_patterns[0] if isinstance(all_patterns, list) else best_pattern
+                        
+                        # Extract the WavePattern object
+                        if hasattr(found_pattern, 'pattern'):
+                            wave_pattern = found_pattern.pattern
+                            score = getattr(found_pattern, 'score', 0)
+                            ensemble_score = getattr(found_pattern, 'ensemble_score', score)
+                            rule_name = getattr(found_pattern, 'rule_name', 'unknown')
+                            
+                            # Create a DataFrame slice for this pattern
+                            start_row = result.get('start_row', 0)
+                            window_len = result.get('window_len', len(df))
+                            end_row = min(start_row + window_len, len(df))
+                            df_slice = df.iloc[start_row:end_row].copy()
+                            
+                            # Import plot function
+                            from models.helpers import plot_pattern
+                            
+                            # Generate plot with custom filename prefix
+                            title = f"{symbol} - Pattern #{i} (Score: {ensemble_score:.3f})"
+                            plot_pattern(
+                                df=df_slice,
+                                wave_pattern=wave_pattern,
+                                title=title,
+                                symbol=symbol,
+                                timeframe="1D",
+                                rule_name=rule_name,
+                                score=ensemble_score
+                            )
+                            
+                            if verbose and i <= 3:
+                                print(f"      Saved pattern #{i}: {rule_name}, score={ensemble_score:.3f}")
+                    except Exception as e:
+                        if verbose:
+                            print(f"      ⚠️  Failed to save image #{i}: {e}")
+                        continue
             
             all_results.extend(symbol_results)
+            
+            # Run pattern analysis if enabled
+            if getattr(cfg, 'analyze_patterns', False) and symbol_results:
+                from tools.analyze_patterns import analyze_score_distribution, analyze_pattern_types
+                
+                if verbose:
+                    print(f"   📊 Pattern Analysis:")
+                
+                # Score distribution
+                ensemble_stats = analyze_score_distribution(symbol_results, 'ensemble_score')
+                if ensemble_stats:
+                    print(f"      Ensemble: mean={ensemble_stats['mean']:.3f}, median={ensemble_stats['median']:.3f}, max={ensemble_stats['max']:.3f}")
+                
+                # Pattern types
+                pattern_types = analyze_pattern_types(symbol_results)
+                if pattern_types:
+                    types_str = ", ".join([f"{k}:{v}" for k, v in pattern_types.items()])
+                    print(f"      Types: {types_str}")
+                
+                # Quality tiers
+                excellent = len([p for p in symbol_results if p.get('ensemble_score', 0) >= 0.85])
+                good = len([p for p in symbol_results if 0.70 <= p.get('ensemble_score', 0) < 0.85])
+                fair = len([p for p in symbol_results if 0.50 <= p.get('ensemble_score', 0) < 0.70])
+                poor = len([p for p in symbol_results if p.get('ensemble_score', 0) < 0.50])
+                print(f"      Quality: Excellent={excellent}, Good={good}, Fair={fair}, Poor={poor}")
             
             # Save checkpoint
             if checkpoint_mgr:

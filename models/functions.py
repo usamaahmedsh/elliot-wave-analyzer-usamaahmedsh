@@ -1,5 +1,12 @@
-from numba import njit
 import numpy as np
+
+# Try to import numba, fall back to no-op decorator if not available
+try:
+    from numba import njit
+except ImportError:
+    # Python 3.14 doesn't support numba yet, use no-op decorator
+    def njit(func):
+        return func
 
 @njit
 def hi(lows_arr: np.array, highs_arr: np.array, idx_start: int = 0):
