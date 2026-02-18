@@ -5,6 +5,7 @@ Enhanced Pipeline Runner with:
 - Checkpoint/resume support
 - Verbose progress tracking
 - HPC compatibility
+- .env file support for HF_TOKEN
 """
 import argparse
 import asyncio
@@ -22,6 +23,24 @@ from tqdm import tqdm
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
+
+# Load environment variables from .env file
+def load_env_file():
+    """Load environment variables from .env file in project root"""
+    env_file = project_root / ".env"
+    if env_file.exists():
+        with open(env_file, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    key = key.strip()
+                    value = value.strip()
+                    if key and value and value != 'your_huggingface_token_here':
+                        os.environ[key] = value
+                        print(f"✅ Loaded {key} from .env file")
+
+load_env_file()
 
 from pipeline.config import PipelineConfig
 from pipeline.executor import parallel_scan_windows
@@ -138,8 +157,13 @@ def load_hf_dataset(dataset_name: str, symbols: List[str] = None, verbose: bool 
         if verbose:
             print(f"📦 Loading dataset from Hugging Face: {dataset_name}")
         
-        # Load dataset
-        dataset = load_dataset(dataset_name, split='train')
+        # Get HF token from environment variable (loaded from .env file)
+        hf_token = os.environ.get('HF_TOKEN')
+        if hf_token and verbose:
+            print(f"🔑 Using HF_TOKEN from environment")
+        
+        # Load dataset with optional token
+        dataset = load_dataset(dataset_name, split='train', token=hf_token)
         
         if verbose:
             print(f"✅ Loaded {len(dataset)} rows")
@@ -275,7 +299,7 @@ def run_pipeline(
     if checkpoint_dir:
         checkpoint_mgr = CheckpointManager(Path(checkpoint_dir))
         
-        if resume:
+        if resume and symbols is not None:
             processed = checkpoint_mgr.load_processed_symbols()
             if verbose and processed:
                 print(f"📂 Resuming: {len(processed)} symbols already processed")
@@ -298,6 +322,23 @@ def run_pipeline(
     # Load data
     if hf_dataset:
         ticker_data = load_hf_dataset(hf_dataset, symbols, verbose)
+        # If symbols was None, get all symbols from the loaded data
+        if symbols is None:
+            symbols = list(ticker_data.keys())
+            if verbose:
+                print(f"📊 Using all {len(symbols)} symbols from HuggingFace dataset")
+            
+            # Now apply resume filtering if checkpoint exists
+            if resume and checkpoint_mgr:
+                processed = checkpoint_mgr.load_processed_symbols()
+                if verbose and processed:
+                    print(f"📂 Resuming: {len(processed)} symbols already processed")
+                symbols = [s for s in symbols if s not in processed]
+                if not symbols:
+                    print("✅ All symbols already processed!")
+                    return
+                if verbose:
+                    print(f"🔄 Remaining: {len(symbols)} symbols to process")
     else:
         # Fallback to yfinance
         if verbose:
@@ -749,13 +790,22 @@ def main():
         action='store_true',
         help='Resume from checkpoint'
     )
+    parser.add_argument(
+        '--use-all-hf-symbols',
+        action='store_true',
+        help='Use all symbols from the HuggingFace dataset (ignores symbol files)'
+    )
     
     args = parser.parse_args()
     
     # Parse symbols from various sources
     symbols = None
     
-    if args.symbols:
+    # If using HF dataset and --use-all-hf-symbols flag, pass None to load all symbols
+    if args.hf_dataset and args.use_all_hf_symbols:
+        symbols = None  # Will load all symbols from the HF dataset
+        print(f"📋 Will use ALL symbols from HuggingFace dataset: {args.hf_dataset}")
+    elif args.symbols:
         # Explicit comma-separated symbols
         symbols = [s.strip() for s in args.symbols.split(',')]
         print(f"📋 Using {len(symbols)} symbols from --symbols argument")

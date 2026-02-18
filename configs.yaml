@@ -1,5 +1,5 @@
-# Pipeline configuration optimized for HPC GPU (140GB VRAM + 16 cores)
-# EXTREME SETTINGS - Maximum pattern detection with massive resources
+# Pipeline configuration optimized for Apple Silicon Mac M4 Pro
+# Balanced settings for 12-core CPU + 16-core GPU + 36GB unified memory
 
 # AUTO DEVICE DETECTION (recommended)
 # Set to true to automatically detect hardware and optimize settings
@@ -13,22 +13,23 @@ auto_detect_device: true
 # days: 5475   = 15 years of data
 # days: 7300   = 20 years of data
 # days: 0      = ALL available history (yfinance "max" period)
-days: 0  # Fetch ALL available historical data (typically 20-40+ years depending on symbol)
-slide_weeks: 1  # Minimum step size - maximum window coverage
-min_weeks: 2  # Minimum 2 weeks - catch very short-term patterns
-max_weeks: 260  # 5 years max window - capture extremely long Elliott Wave cycles
-up_to: 25  # ABSOLUTE MAXIMUM complexity - find deepest nested patterns (very slow but most thorough)
-grow_weeks: 1
-top_n: 100  # Keep top 100 patterns per window (5x normal)
+days: 5475  # 15 years of data - balanced for M4 Pro
+slide_weeks: 2  # Step size for window sliding
+min_weeks: 8  # Minimum 8 weeks - reasonable pattern length
+max_weeks: 104  # 2 years max window - good for most Elliott Wave patterns
+up_to: 8  # Moderate complexity - good balance of depth vs speed
+grow_weeks: 2
+top_n: 20  # Keep top 20 patterns per window
 delay: 0.5
 
+# Optimized for M4 Pro (12 CPU cores, 16 GPU cores, ~36GB unified memory)
 # These will be AUTO-DETECTED if auto_detect_device=true
 # Only used if auto_detect_device=false
-processes: 15  # Use 15 workers (leave 1 core for system on 16-core machine)
-cpu_batch_size: 8192  # MAXIMUM GPU batches - leverage 140GB VRAM fully
-concurrency: 64  # Maximum parallelism for data fetching
+processes: 10  # Use 10 workers (leave 2 cores for system)
+cpu_batch_size: 1024  # Moderate batch size for unified memory
+concurrency: 12  # Network fetch parallelism
 
-max_combinations: 5000000  # 5 MILLION combinations - explore ABSOLUTELY EVERYTHING
+max_combinations: 500000  # 500K combinations - good coverage without excessive runtime
 out_dir: output
 
 # Pattern scanning mode: 'all' scans impulsive + corrective, 'impulses' scans only impulsive waves
@@ -37,28 +38,28 @@ scan_pattern_types: all  # Scan both impulsive and corrective patterns
 # Multi-start search: try multiple pivot points (local extrema) as wave starts
 # Set to true to enable, false for single-start (faster)
 enable_multi_start: true  # Enable to find patterns at different starting points
-max_start_points: 30  # Try MAXIMUM starting points for absolute coverage
+max_start_points: 8  # Try 8 starting points - balanced coverage
 
 # Overlapping windows: set overlap_ratio > 0 to create overlapping time windows
 # overlap_ratio=0.5 means 50% overlap (catches patterns spanning boundaries)
-window_overlap_ratio: 0.8  # 80% overlap (ultra-aggressive) - catch EVERY possible pattern
+window_overlap_ratio: 0.5  # 50% overlap - good balance
 
-# Enable shared memory for quick testing (workers will map lows/highs/dates)
+# Enable shared memory for efficient multi-processing
 use_shared_memory: true
 
-# For quick profiling runs, lower the window budget so the run is fast. Set to 50 for quick test.
-max_windows: 5000  # Scan 5000 windows per symbol - ABSOLUTE MAXIMUM coverage
+# Window budget per symbol
+max_windows: 500  # Scan 500 windows per symbol - reasonable coverage
 
 # Image saving - ENABLED for manual review
 save_images: true  # Save pattern visualizations
-save_images_top_n: 20  # Save top 20 patterns per symbol (4x normal)
+save_images_top_n: 5  # Save top 5 patterns per symbol
 
 # Inline pattern analysis - show quality statistics during pipeline run
 analyze_patterns: true  # Set to true to see score distributions per symbol in real-time
 chunk_size: 0
 min_volatility: 0.0
 skip_flat_windows: false
-profile: true
+profile: false  # Disable profiling for production runs
 
 # Pre-score knobs (cheap vectorized features to prune windows)
 pre_score_top_k: 0
@@ -68,18 +69,13 @@ pre_score_weights: [0.4, 0.3, 0.2, 0.1]
 
 # Sweep knobs (optional) — used by `tools/sweep_cpu_batch.py` if present.
 # Edit these lists to control which values are tried by the sweep driver.
-cpu_batch_sizes: [2048, 4096, 8192, 16384]
-cpu_top_k_values: [64, 128, 256, 512]
+cpu_batch_sizes: [512, 1024, 2048]
+cpu_top_k_values: [64, 128, 256]
 
-# EXTREME GPU PROFILE (140GB VRAM + 16 cores + ALL history):
-# Expected output per symbol: 3,000-10,000+ patterns
-# Expected S&P 500 total: ~1,000,000 - 3,000,000+ patterns
-# Runtime per symbol: 15-45 minutes
-# Full S&P 500: 5-10 DAYS
-# Output file: 3-10 GB
-# 
-# WARNING: This will find EVERY possible Elliott Wave pattern
-# Use data quality validator to filter high-quality patterns (min_score >= 0.75)
-#   max_windows: 2000      # increase scan budget if you want exhaustive search
-#   save_images: false     # keep off for bulk runs; enable only top_n small
+# M4 Pro PROFILE (12 CPU + 16 GPU cores + 36GB unified memory):
+# Expected output per symbol: 15-50 patterns
+# Expected 315 symbols total: ~5,000 - 15,000 patterns
+# Runtime per symbol: ~60-90 seconds
+# Full 315 symbols: ~6-8 hours
+# Output file: 50-200 MB
 
