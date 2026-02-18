@@ -2,25 +2,26 @@
 #PBS -N elliott_sp500
 #PBS -o logs/sp500.out
 #PBS -e logs/sp500.err
-#PBS -l nodes=1:ppn=32
-#PBS -l mem=64gb
-#PBS -l walltime=8:00:00
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=32gb
+#PBS -l walltime=6:00:00
 #PBS -q batch
 
-# Optional: Uncomment for GPU nodes
-# #PBS -l nodes=1:ppn=32:gpus=1
+# GPU configuration: 1 GPU with 12GB VRAM
+#PBS -l nodes=1:ppn=16:gpus=1
 
 # Load required modules (adjust for your HPC cluster)
-module load python/3.10
-# module load cuda/12.1  # Uncomment if using GPU
+module load python/3.11
+module load cuda/12.1  # For NVIDIA GPU support
 
 # Print job information
 echo "======================================"
 echo "Job ID: $PBS_JOBID"
 echo "Job Name: $PBS_JOBNAME"
 echo "Node: $(hostname)"
-echo "CPUs: 32"
-echo "Memory: 64GB"
+echo "CPUs: 16"
+echo "Memory: 32GB"
+echo "GPU: 12GB VRAM"
 echo "Start time: $(date)"
 echo "======================================"
 echo ""

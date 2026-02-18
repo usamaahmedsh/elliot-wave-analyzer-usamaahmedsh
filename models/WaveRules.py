@@ -99,6 +99,85 @@ class Impulse(WaveRule):
         return conditions
 
 
+class BearishImpulse(WaveRule):
+    """
+    Rules for a BEARISH impulsive wave (downtrend).
+    Mirror of the bullish Impulse rules with highs/lows inverted.
+    """
+
+    def set_conditions(self):
+        # condition returns TRUE -> no exit
+        conditions = {  # WAVE 2
+            "w2_1": {
+                "waves": ["wave1", "wave2"],
+                "function": lambda wave1, wave2: wave2.high < wave1.high,  # W2 retracement doesn't exceed W1 start
+                "message": "End of Wave2 is higher than Start of Wave1.",
+            },
+            "w2_2": {
+                "waves": ["wave1", "wave2"],
+                "function": lambda wave1, wave2: wave2.length >= 0.2 * wave1.length,
+                "message": "Wave2 is shorter than 20% of Wave1.",
+            },
+            "w2_3": {
+                "waves": ["wave1", "wave2"],
+                "function": lambda wave1, wave2: 9 * wave2.duration > wave1.duration,
+                "message": "Wave2 is longer than 9x Wave1",
+            },
+            # WAVE 3
+            "w3_1": {
+                "waves": ["wave1", "wave3", "wave5"],
+                "function": lambda wave1, wave3, wave5: not (
+                    wave3.length < wave5.length and wave3.length < wave1.length
+                ),
+                "message": "Wave3 is the shortest Wave.",
+            },
+            "w3_2": {
+                "waves": ["wave1", "wave3"],
+                "function": lambda wave1, wave3: wave3.low < wave1.low,  # W3 extends beyond W1 low
+                "message": "End of Wave3 is higher than End of Wave1",
+            },
+            "w3_3": {
+                "waves": ["wave1", "wave3"],
+                "function": lambda wave1, wave3: wave3.length >= wave1.length / 3.0,
+                "message": "Wave3 is shorter than 1/3 of Wave1",
+            },
+            "w3_4": {
+                "waves": ["wave2", "wave3"],
+                "function": lambda wave2, wave3: wave3.length > wave2.length,
+                "message": "Wave3 shorter than Wave2",
+            },
+            "w3_5": {
+                "waves": ["wave1", "wave3"],
+                "function": lambda wave1, wave3: 7 * wave3.duration > wave1.duration,
+                "message": "Wave3 more than 7 times longer than Wave1.",
+            },
+            # WAVE 4
+            "w4_1": {
+                "waves": ["wave1", "wave4"],
+                "function": lambda wave1, wave4: wave4.high < wave1.low,  # W4 doesn't overlap W1
+                "message": "End of Wave4 is higher than End of Wave1",
+            },
+            "w4_2": {
+                "waves": ["wave2", "wave4"],
+                "function": lambda wave2, wave4: wave4.length > wave2.length / 3.0,
+                "message": "Length of Wave4 is shorter than 1/3 of Wave2",
+            },
+            # WAVE 5
+            "w5_1": {
+                "waves": ["wave3", "wave5"],
+                "function": lambda wave3, wave5: wave3.low > wave5.low,  # W5 extends beyond W3
+                "message": "End of Wave5 is higher than End of Wave3",
+            },
+            "w5_2": {
+                "waves": ["wave1", "wave5"],
+                "function": lambda wave1, wave5: wave5.length < 2.0 * wave1.length,
+                "message": "Wave5 is longer (value wise) than Wave1",
+            },
+        }
+
+        return conditions
+
+
 class Correction(WaveRule):
     """
     Rules for a corrective wave according to

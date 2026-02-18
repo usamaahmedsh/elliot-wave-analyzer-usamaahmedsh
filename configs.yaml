@@ -1,5 +1,5 @@
-# Pipeline configuration optimized for Apple Silicon Mac M4 Pro
-# Balanced settings for 12-core CPU + 16-core GPU + 36GB unified memory
+# Pipeline configuration optimized for HPC (16 CPU cores + 12GB NVIDIA GPU)
+# High-performance settings for cluster computing
 
 # AUTO DEVICE DETECTION (recommended)
 # Set to true to automatically detect hardware and optimize settings
@@ -13,7 +13,7 @@ auto_detect_device: true
 # days: 5475   = 15 years of data
 # days: 7300   = 20 years of data
 # days: 0      = ALL available history (yfinance "max" period)
-days: 5475  # 15 years of data - balanced for M4 Pro
+days: 5475  # 15 years of data
 slide_weeks: 2  # Step size for window sliding
 min_weeks: 8  # Minimum 8 weeks - reasonable pattern length
 max_weeks: 104  # 2 years max window - good for most Elliott Wave patterns
@@ -22,12 +22,12 @@ grow_weeks: 2
 top_n: 20  # Keep top 20 patterns per window
 delay: 0.5
 
-# Optimized for M4 Pro (12 CPU cores, 16 GPU cores, ~36GB unified memory)
+# Optimized for HPC (16 CPU cores + 12GB NVIDIA GPU)
 # These will be AUTO-DETECTED if auto_detect_device=true
 # Only used if auto_detect_device=false
-processes: 10  # Use 10 workers (leave 2 cores for system)
-cpu_batch_size: 1024  # Moderate batch size for unified memory
-concurrency: 12  # Network fetch parallelism
+processes: 14  # Use 14 workers (leave 2 cores for system overhead)
+cpu_batch_size: 2048  # Larger batch size for dedicated GPU VRAM
+concurrency: 16  # Network fetch parallelism - match CPU cores
 
 max_combinations: 500000  # 500K combinations - good coverage without excessive runtime
 out_dir: output
@@ -69,13 +69,13 @@ pre_score_weights: [0.4, 0.3, 0.2, 0.1]
 
 # Sweep knobs (optional) — used by `tools/sweep_cpu_batch.py` if present.
 # Edit these lists to control which values are tried by the sweep driver.
-cpu_batch_sizes: [512, 1024, 2048]
-cpu_top_k_values: [64, 128, 256]
+cpu_batch_sizes: [1024, 2048, 4096]
+cpu_top_k_values: [128, 256, 512]
 
-# M4 Pro PROFILE (12 CPU + 16 GPU cores + 36GB unified memory):
+# HPC PROFILE (16 CPU cores + 12GB NVIDIA GPU):
 # Expected output per symbol: 15-50 patterns
 # Expected 315 symbols total: ~5,000 - 15,000 patterns
-# Runtime per symbol: ~60-90 seconds
-# Full 315 symbols: ~6-8 hours
+# Runtime per symbol: ~30-60 seconds (faster with CUDA)
+# Full 315 symbols: ~3-5 hours
 # Output file: 50-200 MB
 

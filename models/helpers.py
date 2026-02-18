@@ -167,15 +167,19 @@ def plot_cycle(df, wave_cycle, title: str = "",
                    low=df["Low"],
                    close=df["Close"])
 
-    monowaves = go.Scatter(x=wave_cycle.dates,
+    # Convert numpy datetime64 to pandas timestamps for proper Plotly rendering
+    cycle_dates = pd.to_datetime(wave_cycle.dates)
+    
+    monowaves = go.Scatter(x=cycle_dates,
                            y=wave_cycle.values,
                            text=wave_cycle.labels,
                            mode="lines+markers+text",
                            textposition="middle right",
                            textfont=dict(size=15, color="#2c3035"),
                            line=dict(
-                               color=("rgb(111, 126, 130)"),
-                               width=3),
+                               color=("rgb(255, 0, 0)"),  # Red color for visibility
+                               width=4),  # Thicker line
+                           marker=dict(size=10, color="rgb(255, 0, 0)"),  # Red markers
                            )
     layout = dict(title=title)
     fig = go.Figure(data=[data, monowaves], layout=layout)
@@ -215,15 +219,19 @@ def plot_pattern(df: pd.DataFrame,
                    low=df["Low"],
                    close=df["Close"])
 
-    monowaves = go.Scatter(x=wave_pattern.dates,
+    # Convert numpy datetime64 to pandas timestamps for proper Plotly rendering
+    pattern_dates = pd.to_datetime(wave_pattern.dates)
+    
+    monowaves = go.Scatter(x=pattern_dates,
                            y=wave_pattern.values,
                            text=wave_pattern.labels,
                            mode="lines+markers+text",
                            textposition="middle right",
                            textfont=dict(size=15, color="#2c3035"),
                            line=dict(
-                               color=("rgb(111, 126, 130)"),
-                               width=3),
+                               color=("rgb(255, 0, 0)"),  # Red color for visibility
+                               width=4),  # Thicker line
+                           marker=dict(size=10, color="rgb(255, 0, 0)"),  # Red markers
                            )
     layout = dict(title=title)
     fig = go.Figure(data=[data, monowaves], layout=layout)
@@ -249,14 +257,18 @@ def plot_monowave(df, monowave, title: str = "", symbol: str = "", timeframe: st
                    low=df["Low"],
                    close=df["Close"])
 
-    monowaves = go.Scatter(x=monowave.dates,
+    # Convert numpy datetime64 to pandas timestamps for proper Plotly rendering
+    mono_dates = pd.to_datetime(monowave.dates)
+    
+    monowaves = go.Scatter(x=mono_dates,
                            y=monowave.points,
                            mode="lines+markers+text",
                            textposition="middle right",
                            textfont=dict(size=15, color="#2c3035"),
                            line=dict(
-                               color=("rgb(111, 126, 130)"),
-                               width=3),
+                               color=("rgb(255, 0, 0)"),  # Red color for visibility
+                               width=4),  # Thicker line
+                           marker=dict(size=10, color="rgb(255, 0, 0)"),  # Red markers
                            )
     layout = dict(title=title)
     fig = go.Figure(data=[data, monowaves], layout=layout)

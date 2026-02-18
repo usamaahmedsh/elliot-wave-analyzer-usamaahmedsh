@@ -142,6 +142,25 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
         'idx_end': best.idx_end if hasattr(best, 'idx_end') else 0,
     }
     
+    # Serialize individual wave boundaries for rule validation
+    wave_boundaries = {}
+    try:
+        if hasattr(best, 'pattern') and hasattr(best.pattern, 'waves'):
+            for wave_name, wave in best.pattern.waves.items():
+                wave_boundaries[wave_name] = {
+                    'idx_start': int(wave.idx_start) if hasattr(wave, 'idx_start') else 0,
+                    'idx_end': int(wave.idx_end) if hasattr(wave, 'idx_end') else 0,
+                    'low': float(wave.low) if hasattr(wave, 'low') else 0.0,
+                    'high': float(wave.high) if hasattr(wave, 'high') else 0.0,
+                    'low_idx': int(wave.low_idx) if hasattr(wave, 'low_idx') else 0,
+                    'high_idx': int(wave.high_idx) if hasattr(wave, 'high_idx') else 0,
+                    'length': float(wave.length) if hasattr(wave, 'length') else 0.0,
+                    'duration': int(wave.duration) if hasattr(wave, 'duration') else 0,
+                }
+    except Exception:
+        pass
+    best_dict['waves'] = wave_boundaries
+    
     return {
         'symbol': context.get('symbol', 'UNKNOWN'),
         'start_row': start_row,

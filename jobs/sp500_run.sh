@@ -5,15 +5,15 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=128G
-#SBATCH --time=12:00:00
+#SBATCH --mem=32G
+#SBATCH --time=6:00:00
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 
-# GPU-optimized configuration for 140GB VRAM + 16 cores
+# HPC configuration: 16 CPU cores + 12GB GPU VRAM
 
 # Load required modules (adjust for your HPC cluster)
-module load python/3.10
+module load python/3.11
 module load cuda/12.1  # Enable CUDA for GPU acceleration
 
 # Print job information
@@ -22,7 +22,8 @@ echo "Job ID: $SLURM_JOB_ID"
 echo "Job Name: $SLURM_JOB_NAME"
 echo "Node: $SLURM_NODELIST"
 echo "CPUs: $SLURM_CPUS_PER_TASK"
-echo "Memory: 64GB"
+echo "Memory: 32GB"
+echo "GPU: 12GB VRAM"
 echo "Start time: $(date)"
 echo "======================================"
 echo ""

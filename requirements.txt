@@ -1,28 +1,84 @@
-certifi==2024.2.2
-charset-normalizer==3.3.2
-idna==3.7
-llvmlite==0.42.0
-lxml==5.2.2
-multitasking==0.0.11
-numba==0.59.1
+# ==============================================================================
+# Elliott Wave Analyzer Pipeline - Requirements
+# ==============================================================================
+# Python 3.11+ required (for numba compatibility)
+# Install: pip install -r requirements.txt
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Core Data Processing
+# ------------------------------------------------------------------------------
 numpy==1.26.4
 pandas==2.2.2
-plotly==6.1.1
-python-dateutil==2.9.0
-pytz==2023.3
-requests==2.32.3
-six==1.16.0
-tenacity==8.3.0
-urllib3==2.2.1
-yfinance==1.0
-kaleido==1.2.0
-pandas-datareader==0.10.0
-pyarrow==22.0.0
-fastparquet==2025.12.0
-pyyaml==6.0
-datasets==2.17.0
-tqdm>=4.66.0
+pyarrow>=17.0.0
+fastparquet>=2024.2.0
 
-# GPU acceleration (optional - install with: pip install cupy-cuda12x for CUDA 12)
-# cupy-cuda12x>=12.0.0  # Uncomment if you have CUDA 12.x
-# cupy-cuda11x>=11.0.0  # Uncomment if you have CUDA 11.x
+# ------------------------------------------------------------------------------
+# Numerical Computation & JIT Compilation
+# ------------------------------------------------------------------------------
+numba==0.59.1
+llvmlite==0.42.0
+
+# ------------------------------------------------------------------------------
+# Data Fetching & Financial Data
+# ------------------------------------------------------------------------------
+yfinance>=0.2.40
+pandas-datareader>=0.10.0
+requests>=2.31.0
+urllib3>=2.2.0
+
+# ------------------------------------------------------------------------------
+# HuggingFace Datasets (for loading pre-fetched market data)
+# ------------------------------------------------------------------------------
+datasets>=2.17.0
+huggingface-hub>=0.21.0
+
+# ------------------------------------------------------------------------------
+# Visualization & Charting
+# ------------------------------------------------------------------------------
+plotly>=5.18.0
+kaleido>=0.2.1
+
+# ------------------------------------------------------------------------------
+# Configuration & Utilities
+# ------------------------------------------------------------------------------
+pyyaml>=6.0
+tqdm>=4.66.0
+python-dateutil>=2.9.0
+pytz>=2023.3
+
+# ------------------------------------------------------------------------------
+# HTTP/SSL Dependencies
+# ------------------------------------------------------------------------------
+certifi>=2024.2.2
+charset-normalizer>=3.3.0
+idna>=3.7
+six>=1.16.0
+tenacity>=8.3.0
+lxml>=5.2.0
+multitasking>=0.0.11
+
+# ------------------------------------------------------------------------------
+# PyTorch (for Apple Silicon MPS / CUDA GPU support)
+# ------------------------------------------------------------------------------
+# Install PyTorch for your platform:
+# - macOS (Apple Silicon M1/M2/M3/M4): pip install torch torchvision torchaudio
+# - Linux/Windows (CUDA 12.x): pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+# - Linux/Windows (CPU only): pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+torch>=2.2.0
+
+# ------------------------------------------------------------------------------
+# GPU Acceleration (Optional - for NVIDIA CUDA)
+# ------------------------------------------------------------------------------
+# CuPy for GPU-accelerated numpy operations (NVIDIA only)
+# Install the version matching your CUDA toolkit:
+# cupy-cuda12x>=12.0.0  # For CUDA 12.x
+# cupy-cuda11x>=11.0.0  # For CUDA 11.x
+
+# ------------------------------------------------------------------------------
+# Development Dependencies (Optional)
+# ------------------------------------------------------------------------------
+# pytest>=8.0.0        # For running tests
+# black>=24.0.0        # Code formatting
+# isort>=5.13.0        # Import sorting
+# mypy>=1.8.0          # Type checking

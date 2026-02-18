@@ -8,7 +8,7 @@ from models.MonoWave import MonoWaveUp, MonoWaveDown
 from models.WaveOptions import WaveOptionsGenerator5, WaveOptionsGenerator3
 from models.WaveCycle import WaveCycle
 from models.WavePattern import WavePattern
-from models.WaveRules import Impulse, Correction, TDWave, LeadingDiagonal
+from models.WaveRules import Impulse, BearishImpulse, Correction, TDWave, LeadingDiagonal
 from models.EnsembleScoring import EnsembleScorer
 
 
@@ -191,6 +191,66 @@ class WaveAnalyzer:
         if self.lows[wave4.low_idx:wave5.high_idx].any() and wave4.low > np.min(self.lows[wave4.low_idx:wave5.high_idx]):
             if self.verbose:
                 print("Low of Wave 4 higher than a low between Wave 4 and Wave 5")
+            return False
+
+        return [wave1, wave2, wave3, wave4, wave5]
+
+    def find_bearish_impulsive_wave(self, idx_start: int, wave_config: list = None):
+        """
+        Tries to find 5 consecutive waves (down, up, down, up, down) to build a bearish impulsive 12345 wave
+        This is the mirror of find_impulsive_wave for downtrends.
+        """
+        if wave_config is None:
+            wave_config = [0, 0, 0, 0, 0]
+
+        wave1 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=idx_start, skip=wave_config[0])
+        wave1.label = "1"
+        wave1_end = wave1.idx_end
+        if wave1_end is None:
+            if self.verbose:
+                print("Bearish Wave 1 has no End in Data")
+            return False
+
+        wave2 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave1_end, skip=wave_config[1])
+        wave2.label = "2"
+        wave2_end = wave2.idx_end
+        if wave2_end is None:
+            if self.verbose:
+                print("Bearish Wave 2 has no End in Data")
+            return False
+
+        wave3 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave2_end, skip=wave_config[2])
+        wave3.label = "3"
+        wave3_end = wave3.idx_end
+        if wave3_end is None:
+            if self.verbose:
+                print("Bearish Wave 3 has no End in Data")
+            return False
+
+        wave4 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave3_end, skip=wave_config[3])
+        wave4.label = "4"
+        wave4_end = wave4.idx_end
+        if wave4_end is None:
+            if self.verbose:
+                print("Bearish Wave 4 has no End in Data")
+            return False
+
+        # Check wave 2 high is below any high between wave 2 and wave 4
+        if wave2.high < np.max(self.highs[wave2.high_idx:wave4.high_idx]):
+            return False
+
+        wave5 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates, idx_start=wave4_end, skip=wave_config[4])
+        wave5.label = "5"
+        wave5_end = wave5.idx_end
+        if wave5_end is None:
+            if self.verbose:
+                print("Bearish Wave 5 has no End in Data")
+            return False
+
+        # Check wave 4 high is below any high between wave 4 and wave 5
+        if self.highs[wave4.high_idx:wave5.low_idx].any() and wave4.high < np.max(self.highs[wave4.high_idx:wave5.low_idx]):
+            if self.verbose:
+                print("High of Wave 4 lower than a high between Wave 4 and Wave 5")
             return False
 
         return [wave1, wave2, wave3, wave4, wave5]
@@ -433,6 +493,126 @@ class WaveAnalyzer:
         found.sort(key=lambda x: (x.ensemble_score if x.ensemble_score is not None else x.score, x.idx_end), reverse=True)
         return found[:top_n]
 
+    def scan_bearish_impulses(self, idx_start: int, up_to: int = 10, top_n: int = 5, max_combinations: int = None, scan_cfg: dict = None) -> List[FoundPattern]:
+        """
+        Scan for BEARISH impulsive wave patterns (5-wave downtrend) starting from idx_start.
+        This is the mirror of scan_impulses for detecting downtrends.
+        """
+        scan_cfg = scan_cfg or {}
+        batch_size = int(scan_cfg.get('cpu_batch_size', 512))
+        top_k = int(scan_cfg.get('cpu_top_k', 64))
+        max_combinations = max_combinations or 1_000_000
+
+        wave_options_impulse_options = _get_or_create_options(up_to, 'impulse')
+
+        bearish_impulse = BearishImpulse("bearish_impulse")
+        rules_to_check = [bearish_impulse]
+
+        found: List[FoundPattern] = []
+        seen = set()
+
+        processed = 0
+        n_opts = len(wave_options_impulse_options)
+        i = 0
+
+        n_pre_scored = 0
+        n_full_evals = 0
+        t_pre_score = 0.0
+        t_full_eval = 0.0
+
+        # precompute window-level proxies
+        try:
+            slice_window = self.highs[idx_start: idx_start + 10]
+            hi_val = float(np.max(slice_window)) if slice_window.size > 0 else 0.0
+            lo_val = float(np.min(self.lows[idx_start: idx_start + 10])) if slice_window.size > 0 else 0.0
+            vol_proxy = float(np.std(slice_window)) if slice_window.size > 1 else 0.0
+        except Exception:
+            lo_val = 0.0
+            hi_val = 0.0
+            vol_proxy = 0.0
+
+        base_score = 0.4 * vol_proxy + 0.3 * ((hi_val - lo_val) / (hi_val + 1e-9))
+
+        while i < n_opts:
+            batch = wave_options_impulse_options[i : i + batch_size]
+            nb = len(batch)
+            if nb == 0:
+                break
+
+            import time as _time
+            t0 = _time.time()
+            complexities = np.array([float(sum(opt.values)) / (len(opt.values) * max(1, up_to)) for opt in batch], dtype=np.float32)
+            scores = base_score + 0.1 * complexities
+            t_pre_score += _time.time() - t0
+            n_pre_scored += nb
+
+            if nb > top_k:
+                top_idx = np.argpartition(-scores, top_k - 1)[:top_k]
+                top_idx = top_idx[np.argsort(-scores[top_idx])]
+            else:
+                top_idx = np.argsort(-scores)
+
+            top_candidates = [batch[int(j)] for j in top_idx]
+
+            for opt in top_candidates:
+                processed += 1
+                n_full_evals += 1
+                if max_combinations is not None and processed > max_combinations:
+                    i = n_opts
+                    break
+
+                t1 = _time.time()
+                waves_down = self.find_bearish_impulsive_wave(idx_start=idx_start, wave_config=opt.values)
+                t_full_eval += _time.time() - t1
+                if not waves_down:
+                    continue
+
+                wp = WavePattern(waves_down, verbose=False)
+
+                for rule in rules_to_check:
+                    if wp.check_rule(rule):
+                        if wp in seen:
+                            continue
+                        seen.add(wp)
+
+                        rule_score = 0.0
+                        if hasattr(wp, "score_rule"):
+                            rule_score = float(wp.score_rule(rule))
+
+                        ensemble_details = _ensemble_scorer.score_with_details(wp, rule_score=rule_score)
+                        ensemble_score = ensemble_details['ensemble_score']
+                        fib_score = ensemble_details.get('fibonacci_score', 0.5)
+
+                        found.append(
+                            FoundPattern(
+                                pattern=wp,
+                                rule_name=rule.name,
+                                score=rule_score,
+                                wave_config=opt.values,
+                                idx_start=wp.idx_start,
+                                idx_end=wp.idx_end,
+                                ensemble_score=ensemble_score,
+                                fib_score=fib_score
+                            )
+                        )
+
+            i += batch_size
+
+        try:
+            self._last_scan_stats = {
+                'n_options': n_opts,
+                'n_pre_scored': int(n_pre_scored),
+                'n_full_evals': int(n_full_evals),
+                'time_pre_score': float(t_pre_score),
+                'time_full_eval': float(t_full_eval),
+                'pattern_type': 'bearish_impulse'
+            }
+        except Exception:
+            pass
+
+        found.sort(key=lambda x: (x.ensemble_score if x.ensemble_score is not None else x.score, x.idx_end), reverse=True)
+        return found[:top_n]
+
     def scan_correctives(self, idx_start: int, up_to: int = 10, top_n: int = 5, max_combinations: int = None, scan_cfg: dict = None) -> List[FoundPattern]:
         """Scan for corrective wave patterns (ABC, etc.) starting from idx_start."""
         scan_cfg = scan_cfg or {}
@@ -499,16 +679,21 @@ class WaveAnalyzer:
                     continue
                 
                 pat = WavePattern(waves, verbose=False)
-                # Note: corrective patterns don't have the same validation as impulsive
-                # For now, just check if pattern was created
+                
+                # Validate corrective pattern against Correction rules
+                correction = Correction("corrective")
+                if not pat.check_rule(correction):
+                    continue  # Skip patterns that don't pass validation
                     
                 if pat in seen:
                     continue
                 seen.add(pat)
                 
-                # Compute scores (corrective patterns don't have strict rules like impulsive)
-                # Use a simple scoring based on pattern validity
-                rule_score = 0.5  # Default score for corrective patterns
+                # Base rule satisfaction score
+                rule_score = 0.0
+                if hasattr(pat, "score_rule"):
+                    rule_score = float(pat.score_rule(correction))
+                
                 ensemble_details = _ensemble_scorer.score_with_details(pat, rule_score=rule_score)
                 
                 found.append(FoundPattern(
@@ -533,7 +718,7 @@ class WaveAnalyzer:
 
     def scan_all_patterns(self, idx_start: int, up_to: int = 10, top_n: int = 5, max_combinations: int = None, scan_cfg: dict = None) -> List[FoundPattern]:
         """
-        Scan for ALL pattern types (impulsive, corrective) and return combined top_n results.
+        Scan for ALL pattern types (bullish impulsive, bearish impulsive, corrective) and return combined top_n results.
         This maximizes recall by checking every pattern type.
         """
         all_found = []
@@ -541,6 +726,10 @@ class WaveAnalyzer:
         # Scan each pattern type (ask for more from each, then combine)
         impulses = self.scan_impulses(idx_start, up_to, top_n=top_n*2, max_combinations=max_combinations, scan_cfg=scan_cfg)
         all_found.extend(impulses)
+        
+        # Scan for bearish impulses (downtrends)
+        bearish_impulses = self.scan_bearish_impulses(idx_start, up_to, top_n=top_n*2, max_combinations=max_combinations, scan_cfg=scan_cfg)
+        all_found.extend(bearish_impulses)
         
         correctives = self.scan_correctives(idx_start, up_to, top_n=top_n*2, max_combinations=max_combinations, scan_cfg=scan_cfg)
         all_found.extend(correctives)
