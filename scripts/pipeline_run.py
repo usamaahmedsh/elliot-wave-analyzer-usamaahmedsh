@@ -482,18 +482,24 @@ def run_pipeline(
                     print(f"📂 Resuming: {len(processed)} symbols already processed")
                 symbols = [s for s in symbols if s not in processed]
                 if not symbols:
-                    print("✅ All symbols already processed!")
+                    print("All symbols already processed!")
                     return
                 if verbose:
-                    print(f"🔄 Remaining: {len(symbols)} symbols to process")
+                    print(f"Remaining: {len(symbols)} symbols to process")
     else:
         # Fallback to yfinance
+        interval = getattr(cfg, 'interval', '1d')
         if verbose:
-            print("📥 Fetching data from yfinance...")
+            print(f"Fetching data from yfinance (interval={interval})...")
         from pipeline.fetcher import fetch_symbols
         # Use cfg.days for historical data (365 = 1 year, 5475 = 15 years)
         start_days = getattr(cfg, 'days', 720)
-        ticker_data = asyncio.run(fetch_symbols(symbols, start_days=start_days, concurrency=cfg.concurrency))
+        ticker_data = asyncio.run(fetch_symbols(
+            symbols, 
+            start_days=start_days, 
+            concurrency=cfg.concurrency,
+            interval=interval
+        ))
     
     # Collect all results
     all_results = []

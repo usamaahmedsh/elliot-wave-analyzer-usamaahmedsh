@@ -8,23 +8,72 @@ import threading
 # Lock to prevent concurrent yfinance downloads (yfinance is not thread-safe)
 _yf_lock = threading.Lock()
 
+# Valid yfinance intervals and their max history limits
+INTERVAL_LIMITS = {
+    '1m': 7,        # 7 days max
+    '2m': 60,       # 60 days max
+    '5m': 60,       # 60 days max
+    '15m': 60,      # 60 days max
+    '30m': 60,      # 60 days max
+    '60m': 730,     # 730 days max (~2 years)
+    '90m': 60,      # 60 days max
+    '1h': 730,      # 730 days max (~2 years)
+    '1d': None,     # No limit (use period="max")
+    '5d': None,     # No limit
+    '1wk': None,    # No limit
+    '1mo': None,    # No limit
+    '3mo': None,    # No limit
+}
 
-async def _download_to_df(symbol: str, start_days: int) -> pd.DataFrame:
-    # Offload the blocking yfinance.download call to a thread
+
+async def _download_to_df(symbol: str, start_days: int, interval: str = '1d') -> pd.DataFrame:
+    """Download data for a symbol with specified interval.
+    
+    Args:
+        symbol: Stock ticker symbol
+        start_days: Number of days of history (0 = max available)
+        interval: Data interval - '1m', '5m', '15m', '30m', '1h', '1d', '1wk', '1mo'
+    
+    Returns:
+        DataFrame with Date, Open, High, Low, Close columns
+    """
     loop = asyncio.get_running_loop()
 
     def _download():
         # Use lock to serialize yfinance downloads (thread-safety issue)
         with _yf_lock:
-            end_date = pd.Timestamp.now()
+            # Get max days limit for this interval
+            max_days = INTERVAL_LIMITS.get(interval, None)
             
-            # If start_days is 0 or negative, fetch ALL available history
-            if start_days <= 0:
-                # yfinance default: fetch maximum available history
-                raw = yf.download(symbol, period="max", progress=False)
+            # Apply interval limit if specified
+            if max_days is not None and (start_days <= 0 or start_days > max_days):
+                effective_days = max_days
             else:
-                start_date = end_date - pd.DateOffset(days=start_days)
-                raw = yf.download(symbol, start=start_date, end=end_date, progress=False)
+                effective_days = start_days
+            
+            # For intraday intervals, use period parameter which is more reliable
+            if interval in ('1m', '5m', '15m', '30m', '1h'):
+                # Map days to period string for yfinance
+                if effective_days <= 0 or effective_days >= 730:
+                    period = "2y"  # Max for hourly
+                elif effective_days >= 365:
+                    period = "1y"
+                elif effective_days >= 180:
+                    period = "6mo"
+                elif effective_days >= 90:
+                    period = "3mo"
+                elif effective_days >= 30:
+                    period = "1mo"
+                else:
+                    period = f"{effective_days}d"
+                raw = yf.download(symbol, period=period, interval=interval, progress=False)
+            # For daily/weekly/monthly, use date range or max
+            elif effective_days <= 0:
+                raw = yf.download(symbol, period="max", interval=interval, progress=False)
+            else:
+                end_date = pd.Timestamp.now()
+                start_date = end_date - pd.DateOffset(days=effective_days)
+                raw = yf.download(symbol, start=start_date, end=end_date, interval=interval, progress=False)
             
             return convert_yf_data(raw)
 
@@ -53,10 +102,17 @@ def _load_hf_dataset_to_pdf(hf_id: str = "usamaahmedsh/financial-markets-dataset
     return pdf
 
 
-async def fetch_symbols(symbols: List[str], start_days: int = 720, concurrency: int = 8, source: str = "yfinance") -> Dict[str, pd.DataFrame]:
+async def fetch_symbols(symbols: List[str], start_days: int = 720, concurrency: int = 8, source: str = "yfinance", interval: str = '1d') -> Dict[str, pd.DataFrame]:
     """Fetch many symbols concurrently. Supports two sources:
     - 'yfinance' (default): use yfinance async wrapper (threadpool)
     - 'hf': download the HuggingFace dataset and slice it per-symbol (runs in threadpool)
+
+    Args:
+        symbols: List of ticker symbols
+        start_days: Number of days of history (0 = max available)
+        concurrency: Max concurrent downloads
+        source: 'yfinance' or 'hf'
+        interval: Data interval - '1h', '1d', '1wk', etc. (yfinance only)
 
     Returns a dict symbol->DataFrame. Failures are returned as empty DataFrames.
     """
@@ -126,7 +182,7 @@ async def fetch_symbols(symbols: List[str], start_days: int = 720, concurrency: 
     async def _safe_fetch(s: str):
         async with sem:
             try:
-                df = await _download_to_df(s, start_days)
+                df = await _download_to_df(s, start_days, interval=interval)
                 return s, df
             except Exception as e:
                 print(f"fetch error for {s}: {e}")
@@ -139,6 +195,6 @@ async def fetch_symbols(symbols: List[str], start_days: int = 720, concurrency: 
     for coro in asyncio.as_completed(tasks):
         res = await coro
         done += 1
-        print(f"[fetcher:yf] fetched {done}/{total} ({res[0]})")
+        print(f"[fetcher:yf:{interval}] fetched {done}/{total} ({res[0]})")
         results.append(res)
     return {k: v for k, v in results}

@@ -1,0 +1,206 @@
+{
+  "symbol": "MSFT",
+  "summary": {
+    "total_patterns": 2,
+    "runtime_seconds": 218.04451823234558,
+    "patterns_by_timeframe": {
+      "1h": 2,
+      "1d": 0,
+      "1wk": 0
+    },
+    "all_pattern_types": {
+      "impulse": 2
+    }
+  },
+  "timeframes": {
+    "1h": {
+      "name": "Hourly",
+      "count": 2,
+      "bars": 1745,
+      "pattern_types": {
+        "impulse": 2
+      },
+      "runtime_seconds": 53.283304929733276,
+      "patterns": [
+        {
+          "symbol": "MSFT",
+          "start_row": 300,
+          "window_len": 200,
+          "date_start": "2025-04-29T19:30:00+00:00",
+          "date_end": "2025-06-10T15:30:00+00:00",
+          "best": {
+            "rule_name": "impulse",
+            "score": 1.0,
+            "wave_config": [
+              1,
+              0,
+              6,
+              2,
+              7
+            ],
+            "idx_start": 52,
+            "idx_end": 181,
+            "waves": {
+              "wave1": {
+                "idx_start": 52,
+                "idx_end": 57,
+                "low": 435.8800048828125,
+                "high": 446.0400085449219,
+                "low_idx": 52,
+                "high_idx": 57,
+                "length": 10.160003662109375,
+                "duration": 5
+              },
+              "wave2": {
+                "idx_start": 57,
+                "idx_end": 58,
+                "low": 442.4639892578125,
+                "high": 446.0400085449219,
+                "low_idx": 58,
+                "high_idx": 57,
+                "length": 3.576019287109375,
+                "duration": 1
+              },
+              "wave3": {
+                "idx_start": 58,
+                "idx_end": 134,
+                "low": 442.4639892578125,
+                "high": 462.5199890136719,
+                "low_idx": 58,
+                "high_idx": 134,
+                "length": 20.055999755859375,
+                "duration": 76
+              },
+              "wave4": {
+                "idx_start": 134,
+                "idx_end": 143,
+                "low": 455.31048583984375,
+                "high": 462.5199890136719,
+                "low_idx": 143,
+                "high_idx": 134,
+                "length": 7.209503173828125,
+                "duration": 9
+              },
+              "wave5": {
+                "idx_start": 143,
+                "idx_end": 181,
+                "low": 455.31048583984375,
+                "high": 469.6499938964844,
+                "low_idx": 143,
+                "high_idx": 181,
+                "length": 14.339508056640625,
+                "duration": 38
+              }
+            }
+          },
+          "scan_stats": {
+            "n_pre_scored": 512,
+            "n_full_evals": 64,
+            "pattern_type": "corrective"
+          },
+          "ensemble_score": 0.8842333333333334,
+          "fib_score": 0.8666666666666667,
+          "timeframe": "1h",
+          "timeframe_name": "Hourly"
+        },
+        {
+          "symbol": "MSFT",
+          "start_row": 881,
+          "window_len": 200,
+          "date_start": "2025-08-28T16:30:00+00:00",
+          "date_end": "2025-10-08T19:30:00+00:00",
+          "best": {
+            "rule_name": "impulse",
+            "score": 1.0,
+            "wave_config": [
+              2,
+              1,
+              4,
+              5,
+              6
+            ],
+            "idx_start": 37,
+            "idx_end": 181,
+            "waves": {
+              "wave1": {
+                "idx_start": 37,
+                "idx_end": 53,
+                "low": 492.3699951171875,
+                "high": 503.2298889160156,
+                "low_idx": 37,
+                "high_idx": 53,
+                "length": 10.859893798828125,
+                "duration": 16
+              },
+              "wave2": {
+                "idx_start": 53,
+                "idx_end": 60,
+                "low": 497.8800048828125,
+                "high": 503.2298889160156,
+                "low_idx": 60,
+                "high_idx": 53,
+                "length": 5.349884033203125,
+                "duration": 7
+              },
+              "wave3": {
+                "idx_start": 60,
+                "idx_end": 108,
+                "low": 497.8800048828125,
+                "high": 519.2999877929688,
+                "low_idx": 60,
+                "high_idx": 108,
+                "length": 21.41998291015625,
+                "duration": 48
+              },
+              "wave4": {
+                "idx_start": 108,
+                "idx_end": 130,
+                "low": 505.0400085449219,
+                "high": 519.2999877929688,
+                "low_idx": 130,
+                "high_idx": 108,
+                "length": 14.259979248046875,
+                "duration": 22
+              },
+              "wave5": {
+                "idx_start": 130,
+                "idx_end": 181,
+                "low": 505.0400085449219,
+                "high": 525.3900146484375,
+                "low_idx": 130,
+                "high_idx": 181,
+                "length": 20.350006103515625,
+                "duration": 51
+              }
+            }
+          },
+          "scan_stats": {
+            "n_pre_scored": 512,
+            "n_full_evals": 64,
+            "pattern_type": "corrective"
+          },
+          "ensemble_score": 0.8511170452872483,
+          "fib_score": 0.7559840905744966,
+          "timeframe": "1h",
+          "timeframe_name": "Hourly"
+        }
+      ]
+    },
+    "1d": {
+      "name": "Daily",
+      "count": 0,
+      "bars": 1374,
+      "pattern_types": {},
+      "runtime_seconds": 106.46031427383423,
+      "patterns": []
+    },
+    "1wk": {
+      "name": "Weekly",
+      "count": 0,
+      "bars": 522,
+      "pattern_types": {},
+      "runtime_seconds": 57.629034996032715,
+      "patterns": []
+    }
+  }
+}

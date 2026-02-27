@@ -17,6 +17,8 @@ class PipelineConfig:
     max_combinations: int = 200_000  # safety cap
     concurrency: int = 8
     max_windows: int = 1000
+    # Data interval: '1h' (hourly), '1d' (daily), '1wk' (weekly), etc.
+    interval: str = '1d'
     # New knobs
     save_images: bool = True
     save_images_top_n: int = 1

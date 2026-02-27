@@ -119,7 +119,10 @@ class WaveOptionsGenerator(ABC):
 class WaveOptionsGenerator5(WaveOptionsGenerator):
     """
     WaveOptionsGenerator for impulsive 12345 movements
-
+    
+    Generates all combinations of skip values [i, j, k, l, m] where each value
+    can range from 0 to up_to-1 independently. This allows finding patterns
+    where any wave can have any number of intermediate skips.
     """
     def populate(self) -> set:
         checked = set()
@@ -129,15 +132,6 @@ class WaveOptionsGenerator5(WaveOptionsGenerator):
                 for k in range(0, self.up_to):
                     for l in range(0, self.up_to):
                         for m in range(0, self.up_to):
-
-                            if i == 0:
-                                j = k = l = m = 0
-                            if j == 0:
-                                k = l = m = 0
-                            if k == 0:
-                                l = m = 0
-                            if l == 0:
-                                m = 0
                             wave_options = WaveOptions(i, j, k, l, m)
                             checked.add(wave_options)
         return checked
@@ -163,6 +157,9 @@ class WaveOptionsGenerator2(WaveOptionsGenerator):
 class WaveOptionsGenerator3(WaveOptionsGenerator):
     """
     WaveOptions for corrective (ABC) like movements
+    
+    Generates all combinations of skip values [i, j, k] where each value
+    can range from 0 to up_to-1 independently.
     """
     def populate(self) -> set:
         checked = set()
@@ -170,11 +167,6 @@ class WaveOptionsGenerator3(WaveOptionsGenerator):
         for i in range(0, self.up_to):
             for j in range(0, self.up_to):
                 for k in range(0, self.up_to):
-                    if i == 0:
-                        j = k = 0
-                    if j == 0:
-                        k = 0
-
                     wave_options = WaveOptions(i, j, k, None, None)
                     checked.add(wave_options)
         return checked
