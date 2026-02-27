@@ -47,6 +47,63 @@ from pipeline.executor import parallel_scan_windows
 from pipeline.numba_warm import prewarm_numba
 
 
+def deduplicate_patterns(patterns: List[Dict], verbose: bool = False) -> List[Dict]:
+    """
+    Remove duplicate patterns that represent the same Elliott Wave found in overlapping windows.
+    
+    Two patterns are considered duplicates if they have the same:
+    - Pattern type (rule_name)
+    - Wave 1 low price (within 1% tolerance)
+    - Wave 3 high price (within 1% tolerance)  
+    - Wave 5 high price (within 1% tolerance)
+    
+    When duplicates are found, we keep the one with the highest ensemble score.
+    """
+    if not patterns:
+        return patterns
+    
+    # Group patterns by their signature (type + key price levels)
+    seen_signatures = {}
+    
+    for p in patterns:
+        best = p.get('best', {})
+        waves = best.get('waves', {})
+        rule_name = best.get('rule_name', 'unknown')
+        
+        # Extract key price levels for signature
+        w1 = waves.get('wave1', {})
+        w3 = waves.get('wave3', {})
+        w5 = waves.get('wave5', {})
+        
+        # Round to 2 decimal places for fuzzy matching (handles minor price variations)
+        w1_low = round(w1.get('low', 0), 2)
+        w3_high = round(w3.get('high', 0), 2)
+        w5_high = round(w5.get('high', 0), 2)
+        
+        # Create signature tuple
+        sig = (rule_name, w1_low, w3_high, w5_high)
+        
+        # Get current pattern's score
+        score = p.get('ensemble_score', p.get('best', {}).get('score', 0))
+        
+        # Keep the pattern with higher score
+        if sig not in seen_signatures:
+            seen_signatures[sig] = (p, score)
+        else:
+            existing_p, existing_score = seen_signatures[sig]
+            if score > existing_score:
+                seen_signatures[sig] = (p, score)
+    
+    # Extract deduplicated patterns
+    deduplicated = [p for p, score in seen_signatures.values()]
+    
+    if verbose and len(patterns) != len(deduplicated):
+        removed = len(patterns) - len(deduplicated)
+        print(f"   🔄 Deduplicated: {len(patterns)} -> {len(deduplicated)} ({removed} duplicates removed)")
+    
+    return deduplicated
+
+
 class CheckpointManager:
     """Manages checkpoints for resumable pipeline runs with enhanced error tracking"""
     
@@ -570,6 +627,9 @@ def run_pipeline(
                         print(f"   ⚠️  Image saving failed: {e}")
                     # Continue even if image saving fails
                         continue
+            
+            # Deduplicate patterns for this symbol (remove same wave found in overlapping windows)
+            symbol_results = deduplicate_patterns(symbol_results, verbose=verbose)
             
             all_results.extend(symbol_results)
             

@@ -183,6 +183,10 @@ def parallel_scan_windows(windows: List[Tuple[int, int, dict]], cfg: dict, proce
     windows: list of tuples (start_row, window_len, context)
     cfg: dict with scan params (up_to, top_n)
     """
+    # Clear module-level shared memory cache to prevent cross-symbol contamination
+    global _SHM_CACHE
+    _SHM_CACHE.clear()
+    
     if processes is None:
         processes = max(1, mp.cpu_count() - 1)
 

@@ -421,9 +421,24 @@ def print_validation_report(validation: Dict[str, Any]):
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description='Validate Elliott Wave patterns')
+    parser.add_argument('--input', '-i', type=str, default=None,
+                        help='Path to results JSON file')
+    parser.add_argument('--output', '-o', type=str, default=None,
+                        help='Path to output validation report')
+    args = parser.parse_args()
+    
     # Default paths
-    results_path = Path(__file__).parent.parent / "output" / "all_symbols_results.json"
-    output_path = Path(__file__).parent.parent / "output" / "validation_report_v2.json"
+    if args.input:
+        results_path = Path(args.input)
+    else:
+        results_path = Path(__file__).parent.parent / "output" / "results.json"
+    
+    if args.output:
+        output_path = Path(args.output)
+    else:
+        output_path = Path(__file__).parent.parent / "output" / "validation_report_v2.json"
     
     # Load results
     results = load_results(str(results_path))

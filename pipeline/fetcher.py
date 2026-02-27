@@ -3,6 +3,10 @@ from typing import List, Dict
 import pandas as pd
 import yfinance as yf
 from models.helpers import convert_yf_data
+import threading
+
+# Lock to prevent concurrent yfinance downloads (yfinance is not thread-safe)
+_yf_lock = threading.Lock()
 
 
 async def _download_to_df(symbol: str, start_days: int) -> pd.DataFrame:
@@ -10,17 +14,19 @@ async def _download_to_df(symbol: str, start_days: int) -> pd.DataFrame:
     loop = asyncio.get_running_loop()
 
     def _download():
-        end_date = pd.Timestamp.now()
-        
-        # If start_days is 0 or negative, fetch ALL available history
-        if start_days <= 0:
-            # yfinance default: fetch maximum available history
-            raw = yf.download(symbol, period="max")
-        else:
-            start_date = end_date - pd.DateOffset(days=start_days)
-            raw = yf.download(symbol, start=start_date, end=end_date)
-        
-        return convert_yf_data(raw)
+        # Use lock to serialize yfinance downloads (thread-safety issue)
+        with _yf_lock:
+            end_date = pd.Timestamp.now()
+            
+            # If start_days is 0 or negative, fetch ALL available history
+            if start_days <= 0:
+                # yfinance default: fetch maximum available history
+                raw = yf.download(symbol, period="max", progress=False)
+            else:
+                start_date = end_date - pd.DateOffset(days=start_days)
+                raw = yf.download(symbol, start=start_date, end=end_date, progress=False)
+            
+            return convert_yf_data(raw)
 
     df = await loop.run_in_executor(None, _download)
     return df
