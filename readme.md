@@ -16,24 +16,23 @@ Elliott Wave Theory is a form of technical analysis that identifies recurring wa
 
 ## Features
 
-### �� Pattern Detection
+### Pattern Detection
 - **Dual Pattern Types**: Detects both impulsive (5-wave) and corrective (3-wave) patterns
 - **Configurable Complexity**: Adjust `up_to` parameter (3-12) to find simple or complex multi-degree patterns
-- **Multi-Start Search**: Tries multiple pivot points per window to catch patterns not starting at global extrema
-- **Window Overlap**: Configurable overlap (0-80%) to catch patterns spanning window boundaries
+- **Skip-Ahead Algorithm**: When a pattern is found, automatically skips past it to find the next unique pattern
 - **Ensemble Scoring**: Sophisticated scoring combining Fibonacci analysis, rule compliance, and pattern quality
+- **Thread-Safe Data Fetching**: Concurrent symbol downloads with proper synchronization
 
-### ⚡ Performance
+### Performance
 - **Cross-Platform**: Auto-detects Mac (MPS), NVIDIA (CUDA), or CPU and optimizes accordingly
-- **Parallel Processing**: 10 workers on Mac M4 Pro, 30+ on HPC systems
+- **Sequential Scanning with Skip**: Efficiently finds unique patterns without redundant scanning
 - **Shared Memory**: Workers use memory-mapped arrays to avoid copying price data
 - **Batch Vectorization**: Pre-scores candidates in batches (512-2048) before full evaluation
-- **~75 seconds per symbol** (500 windows, 15 years of data, up_to=8)
 
-### 📊 Data & Output
+### Data and Output
 - **15 Years of History**: Fetches daily OHLCV data from yfinance (or HuggingFace datasets)
 - **JSON Results**: Comprehensive pattern metadata including scores, wave configurations, date ranges
-- **Image Export**: Saves top-N pattern visualizations as PNG files for manual review
+- **Image Export**: Saves pattern visualizations as PNG files for manual review
 - **Checkpoint/Resume**: Can resume interrupted runs from saved progress
 
 ## Installation
@@ -109,12 +108,12 @@ Enable `analyze_patterns: true` in `configs.yaml` to see quality statistics duri
 
 ```
 [1/1] Processing AAPL...
-   ✅ Found 18 patterns in 69.0s
-   📈 Top score: 0.899
-   📊 Pattern Analysis:
-      Ensemble: mean=0.551, median=0.530, max=0.899
-      Types: impulse:1, Corrective:17
-      Quality: Excellent=1, Good=0, Fair=17, Poor=0
+   Found 2 patterns in 245.0s
+   Top score: 0.899
+   Pattern Analysis:
+      Ensemble: mean=0.833, median=0.833, max=0.899
+      Types: impulse:2
+      Quality: Excellent=1, Good=1, Fair=0, Poor=0
 ```
 
 ## Configuration
@@ -137,17 +136,16 @@ The pipeline is controlled via `configs.yaml`. Key parameters:
 |-----------|---------|-------|--------|
 | `max_weeks` | 104 | 12-208 | Maximum window size (weeks) |
 | `min_weeks` | 8 | 2-20 | Minimum window size (weeks) |
-| `slide_weeks` | 2 | 1-8 | Window slide step (weeks) |
+| `slide_weeks` | 1 | 1-8 | Window slide step (weeks) |
 | `max_windows` | 500 | 50-2000 | Windows scanned per symbol |
-| `window_overlap_ratio` | 0.5 | 0.0-0.8 | Window overlap (0.5 = 50%) |
 
 ### Resource Optimization
 
 | Parameter | Default | Auto-Detected | Effect |
 |-----------|---------|---------------|--------|
-| `processes` | 10 | ✅ Yes | Worker threads |
-| `cpu_batch_size` | 1024 | ✅ Yes | Vectorization batch size |
-| `concurrency` | 12 | ✅ Yes | Network fetch parallelism |
+| `processes` | 10 | Yes | Worker threads |
+| `cpu_batch_size` | 1024 | Yes | Vectorization batch size |
+| `concurrency` | 12 | Yes | Network fetch parallelism |
 | `auto_detect_device` | true | - | Enable hardware auto-detection |
 
 ### Image Export & Analysis
@@ -221,15 +219,15 @@ max_combinations: 100000
 ```
 **Expected**: 20-30 patterns/symbol, lower quality
 
-### Scenario 2: Balanced Quality (75s per symbol) ⭐ Recommended
+### Scenario 2: Balanced Quality (Recommended)
 ```yaml
 up_to: 8
 max_windows: 500
-slide_weeks: 2
+slide_weeks: 1
 max_start_points: 8
 max_combinations: 500000
 ```
-**Expected**: 70-80 patterns/symbol, high quality (0.85-0.90 scores)
+**Expected**: Unique patterns per symbol with high quality (0.85-0.90 scores)
 
 ### Scenario 3: Maximum Quality (300s per symbol)
 ```yaml
@@ -491,24 +489,24 @@ python tools/backtest_patterns.py --export-trades output/trades.csv
 **Example output:**
 ```
 BACKTEST RESULTS
-📊 Trade Statistics:
+Trade Statistics:
   Total Trades:     1
   Winning Trades:   1 (100.0%)
   Avg Holding:      43.0 days
 
-💰 Returns:
+Returns:
   Total Return:     4.21%
   Average Return:   4.21%
   Best Trade:       4.21%
 
-📈 Performance Metrics:
+Performance Metrics:
   Sharpe Ratio:     0.000
   Max Drawdown:     0.00%
   Profit Factor:    inf
   Net P/L:          $42.14
 
-🏆 Top 5 Best Trades:
-  1. AAPL: +4.21% (score=0.899, 2017-04-04 → 2017-05-17)
+Top 5 Best Trades:
+  1. AAPL: +4.21% (score=0.899, 2017-04-04 to 2017-05-17)
 ```
 
 **Note:** Backtesting uses historical data and does not guarantee future performance. Results include survivorship bias and assume perfect execution.
@@ -544,7 +542,7 @@ pip install -r requirements.txt
 
 ## Roadmap
 
-### Real-Time & Emerging Pattern Detection 🚀
+### Real-Time and Emerging Pattern Detection
 
 The next major feature is **real-time pattern detection mode** to identify incomplete Elliott Waves as they form:
 
@@ -576,12 +574,13 @@ To contribute or discuss this feature, see [GitHub Issues](https://github.com/us
 Contributions welcome! Areas for improvement:
 
 - [ ] Additional pattern types (triangles, flats, zigzags)
-- [ ] **Real-time & emerging pattern detection** 🚀 *(see Roadmap above)*
+- [ ] Real-time and emerging pattern detection
 - [ ] Web dashboard for results
 - [ ] Machine learning-based scoring
-- [x] Backtesting framework ✅
-- [x] Pattern quality analysis ✅
-- [x] Inline pattern statistics ✅
+- [x] Backtesting framework
+- [x] Pattern quality analysis
+- [x] Inline pattern statistics
+- [x] Skip-ahead algorithm for unique pattern detection
 
 ## Credits
 
@@ -595,6 +594,7 @@ This project is forked from and builds upon the foundational Elliott Wave detect
 - Backtesting framework
 - Pattern quality analysis tools
 - Production-ready pipeline infrastructure
+- Skip-ahead scanning for unique pattern detection
 
 ## License
 
@@ -603,13 +603,13 @@ This project is licensed under the **Apache License 2.0**.
 You are free to use, modify, and distribute this software under the terms of the Apache 2.0 license. See the [LICENSE](LICENSE) file for the full license text.
 
 **Key Points:**
-- ✅ Free for commercial and private use
-- ✅ Modification and distribution permitted
-- ✅ Patent grant included
-- ⚠️ Must include copyright notice and license
-- ⚠️ Changes must be documented
-- ❌ No trademark rights granted
-- ❌ No warranty provided
+- Free for commercial and private use
+- Modification and distribution permitted
+- Patent grant included
+- Must include copyright notice and license
+- Changes must be documented
+- No trademark rights granted
+- No warranty provided
 
 For more information, visit: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -626,7 +626,3 @@ https://github.com/usamaahmedsh/elliot-wave-analyzer-usamaahmedsh
 
 - **Issues**: https://github.com/usamaahmedsh/elliot-wave-analyzer-usamaahmedsh/issues
 - **Author**: Usama Ahmed
-
----
-
-**Happy Pattern Hunting! 📈**

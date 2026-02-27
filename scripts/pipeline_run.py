@@ -315,6 +315,96 @@ def build_windows_for_df(df, cfg: PipelineConfig):
     return windows, (lows_arr, highs_arr, dates_arr)
 
 
+def sequential_scan_with_skip(df, cfg: PipelineConfig, symbol: str, verbose: bool = False):
+    """
+    Sequential scanning with skip-ahead logic.
+    
+    When a valid pattern is found, skip to after the pattern ends to avoid
+    finding the same pattern in overlapping windows.
+    
+    Returns list of pattern results.
+    """
+    from pipeline.executor import _worker_scan_window
+    
+    bars_per_week = 7
+    slide_step = cfg.slide_weeks * bars_per_week
+    min_len = cfg.min_weeks * bars_per_week
+    window_size = cfg.max_weeks * bars_per_week
+    
+    # Prepare arrays
+    lows_arr = df['Low'].to_numpy()
+    highs_arr = df['High'].to_numpy()
+    dates_arr = df['Date'].to_numpy()
+    
+    n_total = len(lows_arr)
+    
+    # Config for worker
+    cfg_dict = {
+        'up_to': cfg.up_to,
+        'top_n': cfg.top_n,
+        'cpu_batch_size': cfg.cpu_batch_size,
+        'scan_pattern_types': getattr(cfg, 'scan_pattern_types', 'all'),
+        'enable_multi_start': getattr(cfg, 'enable_multi_start', False),
+        'max_start_points': getattr(cfg, 'max_start_points', 5),
+        'max_combinations': cfg.max_combinations
+    }
+    
+    results = []
+    current_idx = 0
+    windows_scanned = 0
+    max_windows = cfg.max_windows
+    
+    while current_idx < n_total and windows_scanned < max_windows:
+        # Calculate window bounds
+        end_idx = current_idx + window_size
+        if end_idx > n_total:
+            end_idx = n_total
+        
+        window_len = end_idx - current_idx
+        if window_len < min_len:
+            break
+        
+        # Prepare context
+        context = {
+            'symbol': symbol,
+            'lows': lows_arr,
+            'highs': highs_arr,
+            'dates': dates_arr
+        }
+        
+        # Scan this window
+        window_tuple = (current_idx, window_len, context)
+        result = _worker_scan_window(window_tuple, cfg_dict)
+        windows_scanned += 1
+        
+        if result and result.get('best', {}).get('score', 0) > 0:
+            # Valid pattern found!
+            results.append(result)
+            
+            # Get the pattern's end index (relative to window start)
+            pattern_idx_end = result['best'].get('idx_end', 0)
+            
+            # Calculate absolute index where pattern ends
+            pattern_abs_end = current_idx + pattern_idx_end
+            
+            # Skip to after the pattern ends (with a small buffer)
+            # This ensures we don't find the same pattern again
+            skip_to = pattern_abs_end + slide_step
+            
+            if verbose:
+                print(f"      Found pattern at idx {current_idx}-{pattern_abs_end}, skipping to {skip_to}")
+            
+            current_idx = skip_to
+        else:
+            # No pattern found, slide by normal step
+            current_idx += slide_step
+    
+    if verbose:
+        print(f"   📊 Scanned {windows_scanned} windows, found {len(results)} unique patterns")
+    
+    return results
+
+
 def run_pipeline(
     symbols: List[str],
     config_path: str,
@@ -476,65 +566,13 @@ def run_pipeline(
             if verbose:
                 print(f"   📊 Data: {len(df)} bars from {df['Date'].min()} to {df['Date'].max()}")
             
-            # Build windows
-            try:
-                windows, (lows, highs, dates) = build_windows_for_df(df, cfg)
-                
-                if verbose:
-                    print(f"   🔍 Generated {len(windows)} windows")
-                
-                if not windows:
-                    if verbose:
-                        print(f"   ⚠️  No valid windows, skipping")
-                    if checkpoint_mgr:
-                        checkpoint_mgr.save_failed_symbol(symbol, "No valid windows generated")
-                    continue
-            except Exception as e:
-                error_msg = f"Window generation failed: {str(e)}"
-                if verbose:
-                    print(f"   ❌ {error_msg}")
-                if checkpoint_mgr:
-                    checkpoint_mgr.save_failed_symbol(symbol, error_msg)
-                symbol_elapsed = time.time() - symbol_start_time
-                symbol_times.append(symbol_elapsed)
-                patterns_count.append(0)
-                continue
-            
-            # Run pattern detection
+            # Use sequential scanning with skip-ahead to avoid duplicate patterns
             if verbose:
-                print(f"   ⚙️  Running wave analyzer...")
-            
-            # Prepare windows in the format expected by parallel_scan_windows
-            # Convert (start_idx, end_idx) to (start_row, window_len, context)
-            prepared_windows = []
-            for start_idx, end_idx in windows:
-                window_len = end_idx - start_idx
-                context = {
-                    'symbol': symbol,
-                    'lows': lows,
-                    'highs': highs,
-                    'dates': dates
-                }
-                prepared_windows.append((start_idx, window_len, context))
-            
-            # Prepare config dict for executor
-            cfg_dict = {
-                'up_to': cfg.up_to,
-                'top_n': cfg.top_n,
-                'cpu_batch_size': cfg.cpu_batch_size,
-                'scan_pattern_types': getattr(cfg, 'scan_pattern_types', 'all'),
-                'enable_multi_start': getattr(cfg, 'enable_multi_start', False),
-                'max_start_points': getattr(cfg, 'max_start_points', 5),
-                'max_combinations': cfg.max_combinations
-            }
+                print(f"   ⚙️  Running sequential wave analyzer with skip-ahead...")
             
             window_start = time.time()
             try:
-                symbol_results = parallel_scan_windows(
-                    windows=prepared_windows,
-                    cfg=cfg_dict,
-                    processes=cfg.processes
-                )
+                symbol_results = sequential_scan_with_skip(df, cfg, symbol, verbose=verbose)
             except Exception as e:
                 error_msg = f"Pattern detection failed: {str(e)}"
                 if verbose:
@@ -628,8 +666,8 @@ def run_pipeline(
                     # Continue even if image saving fails
                         continue
             
-            # Deduplicate patterns for this symbol (remove same wave found in overlapping windows)
-            symbol_results = deduplicate_patterns(symbol_results, verbose=verbose)
+            # No deduplication needed - sequential_scan_with_skip already handles this
+            # by skipping past found patterns
             
             all_results.extend(symbol_results)
             

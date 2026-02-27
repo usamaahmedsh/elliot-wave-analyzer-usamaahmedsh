@@ -14,7 +14,7 @@ auto_detect_device: true
 # days: 7300   = 20 years of data
 # days: 0      = ALL available history (yfinance "max" period)
 days: 5475  # 15 years of data
-slide_weeks: 2  # Step size for window sliding
+slide_weeks: 1  # Step size for window sliding (1 week = finer granularity to catch all patterns)
 min_weeks: 8  # Minimum 8 weeks - reasonable pattern length
 max_weeks: 104  # 2 years max window - good for most Elliott Wave patterns
 up_to: 8  # Moderate complexity - good balance of depth vs speed

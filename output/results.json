@@ -1,10 +1,10 @@
 {
   "metadata": {
     "total_symbols": 5,
-    "total_patterns": 14,
+    "total_patterns": 5,
     "config": "configs.yaml",
     "hf_dataset": null,
-    "runtime_seconds": 339.82043504714966
+    "runtime_seconds": 1387.9550530910492
   },
   "patterns": [
     {
@@ -30,50 +30,50 @@
             "idx_start": 1,
             "idx_end": 51,
             "low": 18.35117446482239,
-            "high": 21.820784567328694,
+            "high": 21.820786495228244,
             "low_idx": 1,
             "high_idx": 51,
-            "length": 3.469610102506305,
+            "length": 3.4696120304058553,
             "duration": 50
           },
           "wave2": {
             "idx_start": 51,
             "idx_end": 59,
-            "low": 20.57086848886411,
-            "high": 21.820784567328694,
+            "low": 20.570870366819378,
+            "high": 21.820786495228244,
             "low_idx": 59,
             "high_idx": 51,
-            "length": 1.249916078464583,
+            "length": 1.2499161284088665,
             "duration": 8
           },
           "wave3": {
             "idx_start": 59,
             "idx_end": 135,
-            "low": 20.57086848886411,
-            "high": 26.5227558818513,
+            "low": 20.570870366819378,
+            "high": 26.522757824070702,
             "low_idx": 59,
             "high_idx": 135,
-            "length": 5.951887392987189,
+            "length": 5.951887457251324,
             "duration": 76
           },
           "wave4": {
             "idx_start": 135,
             "idx_end": 162,
-            "low": 23.173912432554356,
-            "high": 26.5227558818513,
+            "low": 23.173914310644687,
+            "high": 26.522757824070702,
             "low_idx": 162,
             "high_idx": 135,
-            "length": 3.348843449296943,
+            "length": 3.348843513426015,
             "duration": 27
           },
           "wave5": {
             "idx_start": 162,
             "idx_end": 195,
-            "low": 23.173912432554356,
-            "high": 29.707102206832975,
+            "low": 23.173914310644687,
+            "high": 29.70710413481809,
             "low_idx": 162,
             "high_idx": 195,
-            "length": 6.533189774278618,
+            "length": 6.533189824173402,
             "duration": 33
           }
         }
@@ -83,8 +83,8 @@
         "n_full_evals": 64,
         "pattern_type": "corrective"
       },
-      "ensemble_score": 0.8990555169335487,
-      "fib_score": 0.8401110338670974
+      "ensemble_score": 0.8990555175116798,
+      "fib_score": 0.8401110350233597
     },
     {
       "symbol": "MSFT",
@@ -103,16 +103,16 @@
           6
         ],
         "idx_start": 133,
-        "idx_end": 329,
+        "idx_end": 328,
         "waves": {
           "wave1": {
             "idx_start": 133,
             "idx_end": 173,
-            "low": 74.05280034336022,
+            "low": 74.05280793699738,
             "high": 88.15678183875245,
             "low_idx": 133,
             "high_idx": 173,
-            "length": 14.103981495392233,
+            "length": 14.103973901755069,
             "duration": 40
           },
           "wave2": {
@@ -129,31 +129,31 @@
             "idx_start": 179,
             "idx_end": 260,
             "low": 76.92499429439347,
-            "high": 95.08450542613,
+            "high": 95.08449765984764,
             "low_idx": 179,
             "high_idx": 260,
-            "length": 18.159511131736522,
+            "length": 18.15950336545417,
             "duration": 81
           },
           "wave4": {
             "idx_start": 260,
             "idx_end": 275,
-            "low": 90.0566657054997,
-            "high": 95.08450542613,
+            "low": 90.05667322892003,
+            "high": 95.08449765984764,
             "low_idx": 275,
             "high_idx": 260,
-            "length": 5.027839720630297,
+            "length": 5.027824430927609,
             "duration": 15
           },
           "wave5": {
             "idx_start": 275,
-            "idx_end": 329,
-            "low": 90.0566657054997,
-            "high": 105.71211562466567,
+            "idx_end": 328,
+            "low": 90.05667322892003,
+            "high": 105.71212626495314,
             "low_idx": 275,
-            "high_idx": 329,
-            "length": 15.655449919165974,
-            "duration": 54
+            "high_idx": 328,
+            "length": 15.655453036033109,
+            "duration": 53
           }
         }
       },
@@ -162,94 +162,15 @@
         "n_full_evals": 64,
         "pattern_type": "corrective"
       },
-      "ensemble_score": 0.7947163067295264,
-      "fib_score": 0.6633326134590528
+      "ensemble_score": 0.7947161702925564,
+      "fib_score": 0.6633323405851128
     },
     {
       "symbol": "MSFT",
-      "start_row": 1575,
+      "start_row": 1903,
       "window_len": 728,
-      "date_start": "2017-06-06T00:00:00.000000000",
-      "date_end": "2020-04-27T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          2,
-          2,
-          6,
-          3,
-          7
-        ],
-        "idx_start": 172,
-        "idx_end": 327,
-        "waves": {
-          "wave1": {
-            "idx_start": 172,
-            "idx_end": 193,
-            "low": 76.92499429439347,
-            "high": 89.64957010239641,
-            "low_idx": 172,
-            "high_idx": 193,
-            "length": 12.724575808002939,
-            "duration": 21
-          },
-          "wave2": {
-            "idx_start": 193,
-            "idx_end": 201,
-            "low": 80.28262420103411,
-            "high": 89.64957010239641,
-            "low_idx": 201,
-            "high_idx": 193,
-            "length": 9.3669459013623,
-            "duration": 8
-          },
-          "wave3": {
-            "idx_start": 201,
-            "idx_end": 253,
-            "low": 80.28262420103411,
-            "high": 95.08450542613,
-            "low_idx": 201,
-            "high_idx": 253,
-            "length": 14.801881225095883,
-            "duration": 52
-          },
-          "wave4": {
-            "idx_start": 253,
-            "idx_end": 268,
-            "low": 90.0566657054997,
-            "high": 95.08450542613,
-            "low_idx": 268,
-            "high_idx": 253,
-            "length": 5.027839720630297,
-            "duration": 15
-          },
-          "wave5": {
-            "idx_start": 268,
-            "idx_end": 327,
-            "low": 90.0566657054997,
-            "high": 107.16211153569421,
-            "low_idx": 268,
-            "high_idx": 327,
-            "length": 17.105445830194512,
-            "duration": 59
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.8304764478370871,
-      "fib_score": 0.6852386099598885
-    },
-    {
-      "symbol": "MSFT",
-      "start_row": 1932,
-      "window_len": 728,
-      "date_start": "2018-11-02T00:00:00.000000000",
-      "date_end": "2021-09-24T00:00:00.000000000",
+      "date_start": "2018-09-24T00:00:00.000000000",
+      "date_end": "2021-08-13T00:00:00.000000000",
       "best": {
         "rule_name": "impulse",
         "score": 1.0,
@@ -260,57 +181,57 @@
           2,
           7
         ],
-        "idx_start": 84,
-        "idx_end": 280,
+        "idx_start": 113,
+        "idx_end": 309,
         "waves": {
           "wave1": {
-            "idx_start": 84,
-            "idx_end": 117,
-            "low": 102.00031035648524,
-            "high": 123.15973322754627,
-            "low_idx": 84,
-            "high_idx": 117,
-            "length": 21.159422871061025,
+            "idx_start": 113,
+            "idx_end": 146,
+            "low": 102.00031786782479,
+            "high": 123.15974098808493,
+            "low_idx": 113,
+            "high_idx": 146,
+            "length": 21.159423120260143,
             "duration": 33
           },
           "wave2": {
-            "idx_start": 117,
-            "idx_end": 143,
-            "low": 111.98521024919418,
-            "high": 123.15973322754627,
-            "low_idx": 143,
-            "high_idx": 117,
-            "length": 11.174522978352087,
+            "idx_start": 146,
+            "idx_end": 172,
+            "low": 111.98523297885758,
+            "high": 123.15974098808493,
+            "low_idx": 172,
+            "high_idx": 146,
+            "length": 11.174508009227353,
             "duration": 26
           },
           "wave3": {
-            "idx_start": 143,
-            "idx_end": 219,
-            "low": 111.98521024919418,
-            "high": 134.4124774336888,
-            "low_idx": 143,
-            "high_idx": 219,
-            "length": 22.42726718449461,
+            "idx_start": 172,
+            "idx_end": 248,
+            "low": 111.98523297885758,
+            "high": 134.41244663488519,
+            "low_idx": 172,
+            "high_idx": 248,
+            "length": 22.427213656027604,
             "duration": 76
           },
           "wave4": {
-            "idx_start": 219,
-            "idx_end": 229,
-            "low": 125.77384817449042,
-            "high": 134.4124774336888,
-            "low_idx": 229,
-            "high_idx": 219,
-            "length": 8.638629259198368,
+            "idx_start": 248,
+            "idx_end": 258,
+            "low": 125.77389292300633,
+            "high": 134.41244663488519,
+            "low_idx": 258,
+            "high_idx": 248,
+            "length": 8.638553711878856,
             "duration": 10
           },
           "wave5": {
-            "idx_start": 229,
-            "idx_end": 280,
-            "low": 125.77384817449042,
+            "idx_start": 258,
+            "idx_end": 309,
+            "low": 125.77389292300633,
             "high": 147.6870207251298,
-            "low_idx": 229,
-            "high_idx": 280,
-            "length": 21.913172550639374,
+            "low_idx": 258,
+            "high_idx": 309,
+            "length": 21.91312780212347,
             "duration": 51
           }
         }
@@ -322,401 +243,6 @@
       },
       "ensemble_score": 0.8707575757575757,
       "fib_score": 0.7999999999999999
-    },
-    {
-      "symbol": "MSFT",
-      "start_row": 2023,
-      "window_len": 728,
-      "date_start": "2019-03-19T00:00:00.000000000",
-      "date_end": "2022-02-03T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          1,
-          5,
-          7,
-          2,
-          7
-        ],
-        "idx_start": 6,
-        "idx_end": 189,
-        "waves": {
-          "wave1": {
-            "idx_start": 6,
-            "idx_end": 26,
-            "low": 108.30031244205747,
-            "high": 123.15973322754627,
-            "low_idx": 6,
-            "high_idx": 26,
-            "length": 14.859420785488794,
-            "duration": 20
-          },
-          "wave2": {
-            "idx_start": 26,
-            "idx_end": 52,
-            "low": 111.98521024919418,
-            "high": 123.15973322754627,
-            "low_idx": 52,
-            "high_idx": 26,
-            "length": 11.174522978352087,
-            "duration": 26
-          },
-          "wave3": {
-            "idx_start": 52,
-            "idx_end": 128,
-            "low": 111.98521024919418,
-            "high": 134.4124774336888,
-            "low_idx": 52,
-            "high_idx": 128,
-            "length": 22.42726718449461,
-            "duration": 76
-          },
-          "wave4": {
-            "idx_start": 128,
-            "idx_end": 138,
-            "low": 125.77384817449042,
-            "high": 134.4124774336888,
-            "low_idx": 138,
-            "high_idx": 128,
-            "length": 8.638629259198368,
-            "duration": 10
-          },
-          "wave5": {
-            "idx_start": 138,
-            "idx_end": 189,
-            "low": 125.77384817449042,
-            "high": 147.6870207251298,
-            "low_idx": 138,
-            "high_idx": 189,
-            "length": 21.913172550639374,
-            "duration": 51
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.8320871249628566,
-      "fib_score": 0.7469742499257134
-    },
-    {
-      "symbol": "MSFT",
-      "start_row": 2030,
-      "window_len": 728,
-      "date_start": "2019-03-28T00:00:00.000000000",
-      "date_end": "2022-02-14T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          1,
-          5,
-          7,
-          2,
-          7
-        ],
-        "idx_start": 0,
-        "idx_end": 182,
-        "waves": {
-          "wave1": {
-            "idx_start": 0,
-            "idx_end": 19,
-            "low": 108.87221008388957,
-            "high": 123.15973322754627,
-            "low_idx": 0,
-            "high_idx": 19,
-            "length": 14.2875231436567,
-            "duration": 19
-          },
-          "wave2": {
-            "idx_start": 19,
-            "idx_end": 45,
-            "low": 111.98521024919418,
-            "high": 123.15973322754627,
-            "low_idx": 45,
-            "high_idx": 19,
-            "length": 11.174522978352087,
-            "duration": 26
-          },
-          "wave3": {
-            "idx_start": 45,
-            "idx_end": 121,
-            "low": 111.98521024919418,
-            "high": 134.4124774336888,
-            "low_idx": 45,
-            "high_idx": 121,
-            "length": 22.42726718449461,
-            "duration": 76
-          },
-          "wave4": {
-            "idx_start": 121,
-            "idx_end": 131,
-            "low": 125.77384817449042,
-            "high": 134.4124774336888,
-            "low_idx": 131,
-            "high_idx": 121,
-            "length": 8.638629259198368,
-            "duration": 10
-          },
-          "wave5": {
-            "idx_start": 131,
-            "idx_end": 182,
-            "low": 125.77384817449042,
-            "high": 147.6870207251298,
-            "low_idx": 131,
-            "high_idx": 182,
-            "length": 21.913172550639374,
-            "duration": 51
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.8119994056646112,
-      "fib_score": 0.71364091659238
-    },
-    {
-      "symbol": "MSFT",
-      "start_row": 1750,
-      "window_len": 728,
-      "date_start": "2018-02-14T00:00:00.000000000",
-      "date_end": "2021-01-05T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          5,
-          5,
-          7,
-          2,
-          7
-        ],
-        "idx_start": 131,
-        "idx_end": 462,
-        "waves": {
-          "wave1": {
-            "idx_start": 131,
-            "idx_end": 299,
-            "low": 98.3225845788187,
-            "high": 123.15973322754627,
-            "low_idx": 131,
-            "high_idx": 299,
-            "length": 24.837148648727563,
-            "duration": 168
-          },
-          "wave2": {
-            "idx_start": 299,
-            "idx_end": 325,
-            "low": 111.98521024919418,
-            "high": 123.15973322754627,
-            "low_idx": 325,
-            "high_idx": 299,
-            "length": 11.174522978352087,
-            "duration": 26
-          },
-          "wave3": {
-            "idx_start": 325,
-            "idx_end": 401,
-            "low": 111.98521024919418,
-            "high": 134.4124774336888,
-            "low_idx": 325,
-            "high_idx": 401,
-            "length": 22.42726718449461,
-            "duration": 76
-          },
-          "wave4": {
-            "idx_start": 401,
-            "idx_end": 411,
-            "low": 125.77384817449042,
-            "high": 134.4124774336888,
-            "low_idx": 411,
-            "high_idx": 401,
-            "length": 8.638629259198368,
-            "duration": 10
-          },
-          "wave5": {
-            "idx_start": 411,
-            "idx_end": 462,
-            "low": 125.77384817449042,
-            "high": 147.6870207251298,
-            "low_idx": 411,
-            "high_idx": 462,
-            "length": 21.913172550639374,
-            "duration": 51
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.761636156705565,
-      "fib_score": 0.5607580276968442
-    },
-    {
-      "symbol": "MSFT",
-      "start_row": 1848,
-      "window_len": 728,
-      "date_start": "2018-07-06T00:00:00.000000000",
-      "date_end": "2021-05-26T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          2,
-          1,
-          7,
-          5,
-          5
-        ],
-        "idx_start": 119,
-        "idx_end": 263,
-        "waves": {
-          "wave1": {
-            "idx_start": 119,
-            "idx_end": 135,
-            "low": 87.71317683679607,
-            "high": 100.72638919898468,
-            "low_idx": 119,
-            "high_idx": 135,
-            "length": 13.01321236218861,
-            "duration": 16
-          },
-          "wave2": {
-            "idx_start": 135,
-            "idx_end": 141,
-            "low": 95.37731912961526,
-            "high": 100.72638919898468,
-            "low_idx": 141,
-            "high_idx": 135,
-            "length": 5.349070069369418,
-            "duration": 6
-          },
-          "wave3": {
-            "idx_start": 141,
-            "idx_end": 201,
-            "low": 95.37731912961526,
-            "high": 123.15973322754627,
-            "low_idx": 141,
-            "high_idx": 201,
-            "length": 27.78241409793101,
-            "duration": 60
-          },
-          "wave4": {
-            "idx_start": 201,
-            "idx_end": 227,
-            "low": 111.98521024919418,
-            "high": 123.15973322754627,
-            "low_idx": 227,
-            "high_idx": 201,
-            "length": 11.174522978352087,
-            "duration": 26
-          },
-          "wave5": {
-            "idx_start": 227,
-            "idx_end": 263,
-            "low": 111.98521024919418,
-            "high": 132.4325655485939,
-            "low_idx": 227,
-            "high_idx": 263,
-            "length": 20.44735529939973,
-            "duration": 36
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.8399863416912806,
-      "fib_score": 0.7606726833825613
-    },
-    {
-      "symbol": "MSFT",
-      "start_row": 1792,
-      "window_len": 728,
-      "date_start": "2018-04-17T00:00:00.000000000",
-      "date_end": "2021-03-08T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          7,
-          5,
-          7,
-          2,
-          7
-        ],
-        "idx_start": 124,
-        "idx_end": 420,
-        "waves": {
-          "wave1": {
-            "idx_start": 124,
-            "idx_end": 257,
-            "low": 96.8539680070152,
-            "high": 123.15973322754627,
-            "low_idx": 124,
-            "high_idx": 257,
-            "length": 26.30576522053107,
-            "duration": 133
-          },
-          "wave2": {
-            "idx_start": 257,
-            "idx_end": 283,
-            "low": 111.98521024919418,
-            "high": 123.15973322754627,
-            "low_idx": 283,
-            "high_idx": 257,
-            "length": 11.174522978352087,
-            "duration": 26
-          },
-          "wave3": {
-            "idx_start": 283,
-            "idx_end": 359,
-            "low": 111.98521024919418,
-            "high": 134.4124774336888,
-            "low_idx": 283,
-            "high_idx": 359,
-            "length": 22.42726718449461,
-            "duration": 76
-          },
-          "wave4": {
-            "idx_start": 359,
-            "idx_end": 369,
-            "low": 125.77384817449042,
-            "high": 134.4124774336888,
-            "low_idx": 369,
-            "high_idx": 359,
-            "length": 8.638629259198368,
-            "duration": 10
-          },
-          "wave5": {
-            "idx_start": 369,
-            "idx_end": 420,
-            "low": 125.77384817449042,
-            "high": 147.6870207251298,
-            "low_idx": 369,
-            "high_idx": 420,
-            "length": 21.913172550639374,
-            "duration": 51
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.7888488432351914,
-      "fib_score": 0.6110059571470746
     },
     {
       "symbol": "GOOGL",
@@ -750,21 +276,21 @@
           "wave2": {
             "idx_start": 522,
             "idx_end": 546,
-            "low": 84.22361517091285,
+            "low": 84.22362258367278,
             "high": 101.48321929784336,
             "low_idx": 546,
             "high_idx": 522,
-            "length": 17.259604126930512,
+            "length": 17.259596714170584,
             "duration": 24
           },
           "wave3": {
             "idx_start": 546,
             "idx_end": 650,
-            "low": 84.22361517091285,
+            "low": 84.22362258367278,
             "high": 128.0723251385367,
             "low_idx": 546,
             "high_idx": 650,
-            "length": 43.84870996762386,
+            "length": 43.848702554863934,
             "duration": 104
           },
           "wave4": {
@@ -781,10 +307,10 @@
             "idx_start": 672,
             "idx_end": 720,
             "low": 114.48498095632307,
-            "high": 138.11644163882283,
+            "high": 138.11641091147985,
             "low_idx": 672,
             "high_idx": 720,
-            "length": 23.631460682499764,
+            "length": 23.631429955156776,
             "duration": 48
           }
         }
@@ -798,169 +324,11 @@
       "fib_score": 0.5333333333333333
     },
     {
-      "symbol": "GOOGL",
-      "start_row": 2450,
-      "window_len": 728,
-      "date_start": "2020-11-24T00:00:00.000000000",
-      "date_end": "2023-10-17T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          5,
-          2,
-          6,
-          3,
-          7
-        ],
-        "idx_start": 489,
-        "idx_end": 724,
-        "waves": {
-          "wave1": {
-            "idx_start": 489,
-            "idx_end": 553,
-            "low": 82.71503040774212,
-            "high": 107.36876090901447,
-            "low_idx": 489,
-            "high_idx": 553,
-            "length": 24.65373050127235,
-            "duration": 64
-          },
-          "wave2": {
-            "idx_start": 553,
-            "idx_end": 565,
-            "low": 87.91573031324553,
-            "high": 107.36876090901447,
-            "low_idx": 565,
-            "high_idx": 553,
-            "length": 19.453030595768936,
-            "duration": 12
-          },
-          "wave3": {
-            "idx_start": 565,
-            "idx_end": 636,
-            "low": 87.91573031324553,
-            "high": 128.0723251385367,
-            "low_idx": 565,
-            "high_idx": 636,
-            "length": 40.15659482529118,
-            "duration": 71
-          },
-          "wave4": {
-            "idx_start": 636,
-            "idx_end": 658,
-            "low": 114.48498095632307,
-            "high": 128.0723251385367,
-            "low_idx": 658,
-            "high_idx": 636,
-            "length": 13.587344182213641,
-            "duration": 22
-          },
-          "wave5": {
-            "idx_start": 658,
-            "idx_end": 724,
-            "low": 114.48498095632307,
-            "high": 140.16098355386808,
-            "low_idx": 658,
-            "high_idx": 724,
-            "length": 25.676002597545008,
-            "duration": 66
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.8964729166666666,
-      "fib_score": 0.8333333333333334
-    },
-    {
-      "symbol": "GOOGL",
-      "start_row": 2940,
-      "window_len": 728,
-      "date_start": "2022-11-04T00:00:00.000000000",
-      "date_end": "2025-10-01T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          5,
-          2,
-          6,
-          3,
-          7
-        ],
-        "idx_start": 0,
-        "idx_end": 234,
-        "waves": {
-          "wave1": {
-            "idx_start": 0,
-            "idx_end": 63,
-            "low": 83.08225231902676,
-            "high": 107.36876090901447,
-            "low_idx": 0,
-            "high_idx": 63,
-            "length": 24.286508589987704,
-            "duration": 63
-          },
-          "wave2": {
-            "idx_start": 63,
-            "idx_end": 75,
-            "low": 87.91573031324553,
-            "high": 107.36876090901447,
-            "low_idx": 75,
-            "high_idx": 63,
-            "length": 19.453030595768936,
-            "duration": 12
-          },
-          "wave3": {
-            "idx_start": 75,
-            "idx_end": 146,
-            "low": 87.91573031324553,
-            "high": 128.0723251385367,
-            "low_idx": 75,
-            "high_idx": 146,
-            "length": 40.15659482529118,
-            "duration": 71
-          },
-          "wave4": {
-            "idx_start": 146,
-            "idx_end": 168,
-            "low": 114.48498095632307,
-            "high": 128.0723251385367,
-            "low_idx": 168,
-            "high_idx": 146,
-            "length": 13.587344182213641,
-            "duration": 22
-          },
-          "wave5": {
-            "idx_start": 168,
-            "idx_end": 234,
-            "low": 114.48498095632307,
-            "high": 140.16098355386808,
-            "low_idx": 168,
-            "high_idx": 234,
-            "length": 25.676002597545008,
-            "duration": 66
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.8957412698412699,
-      "fib_score": 0.8333333333333334
-    },
-    {
       "symbol": "AMZN",
-      "start_row": 252,
+      "start_row": 245,
       "window_len": 728,
-      "date_start": "2012-03-02T00:00:00.000000000",
-      "date_end": "2015-01-23T00:00:00.000000000",
+      "date_start": "2012-02-22T00:00:00.000000000",
+      "date_end": "2015-01-13T00:00:00.000000000",
       "best": {
         "rule_name": "leading_diagonal",
         "score": 1.0,
@@ -971,56 +339,56 @@
           4,
           6
         ],
-        "idx_start": 101,
-        "idx_end": 343,
+        "idx_start": 108,
+        "idx_end": 350,
         "waves": {
           "wave1": {
-            "idx_start": 101,
-            "idx_end": 136,
+            "idx_start": 108,
+            "idx_end": 143,
             "low": 10.7475004196167,
             "high": 13.205499649047852,
-            "low_idx": 101,
-            "high_idx": 136,
+            "low_idx": 108,
+            "high_idx": 143,
             "length": 2.4579992294311523,
             "duration": 35
           },
           "wave2": {
-            "idx_start": 136,
-            "idx_end": 178,
+            "idx_start": 143,
+            "idx_end": 185,
             "low": 10.909000396728516,
             "high": 13.205499649047852,
-            "low_idx": 178,
-            "high_idx": 136,
+            "low_idx": 185,
+            "high_idx": 143,
             "length": 2.296499252319336,
             "duration": 42
           },
           "wave3": {
-            "idx_start": 178,
-            "idx_end": 225,
+            "idx_start": 185,
+            "idx_end": 232,
             "low": 10.909000396728516,
             "high": 14.236000061035156,
-            "low_idx": 178,
-            "high_idx": 225,
+            "low_idx": 185,
+            "high_idx": 232,
             "length": 3.3269996643066406,
             "duration": 47
           },
           "wave4": {
-            "idx_start": 225,
-            "idx_end": 291,
+            "idx_start": 232,
+            "idx_end": 298,
             "low": 12.287500381469727,
             "high": 14.236000061035156,
-            "low_idx": 291,
-            "high_idx": 225,
+            "low_idx": 298,
+            "high_idx": 232,
             "length": 1.9484996795654297,
             "duration": 66
           },
           "wave5": {
-            "idx_start": 291,
-            "idx_end": 343,
+            "idx_start": 298,
+            "idx_end": 350,
             "low": 12.287500381469727,
             "high": 15.469499588012695,
-            "low_idx": 291,
-            "high_idx": 343,
+            "low_idx": 298,
+            "high_idx": 350,
             "length": 3.1819992065429688,
             "duration": 52
           }
@@ -1033,85 +401,6 @@
       },
       "ensemble_score": 0.7720990601285213,
       "fib_score": 0.5684838345427567
-    },
-    {
-      "symbol": "AMZN",
-      "start_row": 294,
-      "window_len": 728,
-      "date_start": "2012-05-02T00:00:00.000000000",
-      "date_end": "2015-03-25T00:00:00.000000000",
-      "best": {
-        "rule_name": "impulse",
-        "score": 1.0,
-        "wave_config": [
-          2,
-          2,
-          7,
-          3,
-          6
-        ],
-        "idx_start": 136,
-        "idx_end": 373,
-        "waves": {
-          "wave1": {
-            "idx_start": 136,
-            "idx_end": 158,
-            "low": 10.909000396728516,
-            "high": 13.155500411987305,
-            "low_idx": 136,
-            "high_idx": 158,
-            "length": 2.246500015258789,
-            "duration": 22
-          },
-          "wave2": {
-            "idx_start": 158,
-            "idx_end": 166,
-            "low": 12.137499809265137,
-            "high": 13.155500411987305,
-            "low_idx": 166,
-            "high_idx": 158,
-            "length": 1.018000602722168,
-            "duration": 8
-          },
-          "wave3": {
-            "idx_start": 166,
-            "idx_end": 309,
-            "low": 12.137499809265137,
-            "high": 15.680999755859375,
-            "low_idx": 166,
-            "high_idx": 309,
-            "length": 3.5434999465942383,
-            "duration": 143
-          },
-          "wave4": {
-            "idx_start": 309,
-            "idx_end": 332,
-            "low": 13.966500282287598,
-            "high": 15.680999755859375,
-            "low_idx": 332,
-            "high_idx": 309,
-            "length": 1.7144994735717773,
-            "duration": 23
-          },
-          "wave5": {
-            "idx_start": 332,
-            "idx_end": 373,
-            "low": 13.966500282287598,
-            "high": 18.420000076293945,
-            "low_idx": 332,
-            "high_idx": 373,
-            "length": 4.453499794006348,
-            "duration": 41
-          }
-        }
-      },
-      "scan_stats": {
-        "n_pre_scored": 400,
-        "n_full_evals": 64,
-        "pattern_type": "corrective"
-      },
-      "ensemble_score": 0.8526137846402562,
-      "fib_score": 0.7870639329168762
     }
   ]
 }
