@@ -170,7 +170,7 @@ class TestConfig:
     def test_config_load(self):
         """Config should load from YAML file"""
         from pipeline.config import PipelineConfig
-        cfg = PipelineConfig.load_from_file('configs.yaml', auto_detect=True)
+        cfg = PipelineConfig.load_from_file('configs.yaml')
         assert cfg.up_to > 0
         assert cfg.top_n > 0
         assert cfg.max_combinations > 0

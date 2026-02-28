@@ -1,0 +1,1094 @@
+2026-02-27 15:34:48,723 - INFO - ============================================================
+2026-02-27 15:34:48,723 - INFO - ELLIOTT WAVE MARKET DATA FETCHER - EXTENDED
+2026-02-27 15:34:48,723 - INFO - ============================================================
+2026-02-27 15:34:48,723 - INFO - 
+📈 Small Cap Stocks: 200 tickers
+2026-02-27 15:34:48,723 - INFO - Fetching small_cap: 200 tickers...
+2026-02-27 15:34:52,756 - ERROR - HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: AMED"}}}
+2026-02-27 15:34:52,865 - ERROR - $AMED: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:34:52,866 - ERROR - 
+1 Failed download:
+2026-02-27 15:34:52,866 - ERROR - ['AMED']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:34:52,986 - ERROR - HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: AMED"}}}
+2026-02-27 15:34:52,999 - ERROR - $AMED: possibly delisted; no timezone found
+2026-02-27 15:34:52,999 - ERROR - 
+1 Failed download:
+2026-02-27 15:34:52,999 - ERROR - ['AMED']: possibly delisted; no timezone found
+2026-02-27 15:34:53,006 - ERROR - $AMED: possibly delisted; no timezone found
+2026-02-27 15:34:53,006 - ERROR - 
+1 Failed download:
+2026-02-27 15:34:53,006 - ERROR - ['AMED']: possibly delisted; no timezone found
+2026-02-27 15:35:00,892 - ERROR - $AZEK: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:00,893 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:00,893 - ERROR - ['AZEK']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:00,898 - ERROR - $AZEK: possibly delisted; no timezone found
+2026-02-27 15:35:00,898 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:00,898 - ERROR - ['AZEK']: possibly delisted; no timezone found
+2026-02-27 15:35:00,901 - ERROR - $AZEK: possibly delisted; no timezone found
+2026-02-27 15:35:00,902 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:00,902 - ERROR - ['AZEK']: possibly delisted; no timezone found
+2026-02-27 15:35:04,692 - ERROR - $BECN: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:04,692 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:04,693 - ERROR - ['BECN']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:04,697 - ERROR - $BECN: possibly delisted; no timezone found
+2026-02-27 15:35:04,698 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:04,698 - ERROR - ['BECN']: possibly delisted; no timezone found
+2026-02-27 15:35:04,701 - ERROR - $BECN: possibly delisted; no timezone found
+2026-02-27 15:35:04,701 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:04,701 - ERROR - ['BECN']: possibly delisted; no timezone found
+2026-02-27 15:35:08,930 - ERROR - $BPMC: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:08,931 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:08,931 - ERROR - ['BPMC']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:08,932 - ERROR - $BPMC: possibly delisted; no timezone found
+2026-02-27 15:35:08,932 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:08,932 - ERROR - ['BPMC']: possibly delisted; no timezone found
+2026-02-27 15:35:08,933 - ERROR - $BPMC: possibly delisted; no timezone found
+2026-02-27 15:35:08,934 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:08,934 - ERROR - ['BPMC']: possibly delisted; no timezone found
+2026-02-27 15:35:10,695 - ERROR - $BSIG: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:10,696 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:10,696 - ERROR - ['BSIG']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:10,701 - ERROR - $BSIG: possibly delisted; no timezone found
+2026-02-27 15:35:10,701 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:10,701 - ERROR - ['BSIG']: possibly delisted; no timezone found
+2026-02-27 15:35:10,704 - ERROR - $BSIG: possibly delisted; no timezone found
+2026-02-27 15:35:10,704 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:10,705 - ERROR - ['BSIG']: possibly delisted; no timezone found
+2026-02-27 15:35:12,428 - ERROR - $CASA: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:12,428 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:12,428 - ERROR - ['CASA']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:12,431 - ERROR - $CASA: possibly delisted; no timezone found
+2026-02-27 15:35:12,432 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:12,432 - ERROR - ['CASA']: possibly delisted; no timezone found
+2026-02-27 15:35:12,434 - ERROR - $CASA: possibly delisted; no timezone found
+2026-02-27 15:35:12,434 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:12,434 - ERROR - ['CASA']: possibly delisted; no timezone found
+2026-02-27 15:35:17,469 - ERROR - $CHX: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:17,471 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:17,471 - ERROR - ['CHX']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:17,476 - ERROR - $CHX: possibly delisted; no timezone found
+2026-02-27 15:35:17,477 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:17,477 - ERROR - ['CHX']: possibly delisted; no timezone found
+2026-02-27 15:35:17,480 - ERROR - $CHX: possibly delisted; no timezone found
+2026-02-27 15:35:17,480 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:17,480 - ERROR - ['CHX']: possibly delisted; no timezone found
+2026-02-27 15:35:19,493 - ERROR - $CKH: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:19,493 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:19,493 - ERROR - ['CKH']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:19,497 - ERROR - $CKH: possibly delisted; no timezone found
+2026-02-27 15:35:19,498 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:19,498 - ERROR - ['CKH']: possibly delisted; no timezone found
+2026-02-27 15:35:19,501 - ERROR - $CKH: possibly delisted; no timezone found
+2026-02-27 15:35:19,501 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:19,501 - ERROR - ['CKH']: possibly delisted; no timezone found
+2026-02-27 15:35:20,004 - INFO - [small_cap] Progress: 50/200 (25.0%)
+2026-02-27 15:35:28,226 - ERROR - $CONN: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:28,227 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,227 - ERROR - ['CONN']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:28,232 - ERROR - $CONN: possibly delisted; no timezone found
+2026-02-27 15:35:28,233 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,233 - ERROR - ['CONN']: possibly delisted; no timezone found
+2026-02-27 15:35:28,236 - ERROR - $CONN: possibly delisted; no timezone found
+2026-02-27 15:35:28,236 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,236 - ERROR - ['CONN']: possibly delisted; no timezone found
+2026-02-27 15:35:28,434 - ERROR - $COOP: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:28,435 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,435 - ERROR - ['COOP']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:28,440 - ERROR - $COOP: possibly delisted; no timezone found
+2026-02-27 15:35:28,440 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,440 - ERROR - ['COOP']: possibly delisted; no timezone found
+2026-02-27 15:35:28,443 - ERROR - $COOP: possibly delisted; no timezone found
+2026-02-27 15:35:28,444 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,444 - ERROR - ['COOP']: possibly delisted; no timezone found
+2026-02-27 15:35:28,633 - ERROR - $CORE: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:28,634 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,634 - ERROR - ['CORE']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:28,638 - ERROR - $CORE: possibly delisted; no timezone found
+2026-02-27 15:35:28,638 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,638 - ERROR - ['CORE']: possibly delisted; no timezone found
+2026-02-27 15:35:28,642 - ERROR - $CORE: possibly delisted; no timezone found
+2026-02-27 15:35:28,642 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:28,642 - ERROR - ['CORE']: possibly delisted; no timezone found
+2026-02-27 15:35:36,054 - ERROR - $CSWI: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:36,055 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:36,055 - ERROR - ['CSWI']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:36,059 - ERROR - $CSWI: possibly delisted; no timezone found
+2026-02-27 15:35:36,059 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:36,059 - ERROR - ['CSWI']: possibly delisted; no timezone found
+2026-02-27 15:35:36,063 - ERROR - $CSWI: possibly delisted; no timezone found
+2026-02-27 15:35:36,063 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:36,064 - ERROR - ['CSWI']: possibly delisted; no timezone found
+2026-02-27 15:35:37,722 - ERROR - CUTR: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:35:37,723 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:37,723 - ERROR - ['CUTR']: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:35:37,761 - ERROR - CUTR: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:35:37,762 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:37,762 - ERROR - ['CUTR']: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:35:42,588 - ERROR - $DCPH: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:42,589 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:42,589 - ERROR - ['DCPH']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:42,592 - ERROR - $DCPH: possibly delisted; no timezone found
+2026-02-27 15:35:42,592 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:42,592 - ERROR - ['DCPH']: possibly delisted; no timezone found
+2026-02-27 15:35:42,594 - ERROR - $DCPH: possibly delisted; no timezone found
+2026-02-27 15:35:42,594 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:42,594 - ERROR - ['DCPH']: possibly delisted; no timezone found
+2026-02-27 15:35:48,703 - ERROR - $DOOR: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:48,704 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:48,704 - ERROR - ['DOOR']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:48,709 - ERROR - $DOOR: possibly delisted; no timezone found
+2026-02-27 15:35:48,710 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:48,710 - ERROR - ['DOOR']: possibly delisted; no timezone found
+2026-02-27 15:35:48,713 - ERROR - $DOOR: possibly delisted; no timezone found
+2026-02-27 15:35:48,713 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:48,713 - ERROR - ['DOOR']: possibly delisted; no timezone found
+2026-02-27 15:35:52,232 - INFO - [small_cap] Progress: 100/200 (50.0%)
+2026-02-27 15:35:54,734 - ERROR - $ELVT: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:54,734 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:54,734 - ERROR - ['ELVT']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:54,736 - ERROR - $ELVT: possibly delisted; no timezone found
+2026-02-27 15:35:54,736 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:54,736 - ERROR - ['ELVT']: possibly delisted; no timezone found
+2026-02-27 15:35:54,737 - ERROR - $ELVT: possibly delisted; no timezone found
+2026-02-27 15:35:54,737 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:54,737 - ERROR - ['ELVT']: possibly delisted; no timezone found
+2026-02-27 15:35:58,509 - ERROR - $EVBG: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:58,510 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:58,510 - ERROR - ['EVBG']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:58,516 - ERROR - $EVBG: possibly delisted; no timezone found
+2026-02-27 15:35:58,516 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:58,516 - ERROR - ['EVBG']: possibly delisted; no timezone found
+2026-02-27 15:35:58,519 - ERROR - $EVBG: possibly delisted; no timezone found
+2026-02-27 15:35:58,520 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:58,520 - ERROR - ['EVBG']: possibly delisted; no timezone found
+2026-02-27 15:35:59,375 - ERROR - $EVRI: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:59,376 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:59,376 - ERROR - ['EVRI']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:35:59,381 - ERROR - $EVRI: possibly delisted; no timezone found
+2026-02-27 15:35:59,381 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:59,381 - ERROR - ['EVRI']: possibly delisted; no timezone found
+2026-02-27 15:35:59,383 - ERROR - $EVRI: possibly delisted; no timezone found
+2026-02-27 15:35:59,383 - ERROR - 
+1 Failed download:
+2026-02-27 15:35:59,384 - ERROR - ['EVRI']: possibly delisted; no timezone found
+2026-02-27 15:36:01,438 - ERROR - $FARO: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:01,439 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:01,439 - ERROR - ['FARO']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:01,443 - ERROR - $FARO: possibly delisted; no timezone found
+2026-02-27 15:36:01,444 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:01,444 - ERROR - ['FARO']: possibly delisted; no timezone found
+2026-02-27 15:36:01,446 - ERROR - $FARO: possibly delisted; no timezone found
+2026-02-27 15:36:01,447 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:01,447 - ERROR - ['FARO']: possibly delisted; no timezone found
+2026-02-27 15:36:21,401 - ERROR - $GMS: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:21,402 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:21,402 - ERROR - ['GMS']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:21,406 - ERROR - $GMS: possibly delisted; no timezone found
+2026-02-27 15:36:21,406 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:21,406 - ERROR - ['GMS']: possibly delisted; no timezone found
+2026-02-27 15:36:21,409 - ERROR - $GMS: possibly delisted; no timezone found
+2026-02-27 15:36:21,409 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:21,409 - ERROR - ['GMS']: possibly delisted; no timezone found
+2026-02-27 15:36:22,162 - ERROR - $GOGL: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:22,163 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:22,164 - ERROR - ['GOGL']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:22,169 - ERROR - $GOGL: possibly delisted; no timezone found
+2026-02-27 15:36:22,170 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:22,170 - ERROR - ['GOGL']: possibly delisted; no timezone found
+2026-02-27 15:36:22,173 - ERROR - $GOGL: possibly delisted; no timezone found
+2026-02-27 15:36:22,173 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:22,173 - ERROR - ['GOGL']: possibly delisted; no timezone found
+2026-02-27 15:36:22,680 - INFO - [small_cap] Progress: 150/200 (75.0%)
+2026-02-27 15:36:27,185 - ERROR - $HA: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:27,186 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:27,186 - ERROR - ['HA']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:27,190 - ERROR - $HA: possibly delisted; no timezone found
+2026-02-27 15:36:27,191 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:27,191 - ERROR - ['HA']: possibly delisted; no timezone found
+2026-02-27 15:36:27,193 - ERROR - $HA: possibly delisted; no timezone found
+2026-02-27 15:36:27,194 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:27,194 - ERROR - ['HA']: possibly delisted; no timezone found
+2026-02-27 15:36:28,797 - ERROR - $HBI: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:28,798 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:28,798 - ERROR - ['HBI']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:28,803 - ERROR - $HBI: possibly delisted; no timezone found
+2026-02-27 15:36:28,803 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:28,803 - ERROR - ['HBI']: possibly delisted; no timezone found
+2026-02-27 15:36:28,807 - ERROR - $HBI: possibly delisted; no timezone found
+2026-02-27 15:36:28,807 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:28,808 - ERROR - ['HBI']: possibly delisted; no timezone found
+2026-02-27 15:36:31,412 - ERROR - $HEAR: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:31,412 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:31,413 - ERROR - ['HEAR']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:31,416 - ERROR - $HEAR: possibly delisted; no timezone found
+2026-02-27 15:36:31,416 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:31,416 - ERROR - ['HEAR']: possibly delisted; no timezone found
+2026-02-27 15:36:31,418 - ERROR - $HEAR: possibly delisted; no timezone found
+2026-02-27 15:36:31,418 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:31,418 - ERROR - ['HEAR']: possibly delisted; no timezone found
+2026-02-27 15:36:31,648 - ERROR - $HEES: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:31,649 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:31,649 - ERROR - ['HEES']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:31,653 - ERROR - $HEES: possibly delisted; no timezone found
+2026-02-27 15:36:31,653 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:31,653 - ERROR - ['HEES']: possibly delisted; no timezone found
+2026-02-27 15:36:31,657 - ERROR - $HEES: possibly delisted; no timezone found
+2026-02-27 15:36:31,658 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:31,658 - ERROR - ['HEES']: possibly delisted; no timezone found
+2026-02-27 15:36:32,268 - ERROR - $HIBB: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:32,269 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:32,269 - ERROR - ['HIBB']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:32,273 - ERROR - $HIBB: possibly delisted; no timezone found
+2026-02-27 15:36:32,274 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:32,274 - ERROR - ['HIBB']: possibly delisted; no timezone found
+2026-02-27 15:36:32,276 - ERROR - $HIBB: possibly delisted; no timezone found
+2026-02-27 15:36:32,277 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:32,277 - ERROR - ['HIBB']: possibly delisted; no timezone found
+2026-02-27 15:36:37,573 - ERROR - $HSII: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:37,574 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:37,574 - ERROR - ['HSII']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:37,575 - ERROR - $HSII: possibly delisted; no timezone found
+2026-02-27 15:36:37,576 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:37,576 - ERROR - ['HSII']: possibly delisted; no timezone found
+2026-02-27 15:36:37,577 - ERROR - $HSII: possibly delisted; no timezone found
+2026-02-27 15:36:37,577 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:37,577 - ERROR - ['HSII']: possibly delisted; no timezone found
+2026-02-27 15:36:46,565 - ERROR - $IBTX: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:46,567 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:46,567 - ERROR - ['IBTX']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:46,571 - ERROR - $IBTX: possibly delisted; no timezone found
+2026-02-27 15:36:46,572 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:46,572 - ERROR - ['IBTX']: possibly delisted; no timezone found
+2026-02-27 15:36:46,574 - ERROR - $IBTX: possibly delisted; no timezone found
+2026-02-27 15:36:46,574 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:46,574 - ERROR - ['IBTX']: possibly delisted; no timezone found
+2026-02-27 15:36:54,616 - ERROR - $INST: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:54,617 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:54,617 - ERROR - ['INST']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:54,622 - ERROR - $INST: possibly delisted; no timezone found
+2026-02-27 15:36:54,622 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:54,622 - ERROR - ['INST']: possibly delisted; no timezone found
+2026-02-27 15:36:54,625 - ERROR - $INST: possibly delisted; no timezone found
+2026-02-27 15:36:54,625 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:54,625 - ERROR - ['INST']: possibly delisted; no timezone found
+2026-02-27 15:36:55,130 - INFO - [small_cap] Progress: 200/200 (100.0%)
+2026-02-27 15:36:55,386 - INFO - Saved data/hf_dataset_extended/small_cap/small_cap_1h.parquet: 867707 rows, 172 tickers
+2026-02-27 15:36:55,471 - INFO - Saved data/hf_dataset_extended/small_cap/small_cap_4h.parquet: 291505 rows, 172 tickers
+2026-02-27 15:36:55,723 - INFO - Saved data/hf_dataset_extended/small_cap/small_cap_1d.parquet: 1097034 rows, 171 tickers
+2026-02-27 15:36:55,810 - INFO - Saved data/hf_dataset_extended/small_cap/small_cap_1wk.parquet: 227502 rows, 171 tickers
+2026-02-27 15:36:55,830 - INFO - 
+💻 NASDAQ Components: 67 tickers
+2026-02-27 15:36:55,830 - INFO - Fetching nasdaq: 67 tickers...
+2026-02-27 15:36:59,128 - ERROR - $ANSS: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:59,129 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:59,129 - ERROR - ['ANSS']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:36:59,133 - ERROR - $ANSS: possibly delisted; no timezone found
+2026-02-27 15:36:59,134 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:59,134 - ERROR - ['ANSS']: possibly delisted; no timezone found
+2026-02-27 15:36:59,137 - ERROR - $ANSS: possibly delisted; no timezone found
+2026-02-27 15:36:59,137 - ERROR - 
+1 Failed download:
+2026-02-27 15:36:59,137 - ERROR - ['ANSS']: possibly delisted; no timezone found
+2026-02-27 15:37:00,060 - ERROR - $ATVI: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:37:00,061 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:00,061 - ERROR - ['ATVI']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:37:00,067 - ERROR - $ATVI: possibly delisted; no timezone found
+2026-02-27 15:37:00,068 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:00,068 - ERROR - ['ATVI']: possibly delisted; no timezone found
+2026-02-27 15:37:00,070 - ERROR - $ATVI: possibly delisted; no timezone found
+2026-02-27 15:37:00,070 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:00,070 - ERROR - ['ATVI']: possibly delisted; no timezone found
+2026-02-27 15:37:32,970 - INFO - [nasdaq] Progress: 50/67 (74.6%)
+2026-02-27 15:37:33,863 - ERROR - $SGEN: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:37:33,864 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:33,864 - ERROR - ['SGEN']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:37:33,868 - ERROR - $SGEN: possibly delisted; no timezone found
+2026-02-27 15:37:33,869 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:33,869 - ERROR - ['SGEN']: possibly delisted; no timezone found
+2026-02-27 15:37:33,871 - ERROR - $SGEN: possibly delisted; no timezone found
+2026-02-27 15:37:33,872 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:33,872 - ERROR - ['SGEN']: possibly delisted; no timezone found
+2026-02-27 15:37:36,316 - ERROR - $SPLK: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:37:36,317 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:36,317 - ERROR - ['SPLK']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:37:36,321 - ERROR - $SPLK: possibly delisted; no timezone found
+2026-02-27 15:37:36,322 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:36,322 - ERROR - ['SPLK']: possibly delisted; no timezone found
+2026-02-27 15:37:36,325 - ERROR - $SPLK: possibly delisted; no timezone found
+2026-02-27 15:37:36,325 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:36,325 - ERROR - ['SPLK']: possibly delisted; no timezone found
+2026-02-27 15:37:40,120 - ERROR - $WBA: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:37:40,121 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:40,122 - ERROR - ['WBA']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:37:40,126 - ERROR - $WBA: possibly delisted; no timezone found
+2026-02-27 15:37:40,126 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:40,126 - ERROR - ['WBA']: possibly delisted; no timezone found
+2026-02-27 15:37:40,129 - ERROR - $WBA: possibly delisted; no timezone found
+2026-02-27 15:37:40,129 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:40,130 - ERROR - ['WBA']: possibly delisted; no timezone found
+2026-02-27 15:37:42,812 - INFO - Saved data/hf_dataset_extended/nasdaq/nasdaq_1h.parquet: 314812 rows, 62 tickers
+2026-02-27 15:37:42,854 - INFO - Saved data/hf_dataset_extended/nasdaq/nasdaq_4h.parquet: 105455 rows, 62 tickers
+2026-02-27 15:37:42,965 - INFO - Saved data/hf_dataset_extended/nasdaq/nasdaq_1d.parquet: 383004 rows, 62 tickers
+2026-02-27 15:37:42,999 - INFO - Saved data/hf_dataset_extended/nasdaq/nasdaq_1wk.parquet: 79441 rows, 62 tickers
+2026-02-27 15:37:43,006 - INFO - 
+₿ Additional Crypto: 95 tickers
+2026-02-27 15:37:43,006 - INFO - Fetching crypto_extended: 95 tickers...
+2026-02-27 15:37:43,057 - ERROR - $COMP-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:37:43,057 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:43,057 - ERROR - ['COMP-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:37:51,506 - ERROR - $GMX-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:37:51,508 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:51,508 - ERROR - ['GMX-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:37:53,363 - ERROR - $IMX-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:37:53,363 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:53,363 - ERROR - ['IMX-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:37:59,897 - ERROR - $MAGIC-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:37:59,898 - ERROR - 
+1 Failed download:
+2026-02-27 15:37:59,898 - ERROR - ['MAGIC-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:00,085 - ERROR - $PRIME-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:00,086 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:00,086 - ERROR - ['PRIME-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:02,181 - ERROR - $RARE-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:02,181 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:02,181 - ERROR - ['RARE-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:02,511 - ERROR - $SUPER-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:02,512 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:02,512 - ERROR - ['SUPER-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:07,004 - ERROR - $GRT-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:07,005 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:07,005 - ERROR - ['GRT-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:09,684 - ERROR - $RNDR-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:09,685 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:09,685 - ERROR - ['RNDR-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:15,906 - INFO - [crypto_extended] Progress: 50/95 (52.6%)
+2026-02-27 15:38:19,019 - ERROR - $PEPE-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:19,019 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:19,019 - ERROR - ['PEPE-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:22,040 - ERROR - $MEW-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:22,041 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:22,041 - ERROR - ['MEW-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:24,895 - ERROR - $SUI-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:24,896 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:24,896 - ERROR - ['SUI-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:30,732 - ERROR - $STX-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:30,732 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:30,732 - ERROR - ['STX-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:35,557 - ERROR - $LUNA-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:35,557 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:35,557 - ERROR - ['LUNA-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:41,535 - ERROR - $COPE-USD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:41,535 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:41,535 - ERROR - ['COPE-USD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:42,028 - INFO - Saved data/hf_dataset_extended/crypto_extended/crypto_extended_1h.parquet: 1354970 rows, 79 tickers
+2026-02-27 15:38:42,145 - INFO - Saved data/hf_dataset_extended/crypto_extended/crypto_extended_4h.parquet: 338991 rows, 79 tickers
+2026-02-27 15:38:42,224 - INFO - Saved data/hf_dataset_extended/crypto_extended/crypto_extended_1d.parquet: 165459 rows, 92 tickers
+2026-02-27 15:38:42,239 - INFO - Saved data/hf_dataset_extended/crypto_extended/crypto_extended_1wk.parquet: 23692 rows, 91 tickers
+2026-02-27 15:38:42,252 - INFO - 
+🌍 Emerging Markets: 95 tickers
+2026-02-27 15:38:42,252 - INFO - Fetching emerging_markets: 95 tickers...
+2026-02-27 15:38:46,885 - ERROR - $GXG: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:46,886 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:46,886 - ERROR - ['GXG']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:52,125 - ERROR - $PGAL: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:52,125 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:52,125 - ERROR - ['PGAL']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:53,185 - ERROR - $PAK: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:53,185 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:53,185 - ERROR - ['PAK']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:53,971 - ERROR - $NGE: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:53,971 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:53,971 - ERROR - ['NGE']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:54,777 - ERROR - $FM: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:38:54,777 - ERROR - 
+1 Failed download:
+2026-02-27 15:38:54,777 - ERROR - ['FM']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:39:08,290 - ERROR - $HAO: possibly delisted; no price data found  (period=730d) (Yahoo error = "1h data not available for startTime=1706279400 and endTime=1772235548. The requested range must be within the last 730 days.")
+2026-02-27 15:39:08,290 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:08,290 - ERROR - ['HAO']: possibly delisted; no price data found  (period=730d) (Yahoo error = "1h data not available for startTime=1706279400 and endTime=1772235548. The requested range must be within the last 730 days.")
+2026-02-27 15:39:08,470 - ERROR - $TAO: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:39:08,470 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:08,470 - ERROR - ['TAO']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:39:11,472 - INFO - [emerging_markets] Progress: 50/95 (52.6%)
+2026-02-27 15:39:20,233 - ERROR - $YY: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:20,234 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:20,234 - ERROR - ['YY']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:20,238 - ERROR - $YY: possibly delisted; no timezone found
+2026-02-27 15:39:20,239 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:20,239 - ERROR - ['YY']: possibly delisted; no timezone found
+2026-02-27 15:39:20,242 - ERROR - $YY: possibly delisted; no timezone found
+2026-02-27 15:39:20,242 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:20,242 - ERROR - ['YY']: possibly delisted; no timezone found
+2026-02-27 15:39:32,229 - ERROR - $TTM: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:32,230 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:32,230 - ERROR - ['TTM']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:32,235 - ERROR - $TTM: possibly delisted; no timezone found
+2026-02-27 15:39:32,235 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:32,235 - ERROR - ['TTM']: possibly delisted; no timezone found
+2026-02-27 15:39:32,238 - ERROR - $TTM: possibly delisted; no timezone found
+2026-02-27 15:39:32,238 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:32,239 - ERROR - ['TTM']: possibly delisted; no timezone found
+2026-02-27 15:39:32,461 - ERROR - $VEDL: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:32,461 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:32,462 - ERROR - ['VEDL']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:32,466 - ERROR - $VEDL: possibly delisted; no timezone found
+2026-02-27 15:39:32,467 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:32,467 - ERROR - ['VEDL']: possibly delisted; no timezone found
+2026-02-27 15:39:32,469 - ERROR - $VEDL: possibly delisted; no timezone found
+2026-02-27 15:39:32,470 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:32,470 - ERROR - ['VEDL']: possibly delisted; no timezone found
+2026-02-27 15:39:35,265 - ERROR - $DESP: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:35,266 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:35,266 - ERROR - ['DESP']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:35,271 - ERROR - $DESP: possibly delisted; no timezone found
+2026-02-27 15:39:35,271 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:35,271 - ERROR - ['DESP']: possibly delisted; no timezone found
+2026-02-27 15:39:35,274 - ERROR - $DESP: possibly delisted; no timezone found
+2026-02-27 15:39:35,275 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:35,275 - ERROR - ['DESP']: possibly delisted; no timezone found
+2026-02-27 15:39:37,769 - ERROR - $COUPN: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:37,770 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:37,770 - ERROR - ['COUPN']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:39:37,774 - ERROR - $COUPN: possibly delisted; no timezone found
+2026-02-27 15:39:37,775 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:37,775 - ERROR - ['COUPN']: possibly delisted; no timezone found
+2026-02-27 15:39:37,778 - ERROR - $COUPN: possibly delisted; no timezone found
+2026-02-27 15:39:37,778 - ERROR - 
+1 Failed download:
+2026-02-27 15:39:37,778 - ERROR - ['COUPN']: possibly delisted; no timezone found
+2026-02-27 15:39:38,310 - INFO - Saved data/hf_dataset_extended/emerging_markets/emerging_markets_1h.parquet: 405461 rows, 83 tickers
+2026-02-27 15:39:38,358 - INFO - Saved data/hf_dataset_extended/emerging_markets/emerging_markets_4h.parquet: 139613 rows, 83 tickers
+2026-02-27 15:39:38,450 - INFO - Saved data/hf_dataset_extended/emerging_markets/emerging_markets_1d.parquet: 307011 rows, 90 tickers
+2026-02-27 15:39:38,479 - INFO - Saved data/hf_dataset_extended/emerging_markets/emerging_markets_1wk.parquet: 63769 rows, 90 tickers
+2026-02-27 15:39:38,487 - INFO - 
+💱 Additional Forex: 46 pairs
+2026-02-27 15:39:38,487 - INFO - Fetching forex_extended: 46 tickers...
+2026-02-27 15:40:11,321 - INFO - Saved data/hf_dataset_extended/forex_extended/forex_extended_1h.parquet: 701799 rows, 46 tickers
+2026-02-27 15:40:11,388 - INFO - Saved data/hf_dataset_extended/forex_extended/forex_extended_4h.parquet: 195567 rows, 46 tickers
+2026-02-27 15:40:11,480 - INFO - Saved data/hf_dataset_extended/forex_extended/forex_extended_1d.parquet: 268027 rows, 46 tickers
+2026-02-27 15:40:11,504 - INFO - Saved data/hf_dataset_extended/forex_extended/forex_extended_1wk.parquet: 53891 rows, 46 tickers
+2026-02-27 15:40:11,512 - INFO - 
+🏢 REITs & Specialty: 62 tickers
+2026-02-27 15:40:11,513 - INFO - Fetching reits: 62 tickers...
+2026-02-27 15:40:13,402 - ERROR - $QTS: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:13,403 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,404 - ERROR - ['QTS']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:13,408 - ERROR - $QTS: possibly delisted; no timezone found
+2026-02-27 15:40:13,408 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,409 - ERROR - ['QTS']: possibly delisted; no timezone found
+2026-02-27 15:40:13,411 - ERROR - $QTS: possibly delisted; no timezone found
+2026-02-27 15:40:13,412 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,412 - ERROR - ['QTS']: possibly delisted; no timezone found
+2026-02-27 15:40:13,611 - ERROR - $CONE: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:13,614 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,614 - ERROR - ['CONE']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:13,618 - ERROR - $CONE: possibly delisted; no timezone found
+2026-02-27 15:40:13,618 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,618 - ERROR - ['CONE']: possibly delisted; no timezone found
+2026-02-27 15:40:13,621 - ERROR - $CONE: possibly delisted; no timezone found
+2026-02-27 15:40:13,622 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,622 - ERROR - ['CONE']: possibly delisted; no timezone found
+2026-02-27 15:40:13,823 - ERROR - $INXN: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:13,824 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,824 - ERROR - ['INXN']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:13,827 - ERROR - $INXN: possibly delisted; no timezone found
+2026-02-27 15:40:13,827 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,827 - ERROR - ['INXN']: possibly delisted; no timezone found
+2026-02-27 15:40:13,829 - ERROR - $INXN: possibly delisted; no timezone found
+2026-02-27 15:40:13,829 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:13,829 - ERROR - ['INXN']: possibly delisted; no timezone found
+2026-02-27 15:40:15,601 - ERROR - $PEAK: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:15,602 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:15,602 - ERROR - ['PEAK']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:15,605 - ERROR - $PEAK: possibly delisted; no timezone found
+2026-02-27 15:40:15,605 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:15,605 - ERROR - ['PEAK']: possibly delisted; no timezone found
+2026-02-27 15:40:15,608 - ERROR - $PEAK: possibly delisted; no timezone found
+2026-02-27 15:40:15,608 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:15,608 - ERROR - ['PEAK']: possibly delisted; no timezone found
+2026-02-27 15:40:21,068 - ERROR - $DRE: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:21,068 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:21,068 - ERROR - ['DRE']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:21,070 - ERROR - $DRE: possibly delisted; no timezone found
+2026-02-27 15:40:21,070 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:21,070 - ERROR - ['DRE']: possibly delisted; no timezone found
+2026-02-27 15:40:21,071 - ERROR - $DRE: possibly delisted; no timezone found
+2026-02-27 15:40:21,072 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:21,072 - ERROR - ['DRE']: possibly delisted; no timezone found
+2026-02-27 15:40:29,544 - ERROR - $WRI: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:29,544 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:29,545 - ERROR - ['WRI']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:29,547 - ERROR - $WRI: possibly delisted; no timezone found
+2026-02-27 15:40:29,548 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:29,548 - ERROR - ['WRI']: possibly delisted; no timezone found
+2026-02-27 15:40:29,549 - ERROR - $WRI: possibly delisted; no timezone found
+2026-02-27 15:40:29,550 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:29,550 - ERROR - ['WRI']: possibly delisted; no timezone found
+2026-02-27 15:40:29,726 - ERROR - $ROIC: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:29,726 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:29,727 - ERROR - ['ROIC']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:29,732 - ERROR - $ROIC: possibly delisted; no timezone found
+2026-02-27 15:40:29,732 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:29,733 - ERROR - ['ROIC']: possibly delisted; no timezone found
+2026-02-27 15:40:29,736 - ERROR - $ROIC: possibly delisted; no timezone found
+2026-02-27 15:40:29,736 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:29,736 - ERROR - ['ROIC']: possibly delisted; no timezone found
+2026-02-27 15:40:34,068 - ERROR - $CLI: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:34,069 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:34,069 - ERROR - ['CLI']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:34,073 - ERROR - $CLI: possibly delisted; no timezone found
+2026-02-27 15:40:34,074 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:34,074 - ERROR - ['CLI']: possibly delisted; no timezone found
+2026-02-27 15:40:34,077 - ERROR - $CLI: possibly delisted; no timezone found
+2026-02-27 15:40:34,077 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:34,077 - ERROR - ['CLI']: possibly delisted; no timezone found
+2026-02-27 15:40:34,269 - ERROR - $OFC: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:34,271 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:34,271 - ERROR - ['OFC']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:40:34,275 - ERROR - $OFC: possibly delisted; no timezone found
+2026-02-27 15:40:34,276 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:34,276 - ERROR - ['OFC']: possibly delisted; no timezone found
+2026-02-27 15:40:34,278 - ERROR - $OFC: possibly delisted; no timezone found
+2026-02-27 15:40:34,278 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:34,279 - ERROR - ['OFC']: possibly delisted; no timezone found
+2026-02-27 15:40:45,032 - INFO - [reits] Progress: 50/62 (80.6%)
+2026-02-27 15:40:55,372 - INFO - Saved data/hf_dataset_extended/reits/reits_1h.parquet: 268390 rows, 53 tickers
+2026-02-27 15:40:55,406 - INFO - Saved data/hf_dataset_extended/reits/reits_4h.parquet: 89940 rows, 53 tickers
+2026-02-27 15:40:55,503 - INFO - Saved data/hf_dataset_extended/reits/reits_1d.parquet: 368076 rows, 53 tickers
+2026-02-27 15:40:55,535 - INFO - Saved data/hf_dataset_extended/reits/reits_1wk.parquet: 76338 rows, 53 tickers
+2026-02-27 15:40:55,542 - INFO - 
+🎯 Thematic ETFs: 71 tickers
+2026-02-27 15:40:55,542 - INFO - Fetching thematic_etfs: 71 tickers...
+2026-02-27 15:40:59,845 - ERROR - $RAYS: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:40:59,845 - ERROR - 
+1 Failed download:
+2026-02-27 15:40:59,845 - ERROR - ['RAYS']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:03,809 - ERROR - $IRBO: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:03,810 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:03,810 - ERROR - ['IRBO']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:15,854 - ERROR - $THCX: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:15,855 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:15,855 - ERROR - ['THCX']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:17,016 - ERROR - $POTX: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:17,016 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:17,016 - ERROR - ['POTX']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:24,857 - ERROR - $XBTF: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:24,858 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:24,858 - ERROR - ['XBTF']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:28,023 - INFO - [thematic_etfs] Progress: 50/71 (70.4%)
+2026-02-27 15:41:35,432 - ERROR - $PBS: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:35,432 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:35,432 - ERROR - ['PBS']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:38,510 - ERROR - $OLD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:38,511 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:38,511 - ERROR - ['OLD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:38,859 - ERROR - $AGED: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:41:38,860 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:38,860 - ERROR - ['AGED']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:41:38,864 - ERROR - $AGED: possibly delisted; no timezone found
+2026-02-27 15:41:38,865 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:38,865 - ERROR - ['AGED']: possibly delisted; no timezone found
+2026-02-27 15:41:38,868 - ERROR - $AGED: possibly delisted; no timezone found
+2026-02-27 15:41:38,868 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:38,868 - ERROR - ['AGED']: possibly delisted; no timezone found
+2026-02-27 15:41:38,956 - ERROR - $BFIT: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:38,957 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:38,957 - ERROR - ['BFIT']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:41:39,833 - ERROR - $GERM: possibly delisted; no price data found  (period=730d) (Yahoo error = "1h data not available for startTime=1706279400 and endTime=1772235699. The requested range must be within the last 730 days.")
+2026-02-27 15:41:39,834 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:39,834 - ERROR - ['GERM']: possibly delisted; no price data found  (period=730d) (Yahoo error = "1h data not available for startTime=1706279400 and endTime=1772235699. The requested range must be within the last 730 days.")
+2026-02-27 15:41:40,046 - INFO - Saved data/hf_dataset_extended/thematic_etfs/thematic_etfs_1h.parquet: 290474 rows, 61 tickers
+2026-02-27 15:41:40,084 - INFO - Saved data/hf_dataset_extended/thematic_etfs/thematic_etfs_4h.parquet: 101434 rows, 61 tickers
+2026-02-27 15:41:40,150 - INFO - Saved data/hf_dataset_extended/thematic_etfs/thematic_etfs_1d.parquet: 173140 rows, 70 tickers
+2026-02-27 15:41:40,168 - INFO - Saved data/hf_dataset_extended/thematic_etfs/thematic_etfs_1wk.parquet: 35946 rows, 69 tickers
+2026-02-27 15:41:40,174 - INFO - 
+📉 Additional Indices: 20 indices
+2026-02-27 15:41:40,174 - INFO - Fetching indices_extended: 20 tickers...
+2026-02-27 15:41:44,320 - ERROR - $^XU100.IS: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:41:44,321 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:44,321 - ERROR - ['^XU100.IS']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:41:44,326 - ERROR - $^XU100.IS: possibly delisted; no timezone found
+2026-02-27 15:41:44,326 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:44,326 - ERROR - ['^XU100.IS']: possibly delisted; no timezone found
+2026-02-27 15:41:44,329 - ERROR - $^XU100.IS: possibly delisted; no timezone found
+2026-02-27 15:41:44,330 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:44,330 - ERROR - ['^XU100.IS']: possibly delisted; no timezone found
+2026-02-27 15:41:44,607 - ERROR - ^CASE30: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:41:44,607 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:44,607 - ERROR - ['^CASE30']: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:41:44,653 - ERROR - ^CASE30: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:41:44,653 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:44,653 - ERROR - ['^CASE30']: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:41:45,361 - ERROR - $^MOEX: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:41:45,362 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:45,362 - ERROR - ['^MOEX']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:41:45,367 - ERROR - $^MOEX: possibly delisted; no timezone found
+2026-02-27 15:41:45,367 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:45,367 - ERROR - ['^MOEX']: possibly delisted; no timezone found
+2026-02-27 15:41:45,370 - ERROR - $^MOEX: possibly delisted; no timezone found
+2026-02-27 15:41:45,370 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:45,370 - ERROR - ['^MOEX']: possibly delisted; no timezone found
+2026-02-27 15:41:46,671 - ERROR - ^OMXS30: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:41:46,671 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:46,671 - ERROR - ['^OMXS30']: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:41:46,722 - ERROR - ^OMXS30: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:41:46,723 - ERROR - 
+1 Failed download:
+2026-02-27 15:41:46,723 - ERROR - ['^OMXS30']: Period 'max' is invalid, must be one of: 1d, 5d
+2026-02-27 15:41:50,249 - INFO - Saved data/hf_dataset_extended/indices_extended/indices_extended_1h.parquet: 87336 rows, 18 tickers
+2026-02-27 15:41:50,263 - INFO - Saved data/hf_dataset_extended/indices_extended/indices_extended_4h.parquet: 32028 rows, 18 tickers
+2026-02-27 15:41:50,305 - INFO - Saved data/hf_dataset_extended/indices_extended/indices_extended_1d.parquet: 106848 rows, 16 tickers
+2026-02-27 15:41:50,317 - INFO - Saved data/hf_dataset_extended/indices_extended/indices_extended_1wk.parquet: 22696 rows, 16 tickers
+2026-02-27 15:41:50,319 - INFO - 
+📊 Fixed Income ETFs: 51 tickers
+2026-02-27 15:41:50,319 - INFO - Fetching fixed_income: 51 tickers...
+2026-02-27 15:42:04,312 - ERROR - $HYLD: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:42:04,313 - ERROR - 
+1 Failed download:
+2026-02-27 15:42:04,313 - ERROR - ['HYLD']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:42:12,031 - ERROR - $NXR: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:42:12,033 - ERROR - 
+1 Failed download:
+2026-02-27 15:42:12,033 - ERROR - ['NXR']: possibly delisted; no price data found  (period=730d) (Yahoo error = "No data found, symbol may be delisted")
+2026-02-27 15:42:12,038 - ERROR - $NXR: possibly delisted; no timezone found
+2026-02-27 15:42:12,038 - ERROR - 
+1 Failed download:
+2026-02-27 15:42:12,039 - ERROR - ['NXR']: possibly delisted; no timezone found
+2026-02-27 15:42:12,041 - ERROR - $NXR: possibly delisted; no timezone found
+2026-02-27 15:42:12,041 - ERROR - 
+1 Failed download:
+2026-02-27 15:42:12,042 - ERROR - ['NXR']: possibly delisted; no timezone found
+2026-02-27 15:42:22,211 - INFO - [fixed_income] Progress: 50/51 (98.0%)
+2026-02-27 15:42:22,810 - INFO - Saved data/hf_dataset_extended/fixed_income/fixed_income_1h.parquet: 247812 rows, 49 tickers
+2026-02-27 15:42:22,840 - INFO - Saved data/hf_dataset_extended/fixed_income/fixed_income_4h.parquet: 83274 rows, 49 tickers
+2026-02-27 15:42:22,910 - INFO - Saved data/hf_dataset_extended/fixed_income/fixed_income_1d.parquet: 203556 rows, 50 tickers
+2026-02-27 15:42:22,931 - INFO - Saved data/hf_dataset_extended/fixed_income/fixed_income_1wk.parquet: 42259 rows, 50 tickers
+2026-02-27 15:42:22,936 - INFO - 
+⚡ Leveraged/Inverse ETFs: 58 tickers
+2026-02-27 15:42:22,936 - INFO - Fetching leveraged: 58 tickers...
+2026-02-27 15:43:02,535 - ERROR - $BRAZ: possibly delisted; no price data found  (period=730d) (Yahoo error = "1h data not available for startTime=1692365400 and endTime=1772235782. The requested range must be within the last 730 days.")
+2026-02-27 15:43:02,535 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:02,536 - ERROR - ['BRAZ']: possibly delisted; no price data found  (period=730d) (Yahoo error = "1h data not available for startTime=1692365400 and endTime=1772235782. The requested range must be within the last 730 days.")
+2026-02-27 15:43:13,790 - INFO - [leveraged] Progress: 50/58 (86.2%)
+2026-02-27 15:43:18,015 - ERROR - $FXS: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:18,015 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:18,015 - ERROR - ['FXS']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:18,354 - INFO - Saved data/hf_dataset_extended/leveraged/leveraged_1h.parquet: 277076 rows, 56 tickers
+2026-02-27 15:43:18,390 - INFO - Saved data/hf_dataset_extended/leveraged/leveraged_4h.parquet: 93820 rows, 56 tickers
+2026-02-27 15:43:18,463 - INFO - Saved data/hf_dataset_extended/leveraged/leveraged_1d.parquet: 227244 rows, 58 tickers
+2026-02-27 15:43:18,486 - INFO - Saved data/hf_dataset_extended/leveraged/leveraged_1wk.parquet: 47182 rows, 58 tickers
+2026-02-27 15:43:18,491 - INFO - 
+🛢️ Additional Commodities: 52 tickers
+2026-02-27 15:43:18,492 - INFO - Fetching commodities_extended: 52 tickers...
+2026-02-27 15:43:32,841 - ERROR - $LBS=F: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:32,842 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:32,843 - ERROR - ['LBS=F']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:39,179 - ERROR - $JJC: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:39,179 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:39,179 - ERROR - ['JJC']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:43,628 - ERROR - $JJA: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:43,628 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:43,628 - ERROR - ['JJA']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:43,852 - ERROR - $JJG: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:43,852 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:43,852 - ERROR - ['JJG']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:46,398 - ERROR - $NIB: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:46,398 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:46,398 - ERROR - ['NIB']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:46,665 - ERROR - $JO: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:46,665 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:46,665 - ERROR - ['JO']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:46,878 - ERROR - $COW: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:46,879 - ERROR - 
+1 Failed download:
+2026-02-27 15:43:46,879 - ERROR - ['COW']: possibly delisted; no price data found  (period=730d)
+2026-02-27 15:43:47,554 - INFO - [commodities_extended] Progress: 50/52 (96.2%)
+2026-02-27 15:43:48,856 - INFO - Saved data/hf_dataset_extended/commodities_extended/commodities_extended_1h.parquet: 343667 rows, 45 tickers
+2026-02-27 15:43:48,893 - INFO - Saved data/hf_dataset_extended/commodities_extended/commodities_extended_4h.parquet: 103101 rows, 45 tickers
+2026-02-27 15:43:48,963 - INFO - Saved data/hf_dataset_extended/commodities_extended/commodities_extended_1d.parquet: 256810 rows, 52 tickers
+2026-02-27 15:43:48,986 - INFO - Saved data/hf_dataset_extended/commodities_extended/commodities_extended_1wk.parquet: 53458 rows, 52 tickers
+2026-02-27 15:43:48,992 - INFO - 
+============================================================
+2026-02-27 15:43:48,992 - INFO - FETCH COMPLETE
+2026-02-27 15:43:48,992 - INFO - ============================================================
+2026-02-27 15:43:48,992 - INFO - Total tickers fetched: 764
+2026-02-27 15:43:48,992 - INFO - Total tickers failed: 53
+2026-02-27 15:43:48,992 - INFO - Total data bars: 11,016,615
+2026-02-27 15:43:48,992 - INFO - Time elapsed: 9.0 minutes
+2026-02-27 15:43:48,992 - INFO - Output directory: data/hf_dataset_extended
+2026-02-27 15:43:48,992 - INFO - 
+============================================================
+2026-02-27 15:43:48,992 - INFO - UPLOADING TO HUGGINGFACE
+2026-02-27 15:43:48,992 - INFO - ============================================================
+2026-02-27 15:43:49,289 - INFO - HTTP Request: GET https://huggingface.co/api/whoami-v2 "HTTP/1.1 200 OK"
+2026-02-27 15:43:49,290 - INFO - Creating/updating HuggingFace repo: usamaahmedsh/elliott-wave-market-data-extended
+2026-02-27 15:43:49,698 - INFO - HTTP Request: POST https://huggingface.co/api/repos/create "HTTP/1.1 200 OK"
+2026-02-27 15:43:49,699 - INFO - Uploading indices_extended/indices_extended_1wk.parquet...
+2026-02-27 15:43:49,871 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:49,957 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:43:50,054 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/xet-write-token/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:51,888 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:51,890 - INFO - Uploading indices_extended/indices_extended_1d.parquet...
+2026-02-27 15:43:52,022 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:52,111 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:43:53,630 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:53,632 - INFO - Uploading indices_extended/indices_extended_4h.parquet...
+2026-02-27 15:43:53,735 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:53,830 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:43:54,821 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:54,822 - INFO - Uploading indices_extended/indices_extended_1h.parquet...
+2026-02-27 15:43:54,932 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:55,027 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:43:56,157 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:56,159 - INFO - Uploading thematic_etfs/thematic_etfs_1h.parquet...
+2026-02-27 15:43:56,271 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:56,365 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:43:57,767 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:57,768 - INFO - Uploading thematic_etfs/thematic_etfs_1d.parquet...
+2026-02-27 15:43:57,964 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:58,051 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:43:59,613 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:59,615 - INFO - Uploading thematic_etfs/thematic_etfs_4h.parquet...
+2026-02-27 15:43:59,733 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:43:59,823 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:00,848 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:00,849 - INFO - Uploading thematic_etfs/thematic_etfs_1wk.parquet...
+2026-02-27 15:44:00,969 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:01,062 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:02,222 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:02,225 - INFO - Uploading nasdaq/nasdaq_1d.parquet...
+2026-02-27 15:44:02,349 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:02,448 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:04,416 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:04,418 - INFO - Uploading nasdaq/nasdaq_4h.parquet...
+2026-02-27 15:44:04,623 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:04,715 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:06,237 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:06,238 - INFO - Uploading nasdaq/nasdaq_1wk.parquet...
+2026-02-27 15:44:06,353 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:06,438 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:07,893 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:07,894 - INFO - Uploading nasdaq/nasdaq_1h.parquet...
+2026-02-27 15:44:08,069 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:08,160 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:10,450 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:10,452 - INFO - Uploading emerging_markets/emerging_markets_4h.parquet...
+2026-02-27 15:44:10,560 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:10,643 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:11,664 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:11,666 - INFO - Uploading emerging_markets/emerging_markets_1d.parquet...
+2026-02-27 15:44:11,853 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:11,943 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:13,810 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:13,811 - INFO - Uploading emerging_markets/emerging_markets_1wk.parquet...
+2026-02-27 15:44:13,910 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:13,990 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:15,044 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:15,045 - INFO - Uploading emerging_markets/emerging_markets_1h.parquet...
+2026-02-27 15:44:15,227 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:15,324 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:17,043 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:17,044 - INFO - Uploading fixed_income/fixed_income_1h.parquet...
+2026-02-27 15:44:17,188 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:17,277 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:18,696 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:18,697 - INFO - Uploading fixed_income/fixed_income_1d.parquet...
+2026-02-27 15:44:18,804 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:18,886 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:21,941 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:21,942 - INFO - Uploading fixed_income/fixed_income_4h.parquet...
+2026-02-27 15:44:22,057 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:22,137 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:23,390 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:23,391 - INFO - Uploading fixed_income/fixed_income_1wk.parquet...
+2026-02-27 15:44:23,574 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:23,662 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:24,667 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:24,669 - INFO - Uploading forex_extended/forex_extended_1h.parquet...
+2026-02-27 15:44:24,839 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:24,925 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:26,808 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:26,809 - INFO - Uploading forex_extended/forex_extended_4h.parquet...
+2026-02-27 15:44:26,939 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:27,027 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:28,327 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:28,328 - INFO - Uploading forex_extended/forex_extended_1d.parquet...
+2026-02-27 15:44:28,432 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:28,519 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:30,125 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:30,126 - INFO - Uploading forex_extended/forex_extended_1wk.parquet...
+2026-02-27 15:44:30,345 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:30,435 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:31,723 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:31,724 - INFO - Uploading commodities_extended/commodities_extended_1d.parquet...
+2026-02-27 15:44:31,847 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:31,947 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:33,572 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:33,573 - INFO - Uploading commodities_extended/commodities_extended_4h.parquet...
+2026-02-27 15:44:33,675 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:33,760 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:34,704 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:34,705 - INFO - Uploading commodities_extended/commodities_extended_1wk.parquet...
+2026-02-27 15:44:34,819 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:34,905 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:36,337 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:36,338 - INFO - Uploading commodities_extended/commodities_extended_1h.parquet...
+2026-02-27 15:44:36,599 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:36,691 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:38,188 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:38,189 - INFO - Uploading leveraged/leveraged_1d.parquet...
+2026-02-27 15:44:38,346 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:38,436 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:40,236 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:40,238 - INFO - Uploading leveraged/leveraged_4h.parquet...
+2026-02-27 15:44:40,460 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:40,550 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:41,728 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:41,730 - INFO - Uploading leveraged/leveraged_1h.parquet...
+2026-02-27 15:44:41,903 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:41,992 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:43,308 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:43,308 - INFO - Uploading leveraged/leveraged_1wk.parquet...
+2026-02-27 15:44:43,561 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:43,673 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:44,841 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:44,842 - INFO - Uploading reits/reits_1h.parquet...
+2026-02-27 15:44:45,165 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:45,259 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:46,599 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:46,600 - INFO - Uploading reits/reits_1wk.parquet...
+2026-02-27 15:44:46,805 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:46,968 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:48,198 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:48,199 - INFO - Uploading reits/reits_1d.parquet...
+2026-02-27 15:44:48,340 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:48,427 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:50,698 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:50,699 - INFO - Uploading reits/reits_4h.parquet...
+2026-02-27 15:44:50,808 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:50,896 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:51,887 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:51,889 - INFO - Uploading crypto_extended/crypto_extended_1wk.parquet...
+2026-02-27 15:44:51,999 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:52,090 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:53,334 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:53,336 - INFO - Uploading crypto_extended/crypto_extended_1h.parquet...
+2026-02-27 15:44:53,465 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:53,563 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:56,840 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:56,841 - INFO - Uploading crypto_extended/crypto_extended_4h.parquet...
+2026-02-27 15:44:56,949 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:57,038 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:44:59,073 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:59,073 - INFO - Uploading crypto_extended/crypto_extended_1d.parquet...
+2026-02-27 15:44:59,195 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:44:59,285 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:45:00,940 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:00,941 - INFO - Uploading small_cap/small_cap_1h.parquet...
+2026-02-27 15:45:01,142 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:01,263 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:45:03,906 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:03,907 - INFO - Uploading small_cap/small_cap_1d.parquet...
+2026-02-27 15:45:04,083 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:04,172 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:45:08,210 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:08,211 - INFO - Uploading small_cap/small_cap_4h.parquet...
+2026-02-27 15:45:08,353 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:08,475 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:45:10,506 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:10,507 - INFO - Uploading small_cap/small_cap_1wk.parquet...
+2026-02-27 15:45:10,707 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:13,628 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 15:45:15,784 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:16,719 - INFO - HTTP Request: POST https://huggingface.co/api/validate-yaml "HTTP/1.1 200 OK"
+2026-02-27 15:45:16,821 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:17,811 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:18,139 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:18,641 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-extended/commit/main "HTTP/1.1 200 OK"
+2026-02-27 15:45:18,642 - INFO - ✅ Dataset uploaded successfully to: https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-extended
+2026-02-27 15:45:18,642 - INFO - 🎉 All done! Extended dataset available on HuggingFace Hub.

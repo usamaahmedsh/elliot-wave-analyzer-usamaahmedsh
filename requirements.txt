@@ -28,16 +28,16 @@ requests>=2.31.0
 urllib3>=2.2.0
 
 # ------------------------------------------------------------------------------
-# HuggingFace Datasets (for loading pre-fetched market data)
+# HuggingFace (dataset download)
 # ------------------------------------------------------------------------------
-datasets>=2.17.0
-huggingface-hub>=0.21.0
+huggingface_hub>=0.23.0   # hf_hub_download — fetch parquet files from HF Hub
+python-dotenv>=1.0.0      # load HF_TOKEN (and other secrets) from .env file
 
 # ------------------------------------------------------------------------------
 # Visualization & Charting
 # ------------------------------------------------------------------------------
 plotly>=5.18.0
-kaleido>=0.2.1
+kaleido>=0.2.1            # static image export for plotly (save_images)
 
 # ------------------------------------------------------------------------------
 # Configuration & Utilities
@@ -59,26 +59,6 @@ lxml>=5.2.0
 multitasking>=0.0.11
 
 # ------------------------------------------------------------------------------
-# PyTorch (for Apple Silicon MPS / CUDA GPU support)
+# Development / Testing
 # ------------------------------------------------------------------------------
-# Install PyTorch for your platform:
-# - macOS (Apple Silicon M1/M2/M3/M4): pip install torch torchvision torchaudio
-# - Linux/Windows (CUDA 12.x): pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-# - Linux/Windows (CPU only): pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-torch>=2.2.0
-
-# ------------------------------------------------------------------------------
-# GPU Acceleration (Optional - for NVIDIA CUDA)
-# ------------------------------------------------------------------------------
-# CuPy for GPU-accelerated numpy operations (NVIDIA only)
-# Install the version matching your CUDA toolkit:
-# cupy-cuda12x>=12.0.0  # For CUDA 12.x
-# cupy-cuda11x>=11.0.0  # For CUDA 11.x
-
-# ------------------------------------------------------------------------------
-# Development Dependencies (Optional)
-# ------------------------------------------------------------------------------
-# pytest>=8.0.0        # For running tests
-# black>=24.0.0        # Code formatting
-# isort>=5.13.0        # Import sorting
-# mypy>=1.8.0          # Type checking
+pytest>=8.0.0             # run with: python -m pytest tests/ -v

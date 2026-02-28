@@ -1,0 +1,223 @@
+2026-02-27 15:48:51,188 - INFO - ============================================================
+2026-02-27 15:48:51,188 - INFO - DATA QUALITY VALIDATION & COMBINATION
+2026-02-27 15:48:51,188 - INFO - ============================================================
+2026-02-27 15:48:51,188 - INFO - 
+1. Loading all data files...
+2026-02-27 15:48:51,244 - INFO - Loaded crypto_4h.parquet: 200,364 rows
+2026-02-27 15:48:51,252 - INFO - Loaded crypto_1d.parquet: 131,544 rows
+2026-02-27 15:48:51,255 - INFO - Loaded crypto_1wk.parquet: 18,835 rows
+2026-02-27 15:48:51,284 - INFO - Loaded crypto_1h.parquet: 800,895 rows
+2026-02-27 15:48:51,292 - INFO - Loaded indices_1d.parquet: 159,485 rows
+2026-02-27 15:48:51,296 - INFO - Loaded indices_4h.parquet: 28,665 rows
+2026-02-27 15:48:51,299 - INFO - Loaded indices_1wk.parquet: 33,198 rows
+2026-02-27 15:48:51,304 - INFO - Loaded indices_1h.parquet: 87,347 rows
+2026-02-27 15:48:51,307 - INFO - Loaded commodities_4h.parquet: 44,271 rows
+2026-02-27 15:48:51,310 - INFO - Loaded commodities_1wk.parquet: 20,126 rows
+2026-02-27 15:48:51,315 - INFO - Loaded commodities_1d.parquet: 96,558 rows
+2026-02-27 15:48:51,321 - INFO - Loaded commodities_1h.parquet: 158,787 rows
+2026-02-27 15:48:51,324 - INFO - Loaded forex_1wk.parquet: 29,646 rows
+2026-02-27 15:48:51,338 - INFO - Loaded forex_1h.parquet: 432,687 rows
+2026-02-27 15:48:51,344 - INFO - Loaded forex_4h.parquet: 111,377 rows
+2026-02-27 15:48:51,350 - INFO - Loaded forex_1d.parquet: 147,711 rows
+2026-02-27 15:48:51,426 - INFO - Loaded stocks_1h.parquet: 2,466,894 rows
+2026-02-27 15:48:51,461 - INFO - Loaded stocks_1wk.parquet: 901,915 rows
+2026-02-27 15:48:51,591 - INFO - Loaded stocks_1d.parquet: 4,351,747 rows
+2026-02-27 15:48:51,621 - INFO - Loaded stocks_4h.parquet: 826,422 rows
+2026-02-27 15:48:51,627 - INFO - Loaded etfs_4h.parquet: 136,073 rows
+2026-02-27 15:48:51,644 - INFO - Loaded etfs_1d.parquet: 431,415 rows
+2026-02-27 15:48:51,649 - INFO - Loaded etfs_1wk.parquet: 89,540 rows
+2026-02-27 15:48:51,664 - INFO - Loaded etfs_1h.parquet: 406,220 rows
+2026-02-27 15:48:51,671 - INFO - Loaded international_1wk.parquet: 129,923 rows
+2026-02-27 15:48:51,689 - INFO - Loaded international_1h.parquet: 517,124 rows
+2026-02-27 15:48:51,714 - INFO - Loaded international_1d.parquet: 633,784 rows
+2026-02-27 15:48:51,721 - INFO - Loaded international_4h.parquet: 168,580 rows
+2026-02-27 15:48:51,724 - INFO - Loaded indices_extended_1wk.parquet: 22,696 rows
+2026-02-27 15:48:51,728 - INFO - Loaded indices_extended_1d.parquet: 106,848 rows
+2026-02-27 15:48:51,731 - INFO - Loaded indices_extended_4h.parquet: 32,028 rows
+2026-02-27 15:48:51,735 - INFO - Loaded indices_extended_1h.parquet: 87,336 rows
+2026-02-27 15:48:51,744 - INFO - Loaded thematic_etfs_1h.parquet: 290,474 rows
+2026-02-27 15:48:51,752 - INFO - Loaded thematic_etfs_1d.parquet: 173,140 rows
+2026-02-27 15:48:51,756 - INFO - Loaded thematic_etfs_4h.parquet: 101,434 rows
+2026-02-27 15:48:51,759 - INFO - Loaded thematic_etfs_1wk.parquet: 35,946 rows
+2026-02-27 15:48:51,772 - INFO - Loaded nasdaq_1d.parquet: 383,004 rows
+2026-02-27 15:48:51,777 - INFO - Loaded nasdaq_4h.parquet: 105,455 rows
+2026-02-27 15:48:51,781 - INFO - Loaded nasdaq_1wk.parquet: 79,441 rows
+2026-02-27 15:48:51,794 - INFO - Loaded nasdaq_1h.parquet: 314,812 rows
+2026-02-27 15:48:51,804 - INFO - Loaded emerging_markets_4h.parquet: 139,613 rows
+2026-02-27 15:48:51,824 - INFO - Loaded emerging_markets_1d.parquet: 307,011 rows
+2026-02-27 15:48:51,828 - INFO - Loaded emerging_markets_1wk.parquet: 63,769 rows
+2026-02-27 15:48:51,844 - INFO - Loaded emerging_markets_1h.parquet: 405,461 rows
+2026-02-27 15:48:51,854 - INFO - Loaded fixed_income_1h.parquet: 247,812 rows
+2026-02-27 15:48:51,862 - INFO - Loaded fixed_income_1d.parquet: 203,556 rows
+2026-02-27 15:48:51,866 - INFO - Loaded fixed_income_4h.parquet: 83,274 rows
+2026-02-27 15:48:51,869 - INFO - Loaded fixed_income_1wk.parquet: 42,259 rows
+2026-02-27 15:48:51,892 - INFO - Loaded forex_extended_1h.parquet: 701,799 rows
+2026-02-27 15:48:51,899 - INFO - Loaded forex_extended_4h.parquet: 195,567 rows
+2026-02-27 15:48:51,909 - INFO - Loaded forex_extended_1d.parquet: 268,027 rows
+2026-02-27 15:48:51,912 - INFO - Loaded forex_extended_1wk.parquet: 53,891 rows
+2026-02-27 15:48:51,921 - INFO - Loaded commodities_extended_1d.parquet: 256,810 rows
+2026-02-27 15:48:51,926 - INFO - Loaded commodities_extended_4h.parquet: 103,101 rows
+2026-02-27 15:48:51,928 - INFO - Loaded commodities_extended_1wk.parquet: 53,458 rows
+2026-02-27 15:48:51,941 - INFO - Loaded commodities_extended_1h.parquet: 343,667 rows
+2026-02-27 15:48:51,950 - INFO - Loaded leveraged_1d.parquet: 227,244 rows
+2026-02-27 15:48:51,954 - INFO - Loaded leveraged_4h.parquet: 93,820 rows
+2026-02-27 15:48:51,965 - INFO - Loaded leveraged_1h.parquet: 277,076 rows
+2026-02-27 15:48:51,968 - INFO - Loaded leveraged_1wk.parquet: 47,182 rows
+2026-02-27 15:48:51,977 - INFO - Loaded reits_1h.parquet: 268,390 rows
+2026-02-27 15:48:51,981 - INFO - Loaded reits_1wk.parquet: 76,338 rows
+2026-02-27 15:48:51,995 - INFO - Loaded reits_1d.parquet: 368,076 rows
+2026-02-27 15:48:52,000 - INFO - Loaded reits_4h.parquet: 89,940 rows
+2026-02-27 15:48:52,002 - INFO - Loaded crypto_extended_1wk.parquet: 23,692 rows
+2026-02-27 15:48:52,046 - INFO - Loaded crypto_extended_1h.parquet: 1,354,970 rows
+2026-02-27 15:48:52,060 - INFO - Loaded crypto_extended_4h.parquet: 338,991 rows
+2026-02-27 15:48:52,069 - INFO - Loaded crypto_extended_1d.parquet: 165,459 rows
+2026-02-27 15:48:52,099 - INFO - Loaded small_cap_1h.parquet: 867,707 rows
+2026-02-27 15:48:52,138 - INFO - Loaded small_cap_1d.parquet: 1,097,034 rows
+2026-02-27 15:48:52,150 - INFO - Loaded small_cap_4h.parquet: 291,505 rows
+2026-02-27 15:48:52,160 - INFO - Loaded small_cap_1wk.parquet: 227,502 rows
+2026-02-27 15:48:52,321 - INFO - Combined 1h: 10,029,458 rows
+2026-02-27 15:48:52,368 - INFO - Combined 4h: 3,090,480 rows
+2026-02-27 15:48:52,724 - INFO - Combined 1d: 9,508,453 rows
+2026-02-27 15:48:52,816 - INFO - Combined 1wk: 1,949,357 rows
+2026-02-27 15:48:52,966 - INFO - 
+2. Running quality validation...
+2026-02-27 15:48:52,966 - INFO - 
+Validating 1h...
+2026-02-27 15:48:53,160 - INFO - Starting validation: 10,029,458 rows, 1358 tickers
+2026-02-27 15:49:11,792 - INFO - ============================================================
+2026-02-27 15:49:11,792 - INFO - DATA QUALITY VALIDATION & COMBINATION
+2026-02-27 15:49:11,792 - INFO - ============================================================
+2026-02-27 15:49:11,792 - INFO - 
+1. Loading all data files...
+2026-02-27 15:49:11,845 - INFO - Loaded crypto_4h.parquet: 200,364 rows
+2026-02-27 15:49:11,851 - INFO - Loaded crypto_1d.parquet: 131,544 rows
+2026-02-27 15:49:11,854 - INFO - Loaded crypto_1wk.parquet: 18,835 rows
+2026-02-27 15:49:11,882 - INFO - Loaded crypto_1h.parquet: 800,895 rows
+2026-02-27 15:49:11,889 - INFO - Loaded indices_1d.parquet: 159,485 rows
+2026-02-27 15:49:11,892 - INFO - Loaded indices_4h.parquet: 28,665 rows
+2026-02-27 15:49:11,894 - INFO - Loaded indices_1wk.parquet: 33,198 rows
+2026-02-27 15:49:11,899 - INFO - Loaded indices_1h.parquet: 87,347 rows
+2026-02-27 15:49:11,901 - INFO - Loaded commodities_4h.parquet: 44,271 rows
+2026-02-27 15:49:11,903 - INFO - Loaded commodities_1wk.parquet: 20,126 rows
+2026-02-27 15:49:11,907 - INFO - Loaded commodities_1d.parquet: 96,558 rows
+2026-02-27 15:49:11,913 - INFO - Loaded commodities_1h.parquet: 158,787 rows
+2026-02-27 15:49:11,915 - INFO - Loaded forex_1wk.parquet: 29,646 rows
+2026-02-27 15:49:11,929 - INFO - Loaded forex_1h.parquet: 432,687 rows
+2026-02-27 15:49:11,934 - INFO - Loaded forex_4h.parquet: 111,377 rows
+2026-02-27 15:49:11,939 - INFO - Loaded forex_1d.parquet: 147,711 rows
+2026-02-27 15:49:12,010 - INFO - Loaded stocks_1h.parquet: 2,466,894 rows
+2026-02-27 15:49:12,042 - INFO - Loaded stocks_1wk.parquet: 901,915 rows
+2026-02-27 15:49:12,182 - INFO - Loaded stocks_1d.parquet: 4,351,747 rows
+2026-02-27 15:49:12,209 - INFO - Loaded stocks_4h.parquet: 826,422 rows
+2026-02-27 15:49:12,214 - INFO - Loaded etfs_4h.parquet: 136,073 rows
+2026-02-27 15:49:12,229 - INFO - Loaded etfs_1d.parquet: 431,415 rows
+2026-02-27 15:49:12,234 - INFO - Loaded etfs_1wk.parquet: 89,540 rows
+2026-02-27 15:49:12,248 - INFO - Loaded etfs_1h.parquet: 406,220 rows
+2026-02-27 15:49:12,254 - INFO - Loaded international_1wk.parquet: 129,923 rows
+2026-02-27 15:49:12,271 - INFO - Loaded international_1h.parquet: 517,124 rows
+2026-02-27 15:49:12,292 - INFO - Loaded international_1d.parquet: 633,784 rows
+2026-02-27 15:49:12,299 - INFO - Loaded international_4h.parquet: 168,580 rows
+2026-02-27 15:49:12,302 - INFO - Loaded indices_extended_1wk.parquet: 22,696 rows
+2026-02-27 15:49:12,306 - INFO - Loaded indices_extended_1d.parquet: 106,848 rows
+2026-02-27 15:49:12,308 - INFO - Loaded indices_extended_4h.parquet: 32,028 rows
+2026-02-27 15:49:12,313 - INFO - Loaded indices_extended_1h.parquet: 87,336 rows
+2026-02-27 15:49:12,323 - INFO - Loaded thematic_etfs_1h.parquet: 290,474 rows
+2026-02-27 15:49:12,330 - INFO - Loaded thematic_etfs_1d.parquet: 173,140 rows
+2026-02-27 15:49:12,334 - INFO - Loaded thematic_etfs_4h.parquet: 101,434 rows
+2026-02-27 15:49:12,337 - INFO - Loaded thematic_etfs_1wk.parquet: 35,946 rows
+2026-02-27 15:49:12,350 - INFO - Loaded nasdaq_1d.parquet: 383,004 rows
+2026-02-27 15:49:12,355 - INFO - Loaded nasdaq_4h.parquet: 105,455 rows
+2026-02-27 15:49:12,359 - INFO - Loaded nasdaq_1wk.parquet: 79,441 rows
+2026-02-27 15:49:12,370 - INFO - Loaded nasdaq_1h.parquet: 314,812 rows
+2026-02-27 15:49:12,375 - INFO - Loaded emerging_markets_4h.parquet: 139,613 rows
+2026-02-27 15:49:12,386 - INFO - Loaded emerging_markets_1d.parquet: 307,011 rows
+2026-02-27 15:49:12,390 - INFO - Loaded emerging_markets_1wk.parquet: 63,769 rows
+2026-02-27 15:49:12,403 - INFO - Loaded emerging_markets_1h.parquet: 405,461 rows
+2026-02-27 15:49:12,412 - INFO - Loaded fixed_income_1h.parquet: 247,812 rows
+2026-02-27 15:49:12,420 - INFO - Loaded fixed_income_1d.parquet: 203,556 rows
+2026-02-27 15:49:12,424 - INFO - Loaded fixed_income_4h.parquet: 83,274 rows
+2026-02-27 15:49:12,427 - INFO - Loaded fixed_income_1wk.parquet: 42,259 rows
+2026-02-27 15:49:12,450 - INFO - Loaded forex_extended_1h.parquet: 701,799 rows
+2026-02-27 15:49:12,457 - INFO - Loaded forex_extended_4h.parquet: 195,567 rows
+2026-02-27 15:49:12,466 - INFO - Loaded forex_extended_1d.parquet: 268,027 rows
+2026-02-27 15:49:12,469 - INFO - Loaded forex_extended_1wk.parquet: 53,891 rows
+2026-02-27 15:49:12,478 - INFO - Loaded commodities_extended_1d.parquet: 256,810 rows
+2026-02-27 15:49:12,483 - INFO - Loaded commodities_extended_4h.parquet: 103,101 rows
+2026-02-27 15:49:12,486 - INFO - Loaded commodities_extended_1wk.parquet: 53,458 rows
+2026-02-27 15:49:12,497 - INFO - Loaded commodities_extended_1h.parquet: 343,667 rows
+2026-02-27 15:49:12,506 - INFO - Loaded leveraged_1d.parquet: 227,244 rows
+2026-02-27 15:49:12,511 - INFO - Loaded leveraged_4h.parquet: 93,820 rows
+2026-02-27 15:49:12,520 - INFO - Loaded leveraged_1h.parquet: 277,076 rows
+2026-02-27 15:49:12,523 - INFO - Loaded leveraged_1wk.parquet: 47,182 rows
+2026-02-27 15:49:12,533 - INFO - Loaded reits_1h.parquet: 268,390 rows
+2026-02-27 15:49:12,537 - INFO - Loaded reits_1wk.parquet: 76,338 rows
+2026-02-27 15:49:12,550 - INFO - Loaded reits_1d.parquet: 368,076 rows
+2026-02-27 15:49:12,554 - INFO - Loaded reits_4h.parquet: 89,940 rows
+2026-02-27 15:49:12,556 - INFO - Loaded crypto_extended_1wk.parquet: 23,692 rows
+2026-02-27 15:49:12,596 - INFO - Loaded crypto_extended_1h.parquet: 1,354,970 rows
+2026-02-27 15:49:12,609 - INFO - Loaded crypto_extended_4h.parquet: 338,991 rows
+2026-02-27 15:49:12,615 - INFO - Loaded crypto_extended_1d.parquet: 165,459 rows
+2026-02-27 15:49:12,641 - INFO - Loaded small_cap_1h.parquet: 867,707 rows
+2026-02-27 15:49:12,674 - INFO - Loaded small_cap_1d.parquet: 1,097,034 rows
+2026-02-27 15:49:12,684 - INFO - Loaded small_cap_4h.parquet: 291,505 rows
+2026-02-27 15:49:12,692 - INFO - Loaded small_cap_1wk.parquet: 227,502 rows
+2026-02-27 15:49:12,781 - INFO - Combined 1h: 10,029,458 rows
+2026-02-27 15:49:12,809 - INFO - Combined 4h: 3,090,480 rows
+2026-02-27 15:49:12,896 - INFO - Combined 1d: 9,508,453 rows
+2026-02-27 15:49:12,919 - INFO - Combined 1wk: 1,949,357 rows
+2026-02-27 15:49:13,053 - INFO - 
+2. Running quality validation...
+2026-02-27 15:49:13,053 - INFO - 
+Validating 1h...
+2026-02-27 15:49:13,244 - INFO - Starting validation: 10,029,458 rows, 1358 tickers
+2026-02-27 15:54:28,884 - INFO - Validation complete: 9,267,368 rows (7.60% removed)
+2026-02-27 15:54:29,000 - INFO - 
+Validating 4h...
+2026-02-27 15:54:29,065 - INFO - Starting validation: 3,090,480 rows, 1358 tickers
+2026-02-27 15:56:06,777 - INFO - Validation complete: 2,849,583 rows (7.79% removed)
+2026-02-27 15:56:06,797 - INFO - 
+Validating 1d...
+2026-02-27 15:56:06,983 - INFO - Starting validation: 9,508,453 rows, 1399 tickers
+2026-02-27 16:01:14,353 - INFO - Validation complete: 8,648,514 rows (9.04% removed)
+2026-02-27 16:01:14,410 - INFO - 
+Validating 1wk...
+2026-02-27 16:01:14,450 - INFO - Starting validation: 1,949,357 rows, 1397 tickers
+2026-02-27 16:02:18,372 - INFO - Validation complete: 1,780,724 rows (8.65% removed)
+2026-02-27 16:02:18,387 - INFO - 
+3. Generating quality report...
+2026-02-27 16:02:32,082 - INFO - 
+4. Uploading to HuggingFace...
+2026-02-27 16:02:33,479 - INFO - HTTP Request: GET https://huggingface.co/api/whoami-v2 "HTTP/1.1 200 OK"
+2026-02-27 16:02:33,480 - INFO - Creating/updating repo: usamaahmedsh/elliott-wave-market-data-complete
+2026-02-27 16:02:34,030 - INFO - HTTP Request: POST https://huggingface.co/api/repos/create "HTTP/1.1 200 OK"
+2026-02-27 16:02:36,443 - INFO - Saved data/hf_dataset_complete/market_data_1h.parquet: 9,267,368 rows
+2026-02-27 16:02:36,443 - INFO - Uploading market_data_1h.parquet...
+2026-02-27 16:02:36,931 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 16:02:37,018 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-complete.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 16:02:37,124 - INFO - HTTP Request: GET https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/xet-write-token/main "HTTP/1.1 200 OK"
+2026-02-27 16:02:47,243 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/commit/main "HTTP/1.1 200 OK"
+2026-02-27 16:02:47,979 - INFO - Saved data/hf_dataset_complete/market_data_4h.parquet: 2,849,583 rows
+2026-02-27 16:02:47,979 - INFO - Uploading market_data_4h.parquet...
+2026-02-27 16:02:48,467 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 16:02:48,563 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-complete.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 16:02:54,546 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/commit/main "HTTP/1.1 200 OK"
+2026-02-27 16:02:56,464 - INFO - Saved data/hf_dataset_complete/market_data_1d.parquet: 8,648,514 rows
+2026-02-27 16:02:56,464 - INFO - Uploading market_data_1d.parquet...
+2026-02-27 16:02:56,916 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 16:02:57,002 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-complete.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 16:03:11,507 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/commit/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:11,920 - INFO - Saved data/hf_dataset_complete/market_data_1wk.parquet: 1,780,724 rows
+2026-02-27 16:03:11,920 - INFO - Uploading market_data_1wk.parquet...
+2026-02-27 16:03:12,428 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:12,521 - INFO - HTTP Request: POST https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-complete.git/info/lfs/objects/batch "HTTP/1.1 200 OK"
+2026-02-27 16:03:17,710 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/commit/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:18,993 - INFO - HTTP Request: POST https://huggingface.co/api/validate-yaml "HTTP/1.1 200 OK"
+2026-02-27 16:03:19,256 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:20,211 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/commit/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:20,319 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:20,756 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/commit/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:21,742 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/preupload/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:22,356 - INFO - HTTP Request: POST https://huggingface.co/api/datasets/usamaahmedsh/elliott-wave-market-data-complete/commit/main "HTTP/1.1 200 OK"
+2026-02-27 16:03:22,357 - INFO - ✅ Dataset uploaded: https://huggingface.co/datasets/usamaahmedsh/elliott-wave-market-data-complete
+2026-02-27 16:03:22,357 - INFO - 
+🎉 All done! Quality-validated dataset uploaded to HuggingFace.

@@ -1,81 +1,113 @@
-# Pipeline configuration optimized for Apple Silicon Mac M4 Pro
-# Balanced settings for 12-core CPU + 16-core GPU + 36GB unified memory
+# =============================================================================
+# Elliott Wave Pipeline — Configuration
+# =============================================================================
+# Priority order for every knob:
+#   1. CLI flag (--up-to, --workers, etc.)   ← highest
+#   2. This file (configs.yaml)
+#   3. PipelineConfig dataclass defaults     ← lowest
+#
+# To switch between environments just swap the active PROFILE section below.
+# =============================================================================
 
-# AUTO DEVICE DETECTION (recommended)
-# Set to true to automatically detect hardware and optimize settings
-# - Detects CUDA GPUs (HPC/NVIDIA)
-# - Detects Apple Silicon GPU (Mac M1/M2/M3/M4)
-# - Falls back to optimized CPU settings
-# When enabled, automatically sets: processes, cpu_batch_size, concurrency
-auto_detect_device: true
 
-# Historical data range
-# days: 5475   = 15 years of data
-# days: 7300   = 20 years of data
-# days: 0      = ALL available history (yfinance "max" period)
-days: 5475  # 15 years of data
-slide_weeks: 1  # Step size for window sliding (1 week = finer granularity to catch all patterns)
-min_weeks: 8  # Minimum 8 weeks - reasonable pattern length
-max_weeks: 104  # 2 years max window - good for most Elliott Wave patterns
-up_to: 8  # Moderate complexity - good balance of depth vs speed
+# =============================================================================
+# PARALLELISM  (the main knobs you need to change per machine)
+# =============================================================================
+
+# Number of ticker worker processes.
+# Each worker handles one ticker at a time across the full sliding window.
+# Rule of thumb:  ticker_workers = cpu_count - 1  (leave 1 core for main process)
+#
+# Mac M4 Pro  (12 cores)  →  ticker_workers: 10
+# HPC         (32 cores)  →  ticker_workers: 30
+ticker_workers: 30
+
+# Size of each candidate batch inside scan_impulses / scan_bearish / scan_correctives.
+# Larger = more NumPy vectorisation per batch, slightly higher peak RAM per worker.
+# Mac (36 GB unified)   →  cpu_batch_size: 1024
+# HPC (128+ GB RAM)     →  cpu_batch_size: 2048
+cpu_batch_size: 2048
+
+# How many of the cheapest-scored candidates per batch go to full wave validation.
+# Higher = more patterns found, slower per window.
+# Mac   →  cpu_top_k: 64
+# HPC   →  cpu_top_k: 128
+cpu_top_k: 128
+
+# Hard cap on wave-config combinations evaluated per scan call.
+# Prevents runaway scans on very flat / noisy windows.
+# Mac   →  max_combinations: 500000
+# HPC   →  max_combinations: 1000000
+max_combinations: 1000000
+
+
+# =============================================================================
+# SCAN DEPTH  (quality vs. speed trade-off)
+# =============================================================================
+
+# Maximum "skip" depth when building MonoWaves.
+# Higher = finds deeper / more complex patterns, but exponentially more combos.
+# 8  = fast, good coverage   |   12 = thorough   |   15 = maximum (slow)
+up_to: 12
+
+# Maximum scan windows per ticker per interval.
+max_windows: 1000
+
+# Top-N patterns retained per scan window (before global ranking).
+top_n_per_window: 20
+
+# Pattern types to scan: 'all' | 'impulses' | 'corrective'
+scan_pattern_types: all
+
+# Multi-start: try multiple local-extrema pivot points as wave origins.
+# More starts = more recall, proportionally more CPU time.
+enable_multi_start: true
+max_start_points: 10
+
+
+# =============================================================================
+# DATA RANGE
+# =============================================================================
+
+days: 5475      # 15 years  (7300 = 20 y  |  0 = all available)
+slide_weeks: 1
+min_weeks: 8
+max_weeks: 104
 grow_weeks: 2
-top_n: 20  # Keep top 20 patterns per window
+top_n: 20
 delay: 0.5
+concurrency: 12  # async network fetch parallelism (data download only)
 
-# Optimized for Mac M4 Pro (12 CPU cores + 16 GPU cores + 36GB unified memory)
-# These will be AUTO-DETECTED if auto_detect_device=true
-# Only used if auto_detect_device=false
-processes: 10  # Use 10 workers (leave 2 cores for system)
-cpu_batch_size: 1024  # Moderate batch size for unified memory
-concurrency: 12  # Network fetch parallelism
 
-max_combinations: 500000  # 500K combinations - good coverage without excessive runtime
+# =============================================================================
+# OUTPUT & MISC
+# =============================================================================
+
 out_dir: output
-
-# Pattern scanning mode: 'all' scans impulsive + corrective, 'impulses' scans only impulsive waves
-scan_pattern_types: all  # Scan both impulsive and corrective patterns
-
-# Multi-start search: try multiple pivot points (local extrema) as wave starts
-# Set to true to enable, false for single-start (faster)
-enable_multi_start: true  # Enable to find patterns at different starting points
-max_start_points: 8  # Try 8 starting points - balanced coverage
-
-# Overlapping windows: set overlap_ratio > 0 to create overlapping time windows
-# overlap_ratio=0.5 means 50% overlap (catches patterns spanning boundaries)
-window_overlap_ratio: 0.5  # 50% overlap - good balance
-
-# Enable shared memory for efficient multi-processing
+save_images: true
+save_images_top_n: 5
+analyze_patterns: true
 use_shared_memory: true
-
-# Window budget per symbol
-max_windows: 500  # Scan 500 windows per symbol - reasonable coverage
-
-# Image saving - ENABLED for manual review
-save_images: true  # Save pattern visualizations
-save_images_top_n: 5  # Save top 5 patterns per symbol
-
-# Inline pattern analysis - show quality statistics during pipeline run
-analyze_patterns: true  # Set to true to see score distributions per symbol in real-time
 chunk_size: 0
 min_volatility: 0.0
 skip_flat_windows: false
-profile: false  # Disable profiling for production runs
+profile: false
+window_overlap_ratio: 0.5
 
-# Pre-score knobs (cheap vectorized features to prune windows)
 pre_score_top_k: 0
 pre_score_threshold: 0.0
-# weights: volatility, range, extrema_count, abs(slope)
 pre_score_weights: [0.4, 0.3, 0.2, 0.1]
 
-# Sweep knobs (optional) — used by `tools/sweep_cpu_batch.py` if present.
-# Edit these lists to control which values are tried by the sweep driver.
-cpu_batch_sizes: [512, 1024, 2048]
-cpu_top_k_values: [64, 128, 256]
 
-# Mac M4 Pro PROFILE (12 CPU + 16 GPU cores + 36GB unified memory):
-# Expected output per symbol: 15-50 patterns
-# Expected 315 symbols total: ~5,000 - 15,000 patterns
-# Runtime per symbol: ~60-90 seconds
-# Full 315 symbols: ~6-8 hours
-# Output file: 50-200 MB
-
+# =============================================================================
+# MAC M4 PRO PROFILE  — uncomment this block (and comment out the HPC values
+#                       above) when running locally on the 12-core Mac.
+# =============================================================================
+# ticker_workers:   10
+# cpu_batch_size:   1024
+# cpu_top_k:        64
+# max_combinations: 500000
+# up_to:            8
+# max_windows:      500
+# top_n_per_window: 10
+# max_start_points: 8

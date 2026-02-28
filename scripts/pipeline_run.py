@@ -428,18 +428,8 @@ def run_pipeline(
     """
     start_time = time.time()
     
-    # Load config with auto device detection
-    cfg = PipelineConfig.load_from_file(config_path, auto_detect=True)
-    
-    # Show device info
-    if verbose:
-        try:
-            from pipeline.device import get_optimal_config, print_device_info
-            device_cfg = get_optimal_config()
-            print_device_info(device_cfg)
-            print()
-        except Exception:
-            pass
+    # Load config
+    cfg = PipelineConfig.load_from_file(config_path)
     
     # Setup checkpoint manager
     checkpoint_mgr = None

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple, Any
+import time as _time
 
 import numpy as np
 import pandas as pd
@@ -362,16 +363,13 @@ class WaveAnalyzer:
 
         # Cheap numba-accelerated pre-filter: skip windows that do not contain
         # enough local extrema (peaks/troughs) to form a 5-wave impulsive structure.
-        # DISABLED FOR DEBUGGING - this may be rejecting valid patterns
-        # try:
-        #     from models.functions import count_extrema
-        #     # count extrema in the tail of the arrays from idx_start
-        #     n_ext = count_extrema(self.lows[idx_start:])
-        #     if n_ext < 4:
-        #         return []
-        # except Exception:
-        #     # if the fast filter isn't available for some reason, continue normally
-        #     pass
+        try:
+            from models.functions import count_extrema
+            n_ext = count_extrema(self.lows[idx_start:])
+            if n_ext < 4:
+                return []
+        except Exception:
+            pass
 
         found: List[FoundPattern] = []
         seen = set()
@@ -410,7 +408,6 @@ class WaveAnalyzer:
                 break
 
             # vectorized compute of complexity (only per-candidate varying part)
-            import time as _time
             t0 = _time.time()
             complexities = np.array([float(sum(opt.values)) / (len(opt.values) * max(1, up_to)) for opt in batch], dtype=np.float32)
             # compute scores vectorized
@@ -539,13 +536,11 @@ class WaveAnalyzer:
             if nb == 0:
                 break
 
-            import time as _time
             t0 = _time.time()
             complexities = np.array([float(sum(opt.values)) / (len(opt.values) * max(1, up_to)) for opt in batch], dtype=np.float32)
             scores = base_score + 0.1 * complexities
             t_pre_score += _time.time() - t0
             n_pre_scored += nb
-
             if nb > top_k:
                 top_idx = np.argpartition(-scores, top_k - 1)[:top_k]
                 top_idx = top_idx[np.argsort(-scores[top_idx])]
