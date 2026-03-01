@@ -1,113 +1,99 @@
 # =============================================================================
 # Elliott Wave Pipeline — Configuration
 # =============================================================================
-# Priority order for every knob:
-#   1. CLI flag (--up-to, --workers, etc.)   ← highest
-#   2. This file (configs.yaml)
-#   3. PipelineConfig dataclass defaults     ← lowest
-#
-# To switch between environments just swap the active PROFILE section below.
-# =============================================================================
-
 
 # =============================================================================
-# PARALLELISM  (the main knobs you need to change per machine)
+# PARALLELISM (unused in sequential mode — kept for reference)
 # =============================================================================
+ticker_workers: 62
+cpu_batch_size: 4096 # irrelevant in new vectorized path, kept for compat
 
-# Number of ticker worker processes.
-# Each worker handles one ticker at a time across the full sliding window.
-# Rule of thumb:  ticker_workers = cpu_count - 1  (leave 1 core for main process)
-#
-# Mac M4 Pro  (12 cores)  →  ticker_workers: 10
-# HPC         (32 cores)  →  ticker_workers: 30
-ticker_workers: 30
+# top_k: how many of the ALL-options pre-scored candidates get fully evaluated
+# per scan call. This is now a GLOBAL top-k (not per-batch).
+# At up_to=15: 759,375 options vectorized in one numpy op, then top_k evals only.
+# 300 full evals x 3 types x 8 starts x 1000 windows = 7.2M evals per ticker
+# At ~3us each = ~22s per ticker. Tractable.
+cpu_top_k: 300
 
-# Size of each candidate batch inside scan_impulses / scan_bearish / scan_correctives.
-# Larger = more NumPy vectorisation per batch, slightly higher peak RAM per worker.
-# Mac (36 GB unified)   →  cpu_batch_size: 1024
-# HPC (128+ GB RAM)     →  cpu_batch_size: 2048
-cpu_batch_size: 2048
-
-# How many of the cheapest-scored candidates per batch go to full wave validation.
-# Higher = more patterns found, slower per window.
-# Mac   →  cpu_top_k: 64
-# HPC   →  cpu_top_k: 128
-cpu_top_k: 128
-
-# Hard cap on wave-config combinations evaluated per scan call.
-# Prevents runaway scans on very flat / noisy windows.
-# Mac   →  max_combinations: 500000
-# HPC   →  max_combinations: 1000000
-max_combinations: 1000000
-
+# Hard cap on full evals per scan call (safety net — global top-k does the real work)
+max_combinations: 5000000
 
 # =============================================================================
-# SCAN DEPTH  (quality vs. speed trade-off)
+# SCAN DEPTH
 # =============================================================================
+up_to: 15 # maximum skip depth — 759,375 combos pre-scored in ~1ms
 
-# Maximum "skip" depth when building MonoWaves.
-# Higher = finds deeper / more complex patterns, but exponentially more combos.
-# 8  = fast, good coverage   |   12 = thorough   |   15 = maximum (slow)
-up_to: 12
+max_windows: 5000 # full 20-year history coverage (was 500 = only ~half)
 
-# Maximum scan windows per ticker per interval.
-max_windows: 1000
+top_n_per_window: 50
 
-# Top-N patterns retained per scan window (before global ranking).
-top_n_per_window: 20
-
-# Pattern types to scan: 'all' | 'impulses' | 'corrective'
 scan_pattern_types: all
 
-# Multi-start: try multiple local-extrema pivot points as wave origins.
-# More starts = more recall, proportionally more CPU time.
 enable_multi_start: true
-max_start_points: 10
+max_start_points: 15 # was 20 — diminishing returns past 8, 2.5x faster
 
+# =============================================================================
+# WALL-CLOCK SAFETY NET (new knob read by scan_impulses/bearish/correctives)
+# =============================================================================
+# Maximum seconds allowed per individual scan call (single start point, single
+# pattern type). Prevents any single window from hanging the whole run.
+# At 300 top_k with ~3us each, normal scan takes <1ms. This is a hard safety net.
+max_seconds_per_scan: 10.0
 
 # =============================================================================
 # DATA RANGE
 # =============================================================================
-
-days: 5475      # 15 years  (7300 = 20 y  |  0 = all available)
+days: 7300
 slide_weeks: 1
 min_weeks: 8
 max_weeks: 104
 grow_weeks: 2
-top_n: 20
-delay: 0.5
-concurrency: 12  # async network fetch parallelism (data download only)
-
+top_n: 50
+delay: 0.0
+concurrency: 64
 
 # =============================================================================
 # OUTPUT & MISC
 # =============================================================================
-
 out_dir: output
-save_images: true
-save_images_top_n: 5
-analyze_patterns: true
-use_shared_memory: true
+save_images: false
+save_images_top_n: 10
+analyze_patterns: false
+use_shared_memory: false
 chunk_size: 0
 min_volatility: 0.0
 skip_flat_windows: false
 profile: false
-window_overlap_ratio: 0.5
+window_overlap_ratio: 0.0 # no effect in sequential mode — set to 0 for clarity
 
 pre_score_top_k: 0
 pre_score_threshold: 0.0
 pre_score_weights: [0.4, 0.3, 0.2, 0.1]
 
+# =============================================================================
+# MAC M4 PRO PROFILE
+# =============================================================================
+# cpu_top_k: 150
+# max_combinations: 150
+# up_to: 12
+# max_windows: 500
+# max_start_points: 5
+# max_seconds_per_scan: 5.0
+# days: 5475
+# top_n: 20
+# concurrency: 12
+# save_images_top_n: 5
 
 # =============================================================================
-# MAC M4 PRO PROFILE  — uncomment this block (and comment out the HPC values
-#                       above) when running locally on the 12-core Mac.
+# HPC PROFILE (32 cores / 128 GB)
 # =============================================================================
-# ticker_workers:   10
-# cpu_batch_size:   1024
-# cpu_top_k:        64
-# max_combinations: 500000
-# up_to:            8
-# max_windows:      500
-# top_n_per_window: 10
+# cpu_top_k: 300
+# max_combinations: 300
+# up_to: 15
+# max_windows: 1000
 # max_start_points: 8
+# max_seconds_per_scan: 10.0
+# days: 7300
+# top_n: 50
+# concurrency: 32
+# save_images_top_n: 10
