@@ -1,20 +1,25 @@
 from typing import List, Dict, Any, Tuple, Optional
 import multiprocessing as mp
 from functools import partial
+import math
 import os
 import traceback
 
 from models.WaveAnalyzer import WaveAnalyzer
 
-# Per-process cache for attached shared-memory views.
+# Per-process cache for attached shared-memory views. Keys are shared array names.
 _SHM_CACHE: Dict[str, Dict[str, Any]] = {}
 
-
 # =============================================================================
-# WINDOW-LEVEL WORKER  (called inside each ticker worker)
+# WINDOW-LEVEL WORKER (unchanged — called by both paths)
 # =============================================================================
 
 def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[str, Any]:
+    """
+    Worker function: scan a single window slice for wave patterns.
+    window_tuple: (start_row, window_len, context)
+    cfg: scan configuration dict
+    """
     start_row, window_len, context = window_tuple
 
     lows        = context.get('lows')
@@ -27,15 +32,18 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
             from pipeline.shared_memory import attach_shared_view
         except Exception:
             attach_shared_view = None
+
         if attach_shared_view is not None:
             for key, meta in shared_meta.items():
                 name = meta.get('name')
                 if name not in _SHM_CACHE:
                     try:
-                        _SHM_CACHE[name] = {'view': attach_shared_view(meta), 'meta': meta}
+                        view = attach_shared_view(meta)
+                        _SHM_CACHE[name] = {'view': view, 'meta': meta}
                     except Exception:
                         _SHM_CACHE[name] = None
-            if 'lows'  in shared_meta:
+
+            if 'lows' in shared_meta:
                 sm = shared_meta['lows']['name']
                 lows  = None if _SHM_CACHE.get(sm) is None else _SHM_CACHE[sm]['view']
             if 'highs' in shared_meta:
@@ -68,6 +76,7 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
     scan_mode          = cfg.get('scan_pattern_types', 'all')
     enable_multi_start = cfg.get('enable_multi_start', False)
     max_start_points   = cfg.get('max_start_points', 5)
+
     scan_cfg = {
         'cpu_batch_size':       cfg.get('cpu_batch_size', 512),
         'cpu_top_k':            cfg.get('cpu_top_k', 64),
@@ -76,24 +85,28 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
 
     if enable_multi_start:
         candidates = wa.scan_multi_start(
-            up_to=cfg.get('up_to', 8), top_n=cfg.get('top_n', 1),
-            max_combinations=cfg.get('max_combinations', None),
-            scan_cfg=scan_cfg, max_starts=max_start_points,
-            pattern_types=scan_mode,
+            up_to            = cfg.get('up_to', 8),
+            top_n            = cfg.get('top_n', 1),
+            max_combinations = cfg.get('max_combinations', None),
+            scan_cfg         = scan_cfg,
+            max_starts       = max_start_points,
+            pattern_types    = scan_mode,
         )
     elif scan_mode == 'all':
         candidates = wa.scan_all_patterns(
-            idx_start=local_idx_start,
-            up_to=cfg.get('up_to', 8), top_n=cfg.get('top_n', 1),
-            max_combinations=cfg.get('max_combinations', None),
-            scan_cfg=scan_cfg,
+            idx_start        = local_idx_start,
+            up_to            = cfg.get('up_to', 8),
+            top_n            = cfg.get('top_n', 1),
+            max_combinations = cfg.get('max_combinations', None),
+            scan_cfg         = scan_cfg,
         )
     else:
         candidates = wa.scan_impulses(
-            idx_start=local_idx_start,
-            up_to=cfg.get('up_to', 8), top_n=cfg.get('top_n', 1),
-            max_combinations=cfg.get('max_combinations', None),
-            scan_cfg=scan_cfg,
+            idx_start        = local_idx_start,
+            up_to            = cfg.get('up_to', 8),
+            top_n            = cfg.get('top_n', 1),
+            max_combinations = cfg.get('max_combinations', None),
+            scan_cfg         = scan_cfg,
         )
 
     if not candidates:
@@ -105,6 +118,7 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
                  if dates is not None \
                  else context['base_df'].iloc[min(start_row + window_len - 1,
                                                    len(context['base_df']) - 1)]['Date']
+
     try:
         if hasattr(date_start, '__int__') and \
                 _np.issubdtype(_np.dtype(type(date_start)), _np.integer):
@@ -155,14 +169,17 @@ def _worker_scan_window(window_tuple: Tuple[int, int, dict], cfg: dict) -> Dict[
 
 
 # =============================================================================
-# TICKER-LEVEL WORKER  — each worker owns one full ticker (all its windows)
+# TICKER-LEVEL WORKER (new — the right parallelism axis for HPC)
 # =============================================================================
 
 def _worker_scan_ticker(args: Tuple) -> Dict[str, Any]:
     """
-    Scan ALL windows for a single ticker sequentially with skip-ahead.
-    Runs entirely inside one worker process — no nested parallelism.
-    Returns: {symbol, results, wins_scanned, error}
+    Top-level worker: scan ALL windows for a single ticker.
+    Each worker process owns one full ticker — no nested parallelism.
+    Uses 'fork' on Linux so imports/numba cache are inherited instantly.
+
+    Returns:
+        {symbol, results: List[Dict], wins_scanned: int, error: str|None}
     """
     symbol, lows, highs, dates, cfg_dict = args
 
@@ -185,9 +202,15 @@ def _worker_scan_ticker(args: Tuple) -> Dict[str, Any]:
             if window_len < min_bars:
                 break
 
-            context = {'symbol': symbol, 'lows': lows, 'highs': highs, 'dates': dates}
+            context = {
+                'symbol': symbol,
+                'lows':   lows,
+                'highs':  highs,
+                'dates':  dates,
+            }
             try:
-                result = _worker_scan_window((current_idx, window_len, context), cfg_dict)
+                result = _worker_scan_window(
+                    (current_idx, window_len, context), cfg_dict)
             except Exception:
                 result = {}
             wins_scanned += 1
@@ -200,17 +223,20 @@ def _worker_scan_ticker(args: Tuple) -> Dict[str, Any]:
                 current_idx += slide_bars
 
     except Exception as e:
-        return {'symbol': symbol, 'results': results,
-                'wins_scanned': wins_scanned,
-                'error': f"{e}\n{traceback.format_exc()}"}
+        return {
+            'symbol':       symbol,
+            'results':      results,
+            'wins_scanned': wins_scanned,
+            'error':        f"{e}\n{traceback.format_exc()}",
+        }
 
-    return {'symbol': symbol, 'results': results,
-            'wins_scanned': wins_scanned, 'error': None}
+    return {
+        'symbol':       symbol,
+        'results':      results,
+        'wins_scanned': wins_scanned,
+        'error':        None,
+    }
 
-
-# =============================================================================
-# MAIN PARALLEL ENTRY POINT
-# =============================================================================
 
 def parallel_scan_tickers(
     ticker_data:  Dict[str, Any],
@@ -219,9 +245,9 @@ def parallel_scan_tickers(
     checkpoint_fn = None,
 ) -> List[Dict]:
     """
-    Parallelise wave scanning across tickers using ProcessPoolExecutor.
+    Parallelize wave scanning across tickers using ProcessPoolExecutor.
 
-    Each worker handles one full ticker (all windows) independently.
+    Each worker handles one full ticker (all its windows) independently.
     Uses 'fork' on Linux so the already-warmed Numba JIT cache is inherited
     instantly — no re-compilation in child processes.
 
