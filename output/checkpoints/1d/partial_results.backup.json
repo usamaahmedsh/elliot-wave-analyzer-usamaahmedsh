@@ -1,0 +1,230 @@
+[
+  {
+    "symbol": "1INCH-USD",
+    "start_row": 266,
+    "window_len": 728,
+    "date_start": "2021-09-17T00:00:00.000000000",
+    "date_end": "2023-09-14T00:00:00.000000000",
+    "best": {
+      "rule_name": "Corrective",
+      "score": 1.0,
+      "wave_config": [
+        10,
+        8,
+        14
+      ],
+      "idx_start": 237,
+      "idx_end": 724,
+      "waves": {
+        "wave1": {
+          "idx_start": 237,
+          "idx_end": 469,
+          "low": 0.3738340139389038,
+          "high": 1.0490360260009766,
+          "low_idx": 469,
+          "high_idx": 237,
+          "length": 0.6752020120620728,
+          "duration": 232
+        },
+        "wave2": {
+          "idx_start": 469,
+          "idx_end": 522,
+          "low": 0.3738340139389038,
+          "high": 0.689631998538971,
+          "low_idx": 469,
+          "high_idx": 522,
+          "length": 0.31579798460006714,
+          "duration": 53
+        },
+        "wave3": {
+          "idx_start": 522,
+          "idx_end": 724,
+          "low": 0.22109800577163696,
+          "high": 0.689631998538971,
+          "low_idx": 724,
+          "high_idx": 522,
+          "length": 0.468533992767334,
+          "duration": 202
+        }
+      }
+    },
+    "scan_stats": {
+      "n_full_evals": 300,
+      "pattern_type": "corrective"
+    },
+    "ensemble_score": 0.9308568965517241,
+    "fib_score": 0.9,
+    "_pattern_obj": "FoundPattern(pattern=<models.WavePattern.WavePattern object at 0x7fb96d8451d0>, rule_name='Corrective', score=1.0, wave_config=[10, 8, 14], idx_start=237, idx_end=724, ensemble_score=0.9308568965517241, fib_score=0.9)"
+  },
+  {
+    "symbol": "AGIX-USD",
+    "start_row": 63,
+    "window_len": 728,
+    "date_start": "2018-03-23T00:00:00.000000000",
+    "date_end": "2020-03-19T00:00:00.000000000",
+    "best": {
+      "rule_name": "Corrective",
+      "score": 1.0,
+      "wave_config": [
+        11,
+        9,
+        12
+      ],
+      "idx_start": 82,
+      "idx_end": 721,
+      "waves": {
+        "wave1": {
+          "idx_start": 82,
+          "idx_end": 173,
+          "low": 0.03381799906492233,
+          "high": 0.1342339962720871,
+          "low_idx": 173,
+          "high_idx": 82,
+          "length": 0.10041599720716476,
+          "duration": 91
+        },
+        "wave2": {
+          "idx_start": 173,
+          "idx_end": 433,
+          "low": 0.03381799906492233,
+          "high": 0.08702400326728821,
+          "low_idx": 173,
+          "high_idx": 433,
+          "length": 0.053206004202365875,
+          "duration": 260
+        },
+        "wave3": {
+          "idx_start": 433,
+          "idx_end": 721,
+          "low": 0.0074970000423491,
+          "high": 0.08702400326728821,
+          "low_idx": 721,
+          "high_idx": 433,
+          "length": 0.07952700322493911,
+          "duration": 288
+        }
+      }
+    },
+    "scan_stats": {
+      "n_full_evals": 300,
+      "pattern_type": "corrective"
+    },
+    "ensemble_score": 0.8057010989010988,
+    "fib_score": 0.7,
+    "_pattern_obj": "FoundPattern(pattern=<models.WavePattern.WavePattern object at 0x7fb96d847c90>, rule_name='Corrective', score=1.0, wave_config=[11, 9, 12], idx_start=82, idx_end=721, ensemble_score=0.8057010989010988, fib_score=0.7)"
+  },
+  {
+    "symbol": "0001.HK",
+    "start_row": 0,
+    "window_len": 728,
+    "date_start": "2000-01-04T00:00:00.000000000",
+    "date_end": "2002-10-21T00:00:00.000000000",
+    "best": {
+      "rule_name": "Corrective",
+      "score": 1.0,
+      "wave_config": [
+        9,
+        10,
+        13
+      ],
+      "idx_start": 66,
+      "idx_end": 717,
+      "waves": {
+        "wave1": {
+          "idx_start": 66,
+          "idx_end": 437,
+          "low": 15.716268539428711,
+          "high": 26.396137237548828,
+          "low_idx": 437,
+          "high_idx": 66,
+          "length": 10.679868698120117,
+          "duration": 371
+        },
+        "wave2": {
+          "idx_start": 437,
+          "idx_end": 524,
+          "low": 15.716268539428711,
+          "high": 21.475387573242188,
+          "low_idx": 437,
+          "high_idx": 524,
+          "length": 5.759119033813477,
+          "duration": 87
+        },
+        "wave3": {
+          "idx_start": 524,
+          "idx_end": 717,
+          "low": 11.659062385559082,
+          "high": 21.475387573242188,
+          "low_idx": 717,
+          "high_idx": 524,
+          "length": 9.816325187683105,
+          "duration": 193
+        }
+      }
+    },
+    "scan_stats": {
+      "n_full_evals": 300,
+      "pattern_type": "corrective"
+    },
+    "ensemble_score": 0.9366142857142857,
+    "fib_score": 0.9,
+    "_pattern_obj": "FoundPattern(pattern=<models.WavePattern.WavePattern object at 0x7fb96d836890>, rule_name='Corrective', score=1.0, wave_config=[9, 10, 13], idx_start=66, idx_end=717, ensemble_score=0.9366142857142857, fib_score=0.9)"
+  },
+  {
+    "symbol": "AKAM",
+    "start_row": 1561,
+    "window_len": 728,
+    "date_start": "2006-01-17T00:00:00.000000000",
+    "date_end": "2008-12-04T00:00:00.000000000",
+    "best": {
+      "rule_name": "Corrective",
+      "score": 1.0,
+      "wave_config": [
+        10,
+        8,
+        14
+      ],
+      "idx_start": 267,
+      "idx_end": 685,
+      "waves": {
+        "wave1": {
+          "idx_start": 267,
+          "idx_end": 503,
+          "low": 25.1299991607666,
+          "high": 59.689998626708984,
+          "low_idx": 503,
+          "high_idx": 267,
+          "length": 34.55999946594238,
+          "duration": 236
+        },
+        "wave2": {
+          "idx_start": 503,
+          "idx_end": 590,
+          "low": 25.1299991607666,
+          "high": 40.900001525878906,
+          "low_idx": 503,
+          "high_idx": 590,
+          "length": 15.770002365112305,
+          "duration": 87
+        },
+        "wave3": {
+          "idx_start": 590,
+          "idx_end": 685,
+          "low": 13.229999542236328,
+          "high": 40.900001525878906,
+          "low_idx": 685,
+          "high_idx": 590,
+          "length": 27.670001983642578,
+          "duration": 95
+        }
+      }
+    },
+    "scan_stats": {
+      "n_full_evals": 300,
+      "pattern_type": "corrective"
+    },
+    "ensemble_score": 0.8433050847457626,
+    "fib_score": 0.7,
+    "_pattern_obj": "FoundPattern(pattern=<models.WavePattern.WavePattern object at 0x7fb96d837cd0>, rule_name='Corrective', score=1.0, wave_config=[10, 8, 14], idx_start=267, idx_end=685, ensemble_score=0.8433050847457626, fib_score=0.7)"
+  }
+]
