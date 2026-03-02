@@ -8,3 +8,20 @@ __pycache__
 # Environment variables (contains secrets like HF_TOKEN)
 .env
 /data
+
+# Pipeline runner script (local wrapper)
+run_pipeline.sh
+
+# Data / outputs / logs
+data/
+output/
+logs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
