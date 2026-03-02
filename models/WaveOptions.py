@@ -7,6 +7,7 @@ import numpy as np
 
 _array_cache: dict = {}
 
+
 def generate_options_array(up_to: int, n_waves: int = 5) -> np.ndarray:
     """
     Returns shape (up_to^n_waves, n_waves) int16 array of all skip combinations,
@@ -28,12 +29,14 @@ def generate_options_array(up_to: int, n_waves: int = 5) -> np.ndarray:
     order = np.lexsort(combos[:, ::-1].T)
     return combos[order].astype(np.int16)
 
+
 def get_options_array(up_to: int, n_waves: int = 5) -> np.ndarray:
     """Return cached options array for given up_to and n_waves."""
     key = (up_to, n_waves)
     if key not in _array_cache:
         _array_cache[key] = generate_options_array(up_to, n_waves)
     return _array_cache[key]
+
 
 # =============================================================================
 # Original Python class — kept for backward compatibility

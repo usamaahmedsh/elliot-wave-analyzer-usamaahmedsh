@@ -11,12 +11,13 @@ cpu_batch_size: 4096 # irrelevant in new vectorized path, kept for compat
 # top_k: how many of the ALL-options pre-scored candidates get fully evaluated
 # per scan call. This is now a GLOBAL top-k (not per-batch).
 # At up_to=15: 759,375 options vectorized in one numpy op, then top_k evals only.
-# 300 full evals x 3 types x 8 starts x 1000 windows = 7.2M evals per ticker
-# At ~3us each = ~22s per ticker. Tractable.
+# 300 full evals × 3 types × 8 starts × 1000 windows = 7.2M evals per ticker
+# At ~3µs each = ~22s per ticker. Tractable.
 cpu_top_k: 300
 
 # Hard cap on full evals per scan call (safety net — global top-k does the real work)
 max_combinations: 5000000
+
 
 # =============================================================================
 # SCAN DEPTH
@@ -30,15 +31,17 @@ top_n_per_window: 50
 scan_pattern_types: all
 
 enable_multi_start: true
-max_start_points: 15 # was 20 — diminishing returns past 8, 2.5x faster
+max_start_points: 15 # was 20 — diminishing returns past 8, 2.5× faster
+
 
 # =============================================================================
 # WALL-CLOCK SAFETY NET (new knob read by scan_impulses/bearish/correctives)
 # =============================================================================
 # Maximum seconds allowed per individual scan call (single start point, single
 # pattern type). Prevents any single window from hanging the whole run.
-# At 300 top_k with ~3us each, normal scan takes <1ms. This is a hard safety net.
+# At 300 top_k with ~3µs each, normal scan takes <1ms. This is a hard safety net.
 max_seconds_per_scan: 10.0
+
 
 # =============================================================================
 # DATA RANGE
@@ -51,6 +54,7 @@ grow_weeks: 2
 top_n: 50
 delay: 0.0
 concurrency: 64
+
 
 # =============================================================================
 # OUTPUT & MISC
@@ -70,6 +74,7 @@ pre_score_top_k: 0
 pre_score_threshold: 0.0
 pre_score_weights: [0.4, 0.3, 0.2, 0.1]
 
+
 # =============================================================================
 # MAC M4 PRO PROFILE
 # =============================================================================
@@ -83,6 +88,7 @@ pre_score_weights: [0.4, 0.3, 0.2, 0.1]
 # top_n: 20
 # concurrency: 12
 # save_images_top_n: 5
+
 
 # =============================================================================
 # HPC PROFILE (32 cores / 128 GB)

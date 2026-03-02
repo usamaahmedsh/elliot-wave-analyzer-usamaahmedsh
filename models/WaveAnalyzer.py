@@ -16,14 +16,14 @@ from models.EnsembleScoring import EnsembleScorer
 
 @dataclass
 class FoundPattern:
-    pattern:        WavePattern
-    rule_name:      str
-    score:          float
-    wave_config:    List[int]
-    idx_start:      int
-    idx_end:        int
+    pattern: WavePattern
+    rule_name: str
+    score: float
+    wave_config: List[int]
+    idx_start: int
+    idx_end: int
     ensemble_score: Optional[float] = None
-    fib_score:      Optional[float] = None
+    fib_score: Optional[float] = None
 
 
 _options_cache = {}
@@ -31,7 +31,6 @@ _ensemble_scorer = EnsembleScorer(
     fib_weight=0.5, rule_weight=0.3,
     time_weight=0.1, complexity_weight=0.1
 )
-
 _window_features_cache = {}
 
 
@@ -41,10 +40,10 @@ def _get_or_create_options(up_to: int, pattern_type: str = 'impulse'):
     if cache_key in _options_cache:
         return _options_cache[cache_key]
     if pattern_type == 'impulse':
-        gen     = WaveOptionsGenerator5(up_to=up_to)
+        gen = WaveOptionsGenerator5(up_to=up_to)
         options = list(gen.options_sorted)
     elif pattern_type == 'corrective':
-        gen     = WaveOptionsGenerator3(up_to=up_to)
+        gen = WaveOptionsGenerator3(up_to=up_to)
         options = list(gen.options_sorted)
     else:
         options = []
@@ -53,12 +52,12 @@ def _get_or_create_options(up_to: int, pattern_type: str = 'impulse'):
 
 
 def _vectorized_prescore(opts_arr: np.ndarray, up_to: int,
-                         base_score: float) -> np.ndarray:
+                          base_score: float) -> np.ndarray:
     """
     Compute pre-scores for ALL options at once via numpy.
     Returns float32 array of shape (N,).
     """
-    n_waves    = opts_arr.shape[1]
+    n_waves = opts_arr.shape[1]
     complexity = opts_arr.sum(axis=1).astype(np.float32) / (n_waves * max(1, up_to))
     return base_score + 0.1 * complexity
 
@@ -69,7 +68,7 @@ class WaveAnalyzer:
     """
 
     def __init__(self, df: Optional[pd.DataFrame] = None,
-                 lows:  Optional[np.ndarray] = None,
+                 lows: Optional[np.ndarray] = None,
                  highs: Optional[np.ndarray] = None,
                  dates: Optional[np.ndarray] = None,
                  verbose: bool = False):
@@ -94,7 +93,7 @@ class WaveAnalyzer:
 
         self.impulse_rules    = list()
         self.correction_rules = list()
-        self.__waveoptions_up:   WaveOptionsGenerator5
+        self.__waveoptions_up: WaveOptionsGenerator5
         self.__waveoptions_down: WaveOptionsGenerator3
         self.set_combinatorial_limits()
 
@@ -115,7 +114,7 @@ class WaveAnalyzer:
         global_min = int(np.argmin(self.lows))
         if global_min not in extrema:
             extrema.append(global_min)
-        extrema.sort()
+            extrema.sort()
         return extrema
 
     def set_combinatorial_limits(self, n_up: int = 10, n_down: int = 10):
@@ -123,7 +122,7 @@ class WaveAnalyzer:
         self.__waveoptions_down = WaveOptionsGenerator3(n_down)
 
     # -------------------------------------------------------------------------
-    # Wave builders
+    # Wave builders (unchanged)
     # -------------------------------------------------------------------------
 
     def find_impulsive_wave(self, idx_start: int, wave_config: list = None):
@@ -132,25 +131,25 @@ class WaveAnalyzer:
         wave1 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates,
                            idx_start=idx_start, skip=wave_config[0])
         wave1.label = "1"
-        wave1_end   = wave1.idx_end
+        wave1_end = wave1.idx_end
         if wave1_end is None:
             return False
         wave2 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates,
                              idx_start=wave1_end, skip=wave_config[1])
         wave2.label = "2"
-        wave2_end   = wave2.idx_end
+        wave2_end = wave2.idx_end
         if wave2_end is None:
             return False
         wave3 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates,
                            idx_start=wave2_end, skip=wave_config[2])
         wave3.label = "3"
-        wave3_end   = wave3.idx_end
+        wave3_end = wave3.idx_end
         if wave3_end is None:
             return False
         wave4 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates,
                              idx_start=wave3_end, skip=wave_config[3])
         wave4.label = "4"
-        wave4_end   = wave4.idx_end
+        wave4_end = wave4.idx_end
         if wave4_end is None:
             return False
         if wave2.low > np.min(self.lows[wave2.low_idx:wave4.low_idx]):
@@ -158,7 +157,7 @@ class WaveAnalyzer:
         wave5 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates,
                            idx_start=wave4_end, skip=wave_config[4])
         wave5.label = "5"
-        wave5_end   = wave5.idx_end
+        wave5_end = wave5.idx_end
         if wave5_end is None:
             return False
         if (self.lows[wave4.low_idx:wave5.high_idx].any() and
@@ -172,25 +171,25 @@ class WaveAnalyzer:
         wave1 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates,
                              idx_start=idx_start, skip=wave_config[0])
         wave1.label = "1"
-        wave1_end   = wave1.idx_end
+        wave1_end = wave1.idx_end
         if wave1_end is None:
             return False
         wave2 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates,
                            idx_start=wave1_end, skip=wave_config[1])
         wave2.label = "2"
-        wave2_end   = wave2.idx_end
+        wave2_end = wave2.idx_end
         if wave2_end is None:
             return False
         wave3 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates,
                              idx_start=wave2_end, skip=wave_config[2])
         wave3.label = "3"
-        wave3_end   = wave3.idx_end
+        wave3_end = wave3.idx_end
         if wave3_end is None:
             return False
         wave4 = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates,
                            idx_start=wave3_end, skip=wave_config[3])
         wave4.label = "4"
-        wave4_end   = wave4.idx_end
+        wave4_end = wave4.idx_end
         if wave4_end is None:
             return False
         if wave2.high < np.max(self.highs[wave2.high_idx:wave4.high_idx]):
@@ -198,7 +197,7 @@ class WaveAnalyzer:
         wave5 = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates,
                              idx_start=wave4_end, skip=wave_config[4])
         wave5.label = "5"
-        wave5_end   = wave5.idx_end
+        wave5_end = wave5.idx_end
         if wave5_end is None:
             return False
         if (self.highs[wave4.high_idx:wave5.low_idx].any() and
@@ -212,19 +211,19 @@ class WaveAnalyzer:
         waveA = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates,
                              idx_start=idx_start, skip=wave_config[0])
         waveA.label = "A"
-        waveA_end   = waveA.idx_end
+        waveA_end = waveA.idx_end
         if waveA_end is None:
             return False
         waveB = MonoWaveUp(lows=self.lows, highs=self.highs, dates=self.dates,
                            idx_start=waveA_end, skip=wave_config[1])
         waveB.label = "B"
-        waveB_end   = waveB.idx_end
+        waveB_end = waveB.idx_end
         if waveB_end is None:
             return False
         waveC = MonoWaveDown(lows=self.lows, highs=self.highs, dates=self.dates,
                              idx_start=waveB_end, skip=wave_config[2])
         waveC.label = "C"
-        waveC_end   = waveC.idx_end
+        waveC_end = waveC.idx_end
         if waveC_end is None:
             return False
         return [waveA, waveB, waveC]
@@ -234,12 +233,12 @@ class WaveAnalyzer:
             wave_config = [0, 0]
         wave1 = MonoWaveUp(self.df, idx_start=idx_start, skip=wave_config[0])
         wave1.label = "1"
-        wave1_end   = wave1.idx_end
+        wave1_end = wave1.idx_end
         if wave1_end is None:
             return False
         wave2 = MonoWaveDown(self.df, idx_start=wave1_end, skip=wave_config[1])
         wave2.label = "2"
-        wave2_end   = wave2.idx_end
+        wave2_end = wave2.idx_end
         if wave2_end is None:
             return False
         return [wave1, wave2]
@@ -265,11 +264,11 @@ class WaveAnalyzer:
                             wavepattern = WavePattern(waves, verbose=False)
                             if wavepattern.check_rule(correction):
                                 cycle_complete = True
-                                wave_cycle     = WaveCycle(wavepattern_up, wavepattern)
+                                wave_cycle = WaveCycle(wavepattern_up, wavepattern)
                                 wave_cycles.add(wave_cycle)
-            if cycle_complete:
-                yield wave_cycle
-        return None
+                    if cycle_complete:
+                        yield wave_cycle
+                        return None
 
     # -------------------------------------------------------------------------
     # Core scan helpers — shared vectorized pre-score + global top-k
@@ -278,14 +277,14 @@ class WaveAnalyzer:
     def _compute_base_score(self, idx_start: int, use_highs: bool = False) -> float:
         """Cheap window-level proxy score for pre-filtering."""
         try:
-            sl     = self.lows [idx_start: idx_start + 10]
-            sh     = self.highs[idx_start: idx_start + 10]
+            sl = self.lows[idx_start: idx_start + 10]
+            sh = self.highs[idx_start: idx_start + 10]
             if sl.size == 0:
                 return 0.0
-            lo_val = float(np.min(sl))
-            hi_val = float(np.max(sh))
-            ref    = hi_val if use_highs else lo_val
-            vol    = float(np.std(sl)) if sl.size > 1 else 0.0
+            lo_val  = float(np.min(sl))
+            hi_val  = float(np.max(sh))
+            ref     = hi_val if use_highs else lo_val
+            vol     = float(np.std(sl)) if sl.size > 1 else 0.0
             return 0.4 * vol + 0.3 * ((hi_val - lo_val) / (ref + 1e-9))
         except Exception:
             return 0.0
@@ -304,16 +303,18 @@ class WaveAnalyzer:
         return np.argsort(-pre_scores)
 
     # -------------------------------------------------------------------------
-    # scan_impulses
+    # scan_impulses  (rewritten — global top-k, numpy options array)
     # -------------------------------------------------------------------------
 
     def scan_impulses(self, idx_start: int, up_to: int = 10, top_n: int = 5,
                       max_combinations: int = None,
                       scan_cfg: dict = None) -> List['FoundPattern']:
         scan_cfg   = scan_cfg or {}
+        # top_k_global: how many candidates to fully evaluate (global, not per-batch)
         top_k      = int(scan_cfg.get('cpu_top_k', 64))
         max_combos = max_combinations or 1_000_000
 
+        # Cheap extrema pre-filter
         try:
             from models.functions import count_extrema
             if count_extrema(self.lows[idx_start:]) < 4:
@@ -321,8 +322,8 @@ class WaveAnalyzer:
         except Exception:
             pass
 
-        opts_arr    = get_options_array(up_to, n_waves=5)
-        base_score  = self._compute_base_score(idx_start, use_highs=False)
+        opts_arr   = get_options_array(up_to, n_waves=5)  # cached numpy array
+        base_score = self._compute_base_score(idx_start, use_highs=False)
         top_indices = self._global_topk_indices(opts_arr, up_to, base_score, top_k)
 
         impulse          = Impulse("impulse")
@@ -330,77 +331,7 @@ class WaveAnalyzer:
         rules_to_check   = [impulse, leading_diagonal]
 
         found: List[FoundPattern] = []
-        seen          = set()
-        n_full_evals  = 0
-        t_full_eval   = 0.0
-        t_start_wall  = _time.time()
-        max_seconds   = float(scan_cfg.get('max_seconds_per_scan', 1e9))
-
-        for idx in top_indices:
-            if n_full_evals >= max_combos:
-                break
-            if _time.time() - t_start_wall > max_seconds:
-                break
-
-            wave_config = opts_arr[idx].tolist()
-            t1          = _time.time()
-            waves_up    = self.find_impulsive_wave(idx_start=idx_start,
-                                                   wave_config=wave_config)
-            t_full_eval += _time.time() - t1
-            n_full_evals += 1
-
-            if not waves_up:
-                continue
-
-            wp = WavePattern(waves_up, verbose=False)
-            for rule in rules_to_check:
-                if wp.check_rule(rule):
-                    if wp in seen:
-                        continue
-                    seen.add(wp)
-                    rule_score = float(wp.score_rule(rule)) if hasattr(wp, 'score_rule') else 0.0
-                    ed         = _ensemble_scorer.score_with_details(wp, rule_score=rule_score)
-                    found.append(FoundPattern(
-                        pattern=wp, rule_name=rule.name, score=rule_score,
-                        wave_config=wave_config,
-                        idx_start=wp.idx_start, idx_end=wp.idx_end,
-                        ensemble_score=ed['ensemble_score'],
-                        fib_score=ed.get('fibonacci_score', 0.5),
-                    ))
-
-        try:
-            self._last_scan_stats = {
-                'n_options':      len(opts_arr),
-                'n_full_evals':   n_full_evals,
-                'time_full_eval': float(t_full_eval),
-                'pattern_type':   'impulse',
-            }
-        except Exception:
-            pass
-
-        found.sort(key=lambda x: (x.ensemble_score or x.score, x.idx_end), reverse=True)
-        return found[:top_n]
-
-    # -------------------------------------------------------------------------
-    # scan_bearish_impulses
-    # -------------------------------------------------------------------------
-
-    def scan_bearish_impulses(self, idx_start: int, up_to: int = 10, top_n: int = 5,
-                              max_combinations: int = None,
-                              scan_cfg: dict = None) -> List['FoundPattern']:
-        scan_cfg   = scan_cfg or {}
-        top_k      = int(scan_cfg.get('cpu_top_k', 64))
-        max_combos = max_combinations or 1_000_000
-
-        opts_arr    = get_options_array(up_to, n_waves=5)
-        base_score  = self._compute_base_score(idx_start, use_highs=True)
-        top_indices = self._global_topk_indices(opts_arr, up_to, base_score, top_k)
-
-        bearish_impulse = BearishImpulse("bearish_impulse")
-        rules_to_check  = [bearish_impulse]
-
-        found: List[FoundPattern] = []
-        seen         = set()
+        seen  = set()
         n_full_evals = 0
         t_full_eval  = 0.0
         t_start_wall = _time.time()
@@ -413,9 +344,79 @@ class WaveAnalyzer:
                 break
 
             wave_config = opts_arr[idx].tolist()
-            t1          = _time.time()
-            waves_down  = self.find_bearish_impulsive_wave(idx_start=idx_start,
-                                                           wave_config=wave_config)
+            t1 = _time.time()
+            waves_up = self.find_impulsive_wave(idx_start=idx_start,
+                                                wave_config=wave_config)
+            t_full_eval  += _time.time() - t1
+            n_full_evals += 1
+
+            if not waves_up:
+                continue
+
+            wp = WavePattern(waves_up, verbose=False)
+            for rule in rules_to_check:
+                if wp.check_rule(rule):
+                    if wp in seen:
+                        continue
+                    seen.add(wp)
+                    rule_score = float(wp.score_rule(rule)) if hasattr(wp, 'score_rule') else 0.0
+                    ed = _ensemble_scorer.score_with_details(wp, rule_score=rule_score)
+                    found.append(FoundPattern(
+                        pattern=wp, rule_name=rule.name, score=rule_score,
+                        wave_config=wave_config,
+                        idx_start=wp.idx_start, idx_end=wp.idx_end,
+                        ensemble_score=ed['ensemble_score'],
+                        fib_score=ed.get('fibonacci_score', 0.5),
+                    ))
+
+        try:
+            self._last_scan_stats = {
+                'n_options':    len(opts_arr),
+                'n_full_evals': n_full_evals,
+                'time_full_eval': float(t_full_eval),
+                'pattern_type': 'impulse',
+            }
+        except Exception:
+            pass
+
+        found.sort(key=lambda x: (x.ensemble_score or x.score, x.idx_end), reverse=True)
+        return found[:top_n]
+
+    # -------------------------------------------------------------------------
+    # scan_bearish_impulses  (rewritten — global top-k, numpy options array)
+    # -------------------------------------------------------------------------
+
+    def scan_bearish_impulses(self, idx_start: int, up_to: int = 10, top_n: int = 5,
+                               max_combinations: int = None,
+                               scan_cfg: dict = None) -> List['FoundPattern']:
+        scan_cfg   = scan_cfg or {}
+        top_k      = int(scan_cfg.get('cpu_top_k', 64))
+        max_combos = max_combinations or 1_000_000
+
+        opts_arr   = get_options_array(up_to, n_waves=5)
+        base_score = self._compute_base_score(idx_start, use_highs=True)
+        top_indices = self._global_topk_indices(opts_arr, up_to, base_score, top_k)
+
+        bearish_impulse = BearishImpulse("bearish_impulse")
+        rules_to_check  = [bearish_impulse]
+
+        found: List[FoundPattern] = []
+        seen  = set()
+        n_full_evals = 0
+        t_full_eval  = 0.0
+        t_start_wall = _time.time()
+        max_seconds  = float(scan_cfg.get('max_seconds_per_scan', 1e9))
+
+        for idx in top_indices:
+            if n_full_evals >= max_combos:
+                break
+            if _time.time() - t_start_wall > max_seconds:
+                break
+
+            wave_config  = opts_arr[idx].tolist()
+            t1 = _time.time()
+            waves_down   = self.find_bearish_impulsive_wave(idx_start=idx_start,
+                                                            wave_config=wave_config)
             t_full_eval  += _time.time() - t1
             n_full_evals += 1
 
@@ -429,7 +430,7 @@ class WaveAnalyzer:
                         continue
                     seen.add(wp)
                     rule_score = float(wp.score_rule(rule)) if hasattr(wp, 'score_rule') else 0.0
-                    ed         = _ensemble_scorer.score_with_details(wp, rule_score=rule_score)
+                    ed = _ensemble_scorer.score_with_details(wp, rule_score=rule_score)
                     found.append(FoundPattern(
                         pattern=wp, rule_name=rule.name, score=rule_score,
                         wave_config=wave_config,
@@ -440,10 +441,10 @@ class WaveAnalyzer:
 
         try:
             self._last_scan_stats = {
-                'n_options':      len(opts_arr),
-                'n_full_evals':   n_full_evals,
+                'n_options':    len(opts_arr),
+                'n_full_evals': n_full_evals,
                 'time_full_eval': float(t_full_eval),
-                'pattern_type':   'bearish_impulse',
+                'pattern_type': 'bearish_impulse',
             }
         except Exception:
             pass
@@ -452,7 +453,7 @@ class WaveAnalyzer:
         return found[:top_n]
 
     # -------------------------------------------------------------------------
-    # scan_correctives
+    # scan_correctives  (rewritten — global top-k, numpy options array)
     # -------------------------------------------------------------------------
 
     def scan_correctives(self, idx_start: int, up_to: int = 10, top_n: int = 5,
@@ -462,13 +463,13 @@ class WaveAnalyzer:
         top_k      = int(scan_cfg.get('cpu_top_k', 64))
         max_combos = max_combinations or 1_000_000
 
-        opts_arr    = get_options_array(up_to, n_waves=3)
-        base_score  = self._compute_base_score(idx_start, use_highs=False)
+        opts_arr   = get_options_array(up_to, n_waves=3)
+        base_score = self._compute_base_score(idx_start, use_highs=False)
         top_indices = self._global_topk_indices(opts_arr, up_to, base_score, top_k)
 
-        correction = Correction("corrective")
+        correction     = Correction("corrective")
         found: List[FoundPattern] = []
-        seen         = set()
+        seen  = set()
         n_full_evals = 0
         t_start_wall = _time.time()
         max_seconds  = float(scan_cfg.get('max_seconds_per_scan', 1e9))
@@ -479,9 +480,9 @@ class WaveAnalyzer:
             if _time.time() - t_start_wall > max_seconds:
                 break
 
-            wave_config  = opts_arr[idx].tolist()
-            waves        = self.find_corrective_wave(idx_start=idx_start,
-                                                     wave_config=wave_config)
+            wave_config = opts_arr[idx].tolist()
+            waves       = self.find_corrective_wave(idx_start=idx_start,
+                                                    wave_config=wave_config)
             n_full_evals += 1
 
             if not waves:
@@ -495,7 +496,7 @@ class WaveAnalyzer:
             seen.add(pat)
 
             rule_score = float(pat.score_rule(correction)) if hasattr(pat, 'score_rule') else 0.0
-            ed         = _ensemble_scorer.score_with_details(pat, rule_score=rule_score)
+            ed = _ensemble_scorer.score_with_details(pat, rule_score=rule_score)
             found.append(FoundPattern(
                 pattern=pat, rule_name='Corrective', score=rule_score,
                 wave_config=wave_config,
@@ -516,7 +517,7 @@ class WaveAnalyzer:
         return found[:top_n]
 
     # -------------------------------------------------------------------------
-    # scan_all_patterns
+    # scan_all_patterns  (unchanged logic, calls rewritten scan methods)
     # -------------------------------------------------------------------------
 
     def scan_all_patterns(self, idx_start: int, up_to: int = 10, top_n: int = 5,
@@ -536,7 +537,7 @@ class WaveAnalyzer:
         return all_found[:top_n]
 
     # -------------------------------------------------------------------------
-    # scan_multi_start
+    # scan_multi_start  (unchanged logic)
     # -------------------------------------------------------------------------
 
     def scan_multi_start(self, up_to: int = 10, top_n: int = 5,
@@ -580,7 +581,7 @@ class WaveAnalyzer:
         return unique_patterns[:top_n]
 
     # -------------------------------------------------------------------------
-    # Adaptive window methods
+    # Adaptive window methods (unchanged)
     # -------------------------------------------------------------------------
 
     @staticmethod
@@ -603,11 +604,11 @@ class WaveAnalyzer:
         for window_len in range(min_len, max_len + 1, step_len):
             if start_row + window_len > len(base_df):
                 break
-            window_df      = self.slice_df(base_df, start_row, window_len)
-            wa             = WaveAnalyzer(window_df, verbose=False)
-            local_idx_start = int(np.argmin(np.array(list(window_df["Low"]))))
-            candidates     = wa.scan_impulses(idx_start=local_idx_start,
-                                              up_to=up_to, top_n=top_n)
+            window_df        = self.slice_df(base_df, start_row, window_len)
+            wa               = WaveAnalyzer(window_df, verbose=False)
+            local_idx_start  = int(np.argmin(np.array(list(window_df["Low"]))))
+            candidates       = wa.scan_impulses(idx_start=local_idx_start,
+                                                up_to=up_to, top_n=top_n)
             if candidates:
                 best = candidates[0]
                 return {
@@ -623,13 +624,13 @@ class WaveAnalyzer:
         return None
 
     def sliding_adaptive_impulses(self, df, symbol, timeframe="1D", slide_weeks=1,
-                                   min_weeks=4, max_weeks=12, up_to=10,
-                                   grow_weeks=1, top_n=1):
+                                  min_weeks=4, max_weeks=12, up_to=10,
+                                  grow_weeks=1, top_n=1):
         bars_per_week = self._bars_per_week(timeframe)
-        slide_step    = slide_weeks * bars_per_week
-        min_len       = min_weeks   * bars_per_week
-        out           = []
-        start_row     = 0
+        slide_step = slide_weeks * bars_per_week
+        min_len    = min_weeks  * bars_per_week
+        out        = []
+        start_row  = 0
         while start_row <= len(df) - min_len:
             result = self.find_best_impulse_adaptive_window(
                 base_df=df, start_row=start_row, timeframe=timeframe,
